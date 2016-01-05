@@ -1,0 +1,13 @@
+main: code.breakmc.legacy.Legacy
+name: Legacy
+version: 1.0
+author: Young
+depends: [Origin, WorldEdit]
+
+commands:
+  buy:
+  sell:
+  price:
+  value:
+  shop:
+  pay:
