@@ -25,7 +25,6 @@ import code.breakmc.legacy.utils.command.Register;
 import code.breakmc.legacy.utils.mobs.*;
 import code.breakmc.legacy.warps.OverrideListener;
 import code.breakmc.legacy.warps.WarpManager;
-
 import com.mongodb.DB;
 import com.mongodb.DBAddress;
 import com.mongodb.MongoClient;
@@ -171,14 +170,6 @@ public class Legacy extends JavaPlugin {
                 Villager villager = (Villager) ent;
 
                 if (villager.getMetadata("logger") != null && villager.hasMetadata("logger")) {
-                    villager.remove();
-                }
-
-                if (villager.getMetadata("tutorial") != null && villager.hasMetadata("tutorial")) {
-                    villager.remove();
-                }
-
-                if (villager.getCustomName() != null && villager.getCustomName().contains("AdvancedPvP")) {
                     villager.remove();
                 }
             });
