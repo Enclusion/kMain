@@ -33,10 +33,10 @@ public class SetFriendlyFire extends TeamSubCommand {
 
         if (args.length == 0) {
             if (team.isFriendlyFireEnabled()) {
-                team.setFriendlyFire(false);
+                team.setFriendlyFireEnabled(false);
                 team.sendMessage("&b" + p.getName() + " &3has disabled friendly fire!");
             } else {
-                team.setFriendlyFire(true);
+                team.setFriendlyFireEnabled(true);
                 team.sendMessage("&b" + p.getName() + " &3has enabled friendly fire!");
             }
         } else if (args.length == 1) {
@@ -46,7 +46,7 @@ public class SetFriendlyFire extends TeamSubCommand {
                     return;
                 }
 
-                team.setFriendlyFire(true);
+                team.setFriendlyFireEnabled(true);
                 team.sendMessage("&b" + p.getName() + " &3has enabled friendly fire!");
             } else if (args[0].equalsIgnoreCase("off") || args[0].equalsIgnoreCase("false")) {
                 if (!team.isFriendlyFireEnabled()) {
@@ -54,7 +54,7 @@ public class SetFriendlyFire extends TeamSubCommand {
                     return;
                 }
 
-                team.setFriendlyFire(false);
+                team.setFriendlyFireEnabled(false);
                 team.sendMessage("&b" + p.getName() + " &3has disabled friendly fire!");
             } else {
                 MessageManager.sendMessage(p, "&cImproper usage! /team ff <on/off>");

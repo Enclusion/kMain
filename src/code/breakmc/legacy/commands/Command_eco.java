@@ -67,10 +67,10 @@ public class Command_eco extends BaseCommand {
                     return;
                 }
 
-                Profile prof = pm.getProfile(args[0]);
+                Profile prof = pm.getProfile(args[1]);
 
                 if (prof == null) {
-                    MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
+                    MessageManager.sendMessage(p, "&cPlayer \"" + args[1] + "\" could not be found.");
                     return;
                 }
 
@@ -84,10 +84,10 @@ public class Command_eco extends BaseCommand {
                     return;
                 }
 
-                Profile prof = pm.getProfile(args[0]);
+                Profile prof = pm.getProfile(args[1]);
 
                 if (prof == null) {
-                    MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
+                    MessageManager.sendMessage(p, "&cPlayer \"" + args[1] + "\" could not be found.");
                     return;
                 }
 
@@ -110,10 +110,10 @@ public class Command_eco extends BaseCommand {
                     return;
                 }
 
-                Profile prof = pm.getProfile(args[0]);
+                Profile prof = pm.getProfile(args[1]);
 
                 if (prof == null) {
-                    MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
+                    MessageManager.sendMessage(p, "&cPlayer \"" + args[1] + "\" could not be found.");
                     return;
                 }
 
@@ -136,10 +136,10 @@ public class Command_eco extends BaseCommand {
                     return;
                 }
 
-                Profile prof = pm.getProfile(args[0]);
+                Profile prof = pm.getProfile(args[1]);
 
                 if (prof == null) {
-                    MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
+                    MessageManager.sendMessage(p, "&cPlayer \"" + args[1] + "\" could not be found.");
                     return;
                 }
 

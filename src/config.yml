@@ -2,7 +2,10 @@ database:
   host: localhost
   database-name: legacy
   port: 27015
-  
+
+scoreboard:
+  title: '&bAdvancedPvP'
+
 economy:
   buy-sell-ratio: 1.5
 

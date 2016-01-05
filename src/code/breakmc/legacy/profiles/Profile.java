@@ -3,6 +3,7 @@ package code.breakmc.legacy.profiles;
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.utils.MessageManager;
+import code.breakmc.legacy.utils.moon.ScoreboardManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -21,6 +22,8 @@ import java.util.UUID;
 @Setter
 public class Profile implements Listener {
 
+    private ScoreboardManager sbm = Legacy.getInstance().getScoreboardManager();
+    private TeamManager tm = Legacy.getInstance().getTeamManager();
     HashMap<UUID, BukkitRunnable> dontMove = new HashMap<>();
     UUID uniqueId;
     String name;
@@ -28,13 +31,16 @@ public class Profile implements Listener {
     Double balance;
     boolean safeLogged;
     Location home;
+    HashMap<String, Long> usedKits = new HashMap<>();
 
-    public Profile(UUID uniqueId, String name, String youtubename, Double balance, Location home, boolean safeLogged) {
+    public Profile(UUID uniqueId, String name, String youtubename, Double balance, Location home, boolean safeLogged, HashMap<String, Long> usedKits) {
         this.uniqueId = uniqueId;
         this.name = name;
         this.youtubename = youtubename;
         this.balance = balance;
         this.safeLogged = safeLogged;
+        this.usedKits = usedKits;
+        this.home = home;
 
         Bukkit.getPluginManager().registerEvents(this, Legacy.getInstance());
     }

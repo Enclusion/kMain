@@ -4,6 +4,7 @@ import code.BreakMC.origin.util.event.UpdateNameEvent;
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.teams.Team;
 import code.breakmc.legacy.teams.TeamManager;
+import code.breakmc.legacy.utils.moon.ScoreboardManager;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -24,6 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class TeamListeners implements Listener {
 
     private TeamManager tm = Legacy.getInstance().getTeamManager();
+    private ScoreboardManager sbm = Legacy.getInstance().getScoreboardManager();
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
@@ -87,17 +89,19 @@ public class TeamListeners implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        Legacy.getInstance().getTeamTagManager().initPlayer(e.getPlayer());
-        Legacy.getInstance().getTeamTagManager().sendTeamsToPlayer(e.getPlayer());
-        Legacy.getInstance().getTeamTagManager().reloadPlayer(e.getPlayer());
+        Player p = e.getPlayer();
 
-        if (tm.hasTeam(e.getPlayer().getUniqueId())) {
-            Team team = tm.getTeam(e.getPlayer().getUniqueId());
+        Legacy.getInstance().getTeamTagManager().initPlayer(p);
+        Legacy.getInstance().getTeamTagManager().sendTeamsToPlayer(p);
+        Legacy.getInstance().getTeamTagManager().reloadPlayer(p);
 
-            if (team.isManager(e.getPlayer().getUniqueId())) {
-                team.sendMessage("&3Team Login&7: &b" + e.getPlayer().getName());
+        if (tm.hasTeam(p.getUniqueId())) {
+            Team team = tm.getTeam(p.getUniqueId());
+
+            if (team.isManager(p.getUniqueId())) {
+                team.sendMessage("&3Team Login&7: &b" + p.getName());
             } else {
-                team.sendMessage("&3Team Login&7: " + e.getPlayer().getName());
+                team.sendMessage("&3Team Login&7: " + p.getName());
             }
         }
     }

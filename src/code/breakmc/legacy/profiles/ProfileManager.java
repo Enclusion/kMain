@@ -8,13 +8,11 @@ import com.mongodb.DBCursor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 import java.util.logging.Level;
 
-/**
- * Created by Calvin on 5/9/2015.
- */
 public class ProfileManager {
 
     private Legacy main = Legacy.getInstance();
@@ -50,7 +48,15 @@ public class ProfileManager {
                 safeLogged = dbo.getBoolean("safe-logged");
             }
 
-            prof = new Profile(id, name, youtubename, balance, home, safeLogged);
+            HashMap<String, Long> usedKits = new HashMap<>();
+            BasicDBObject oj = (BasicDBObject) dbo.get("usedkits");
+            if (oj != null) {
+                for (String str : oj.keySet()) {
+                    usedKits.put(str, (long) oj.get(str));
+                }
+            }
+
+            prof = new Profile(id, name, youtubename, balance, home, safeLogged, usedKits);
 
             loadedProfiles.add(prof);
         }
@@ -71,6 +77,7 @@ public class ProfileManager {
                 dbo.put("home", LocationSerialization.serializeLocation(prof.getHome()));
             }
             dbo.put("safe-logged", prof.isSafeLogged());
+            dbo.put("usedkits", prof.getUsedKits());
 
             if (dbc.hasNext()) {
                 pCollection.update(dbc.getQuery(), dbo);
@@ -84,13 +91,14 @@ public class ProfileManager {
 
     public void createProfile(Player p) {
         if (!hasProfile(p.getUniqueId())) {
-            Profile prof = new Profile(p.getUniqueId(), p.getName(), "", 0.0, null, false);
+            Profile prof = new Profile(p.getUniqueId(), p.getName(), "", 0.0, null, false, new HashMap<>());
 
             BasicDBObject dbo = new BasicDBObject("id", prof.getUniqueId().toString());
             dbo.put("name", prof.getName());
             dbo.put("youtubename", prof.getYoutubename());
             dbo.put("balance", prof.getBalance());
             dbo.put("safe-loggged", prof.isSafeLogged());
+            dbo.put("usedkits", prof.getUsedKits());
 
             pCollection.insert(dbo);
 

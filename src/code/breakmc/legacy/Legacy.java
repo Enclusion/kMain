@@ -5,6 +5,7 @@ import code.breakmc.legacy.economy.EconomyListener;
 import code.breakmc.legacy.economy.EconomyManager;
 import code.breakmc.legacy.enderchest.EnderchestListener;
 import code.breakmc.legacy.enderchest.EnderchestManager;
+import code.breakmc.legacy.kits.KitManager;
 import code.breakmc.legacy.kitviewer.KitListener;
 import code.breakmc.legacy.listeners.*;
 import code.breakmc.legacy.mobcapture.MobCaptureListener;
@@ -20,6 +21,7 @@ import code.breakmc.legacy.utils.BlockUtils;
 import code.breakmc.legacy.utils.LagTask;
 import code.breakmc.legacy.utils.command.Register;
 import code.breakmc.legacy.utils.mobs.*;
+import code.breakmc.legacy.utils.moon.ScoreboardManager;
 import code.breakmc.legacy.warps.OverrideListener;
 import code.breakmc.legacy.warps.WarpManager;
 import com.mongodb.DB;
@@ -43,9 +45,11 @@ public class Legacy extends JavaPlugin {
     private static Legacy instance;
     private DB database;
     private ProfileManager profileManager;
+    private KitManager kitManager;
     private EconomyManager economyManager;
     private SpawnManager spawnManager;
     private TeamManager teamManager;
+    private ScoreboardManager scoreboardManager;
     private TeamTagManager teamtagManager;
     private WarpManager warpManager;
     private EnderchestManager enderchestManager;
@@ -58,9 +62,11 @@ public class Legacy extends JavaPlugin {
         clearVillagers();
 
         profileManager = new ProfileManager();
+        kitManager = new KitManager();
         economyManager = new EconomyManager();
         spawnManager = new SpawnManager();
         teamManager = new TeamManager();
+        scoreboardManager = new ScoreboardManager();
         teamtagManager = new TeamTagManager();
         warpManager = new WarpManager();
         enderchestManager = new EnderchestManager();
@@ -75,6 +81,7 @@ public class Legacy extends JavaPlugin {
 
     public void onDisable() {
         profileManager.saveProfiles();
+        kitManager.saveAllKits();
         teamManager.saveTeams();
         warpManager.saveWarps();
         spawnManager.saveSpawn();
@@ -117,6 +124,8 @@ public class Legacy extends JavaPlugin {
             register.registerCommand("home", new Command_home());
             register.registerCommand("sethome", new Command_sethome());
             register.registerCommand("homeas", new Command_homeas());
+            register.registerCommand("kit", new Command_kit());
+            register.registerCommand("setkit", new Command_setkit());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -132,9 +141,8 @@ public class Legacy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EnderchestListener(), this);
         getServer().getPluginManager().registerEvents(new CooldownListeners(), this);
         getServer().getPluginManager().registerEvents(new SpawnListeners(), this);
-        getServer().getPluginManager().registerEvents(new HungerListener(), this);
+        getServer().getPluginManager().registerEvents(new OptimzationsListener(), this);
         getServer().getPluginManager().registerEvents(new SoupListener(), this);
-        getServer().getPluginManager().registerEvents(new StrengthListener(), this);
         getServer().getPluginManager().registerEvents(new TeamListeners(), this);
         getServer().getPluginManager().registerEvents(new CombatLogListener(), this);
         getServer().getPluginManager().registerEvents(new EconomyListener(), this);
@@ -190,6 +198,10 @@ public class Legacy extends JavaPlugin {
         return profileManager;
     }
 
+    public KitManager getKitManager() {
+        return kitManager;
+    }
+
     public EconomyManager getEconomyManager() {
         return economyManager;
     }
@@ -200,6 +212,10 @@ public class Legacy extends JavaPlugin {
 
     public TeamManager getTeamManager() {
         return teamManager;
+    }
+
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
     }
 
     public TeamTagManager getTeamTagManager() {
