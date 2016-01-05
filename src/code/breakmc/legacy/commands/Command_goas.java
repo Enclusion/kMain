@@ -1,11 +1,12 @@
 package code.breakmc.legacy.commands;
 
 import code.breakmc.legacy.Legacy;
+import code.breakmc.legacy.profiles.Profile;
+import code.breakmc.legacy.profiles.ProfileManager;
 import code.breakmc.legacy.utils.MessageManager;
 import code.breakmc.legacy.utils.command.BaseCommand;
 import code.breakmc.legacy.utils.command.CommandUsageBy;
 import code.breakmc.legacy.warps.WarpManager;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,10 +17,11 @@ import org.bukkit.entity.Player;
 public class Command_goas extends BaseCommand {
 
     private WarpManager wm = Legacy.getInstance().getWarpManager();
+    private ProfileManager pm = Legacy.getInstance().getProfileManager();
 
     public Command_goas() {
         super("goas", "legacy.goas", CommandUsageBy.PlAYER, "warpas");
-        setUsage("/<command>");
+        setUsage("&cImproper usage! /goas (player)");
         setMinArgs(0);
         setMaxArgs(3);
     }
@@ -40,12 +42,14 @@ public class Command_goas extends BaseCommand {
             if (args[0].equalsIgnoreCase("del")) {
                 MessageManager.sendMessage(p, "&cImproper usage! /goas del (player) (warp)");
             } else {
-                if (Bukkit.getOfflinePlayer(args[0]) == null) {
+                Profile prof = pm.getProfile(args[0]);
+
+                if (prof == null) {
                     MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
                     return;
                 }
 
-                wm.adminListWarps(p.getUniqueId(), Bukkit.getOfflinePlayer(args[0]).getUniqueId());
+                wm.adminListWarps(p.getUniqueId(), prof.getUniqueId());
             }
         }
 
@@ -53,22 +57,26 @@ public class Command_goas extends BaseCommand {
             if (args[0].equalsIgnoreCase("del")) {
                 MessageManager.sendMessage(p, "&cImproper usage! /goas del (player) (warp)");
             } else {
-                if (Bukkit.getOfflinePlayer(args[0]) == null) {
+                Profile prof = pm.getProfile(args[0]);
+
+                if (prof == null) {
                     MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
                     return;
                 }
 
-                wm.warpAdminTeleport(p, Bukkit.getOfflinePlayer(args[0]).getUniqueId(), args[1]);
+                wm.warpAdminTeleport(p, prof.getUniqueId(), args[1]);
             }
         }
 
         if (args.length == 3) {
-            if (Bukkit.getOfflinePlayer(args[1]) == null) {
+            Profile prof = pm.getProfile(args[0]);
+
+            if (prof == null) {
                 MessageManager.sendMessage(p, "&cPlayer \"" + args[1] + "\" could not be found.");
                 return;
             }
 
-            wm.adminRemoveWarp(p.getUniqueId(), Bukkit.getOfflinePlayer(args[1]).getUniqueId(), args[2]);
+            wm.adminRemoveWarp(p.getUniqueId(), prof.getUniqueId(), args[2]);
         }
     }
 }

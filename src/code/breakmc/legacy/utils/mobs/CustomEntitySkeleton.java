@@ -1,16 +1,15 @@
 package code.breakmc.legacy.utils.mobs;
 
-import net.minecraft.server.v1_7_R4.Entity;
-import net.minecraft.server.v1_7_R4.EntityCaveSpider;
+import net.minecraft.server.v1_7_R4.EntitySkeleton;
 import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 
 import java.lang.reflect.Field;
 
-public class Dummy_cave_spider extends EntityCaveSpider {
+public class CustomEntitySkeleton extends EntitySkeleton {
 
-    public Dummy_cave_spider(World world) {
+    public CustomEntitySkeleton(World world) {
         super(world);
 
         try {
@@ -26,8 +25,4 @@ public class Dummy_cave_spider extends EntityCaveSpider {
             e.printStackTrace();
         }
     }
-
-
-    @Override
-    public void a(Entity ent, float f) {}
 }

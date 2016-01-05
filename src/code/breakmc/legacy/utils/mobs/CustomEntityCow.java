@@ -1,15 +1,16 @@
 package code.breakmc.legacy.utils.mobs;
 
-import net.minecraft.server.v1_7_R4.EntitySkeleton;
+import net.minecraft.server.v1_7_R4.Entity;
+import net.minecraft.server.v1_7_R4.EntityCow;
 import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 
 import java.lang.reflect.Field;
 
-public class Dummy_skeleton extends EntitySkeleton {
+public class CustomEntityCow extends EntityCow {
 
-    public Dummy_skeleton(World world) {
+    public CustomEntityCow(World world) {
         super(world);
 
         try {
@@ -25,4 +26,7 @@ public class Dummy_skeleton extends EntitySkeleton {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void a(Entity ent, float f) {}
 }

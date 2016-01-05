@@ -2,12 +2,7 @@ package code.breakmc.legacy.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 
-/**
- * Created by Calvin on 4/25/2015.
- * Project: Legacy
- */
 public class LocationSerialization {
 
     public static String serializeLocation(Location l) {
@@ -24,33 +19,30 @@ public class LocationSerialization {
     public static Location deserializeLocation(String s) {
         Location l = new Location(Bukkit.getWorlds().get(0), 0.0D, 0.0D, 0.0D);
         String[] att = s.split(":");
-        String[] arr$ = att;
-        int len$ = att.length;
 
-        for(int i$ = 0; i$ < len$; ++i$) {
-            String attribute = arr$[i$];
+        for (String attribute : att) {
             String[] split = attribute.split(";");
-            if(split[0].equalsIgnoreCase("@w")) {
+            if (split[0].equalsIgnoreCase("@w")) {
                 l.setWorld(Bukkit.getWorld(split[1]));
             }
 
-            if(split[0].equalsIgnoreCase("@x")) {
+            if (split[0].equalsIgnoreCase("@x")) {
                 l.setX(Double.parseDouble(split[1]));
             }
 
-            if(split[0].equalsIgnoreCase("@y")) {
+            if (split[0].equalsIgnoreCase("@y")) {
                 l.setY(Double.parseDouble(split[1]));
             }
 
-            if(split[0].equalsIgnoreCase("@z")) {
+            if (split[0].equalsIgnoreCase("@z")) {
                 l.setZ(Double.parseDouble(split[1]));
             }
 
-            if(split[0].equalsIgnoreCase("@p")) {
+            if (split[0].equalsIgnoreCase("@p")) {
                 l.setPitch(Float.parseFloat(split[1]));
             }
 
-            if(split[0].equalsIgnoreCase("@ya")) {
+            if (split[0].equalsIgnoreCase("@ya")) {
                 l.setYaw(Float.parseFloat(split[1]));
             }
         }

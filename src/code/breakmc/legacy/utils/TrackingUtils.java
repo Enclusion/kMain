@@ -9,10 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-/**
- * Created by Calvin on 4/25/2015.
- * Project: Legacy
- */
 public class TrackingUtils {
 
     private SpawnManager sm = Legacy.getInstance().getSpawnManager();
@@ -117,10 +113,10 @@ public class TrackingUtils {
     public void Track(Material mat1, Material mat2, Player player, Player player2) {
 
         Block block = new Location(player.getWorld(), player.getLocation().getBlockX(), player.getLocation().getBlockY() - 1, player.getLocation().getBlockZ()).getBlock();
-        boolean northDists = findEnd(player.getWorld(), 0, -1, mat1, mat2);
-        boolean southDists = findEnd(player.getWorld(), 0, 1, mat1, mat2);
-        boolean eastDists = findEnd(player.getWorld(), -1, 0, mat1, mat2);
-        boolean westDists = findEnd(player.getWorld(), 1, 0, mat1, mat2);
+        boolean northDists = findEnd(player.getWorld(), 0, -1, mat2);
+        boolean southDists = findEnd(player.getWorld(), 0, 1, mat2);
+        boolean eastDists = findEnd(player.getWorld(), -1, 0, mat2);
+        boolean westDists = findEnd(player.getWorld(), 1, 0, mat2);
         int northDist = findBlock(player.getWorld(), 0, -1, mat1, mat2);
         int southDist = findBlock(player.getWorld(), 0, 1, mat1, mat2);
         int eastDist = findBlock(player.getWorld(), -1, 0, mat1, mat2);
@@ -153,7 +149,7 @@ public class TrackingUtils {
         } else if (block.getType() == Material.OBSIDIAN && isTemp(block)) {
             Track(Material.COBBLESTONE, Material.STONE, player, player2);
         } else {
-            player.sendMessage(ChatColor.RED + "You must be on a tracker to use this command.");
+            MessageManager.sendMessage(player, "&cYou must be on a tracker to use this command.");
         }
     }
 
@@ -247,11 +243,6 @@ public class TrackingUtils {
 
             if (can) {
                 in ++;
-                Bukkit.broadcastMessage("Wat");
-                if (player2.hasPermission("tracking.donator")) {
-                } else {
-
-                }
             }
         }
 
@@ -307,10 +298,10 @@ public class TrackingUtils {
                 int southDist = findBlock(player.getWorld(), 0, 1, mat1, mat2);
                 int eastDist = findBlock(player.getWorld(), -1, 0, mat1, mat2);
                 int westDist = findBlock(player.getWorld(), 1, 0, mat1, mat2);
-                boolean northDists = findEnd(player.getWorld(), 0, -1, mat1, mat2);
-                boolean southDists = findEnd(player.getWorld(), 0, 1, mat1, mat2);
-                boolean eastDists = findEnd(player.getWorld(), -1, 0, mat1, mat2);
-                boolean westDists = findEnd(player.getWorld(), 1, 0, mat1, mat2);
+                boolean northDists = findEnd(player.getWorld(), 0, -1, mat2);
+                boolean southDists = findEnd(player.getWorld(), 0, 1, mat2);
+                boolean eastDists = findEnd(player.getWorld(), -1, 0, mat2);
+                boolean westDists = findEnd(player.getWorld(), 1, 0, mat2);
 
                 MessageManager.sendMessage(player, "&3Results&7:");
                 if (northDist > 0 && northDists) {
@@ -358,7 +349,7 @@ public class TrackingUtils {
         }
     }
 
-    public boolean findEnd(final World world, final int x, final int z, Material mat1, Material mat2) {
+    public boolean findEnd(final World world, final int x, final int z, Material mat2) {
         boolean yes = false;
 
         for (int i = 1; i < 1000; i++) {

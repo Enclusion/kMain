@@ -2,11 +2,9 @@ package code.breakmc.legacy.profiles;
 
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.utils.LocationSerialization;
-import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -115,6 +113,16 @@ public class ProfileManager {
                 return prof;
             }
         }
+        return null;
+    }
+
+    public Profile getProfile(String name) {
+        for (Profile prof : getLoadedProfiles()) {
+            if (prof.getName().equalsIgnoreCase(name)) {
+                return prof;
+            }
+        }
+
         return null;
     }
 

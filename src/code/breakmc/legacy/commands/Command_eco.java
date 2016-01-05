@@ -22,7 +22,7 @@ public class Command_eco extends BaseCommand {
 
     public Command_eco() {
         super("economy", null, CommandUsageBy.ANYONE, "balancetop", "moneytop", "dinerotop", "eco");
-        setUsage("/<command>");
+        setUsage("&cImproper usage! /economy");
         setMinArgs(0);
         setMaxArgs(3);
     }
@@ -67,16 +67,10 @@ public class Command_eco extends BaseCommand {
                     return;
                 }
 
-                Profile prof = null;
-
-                for (Profile profs : pm.getLoadedProfiles()) {
-                    if (profs.getName().equalsIgnoreCase(args[1])) {
-                        prof = profs;
-                    }
-                }
+                Profile prof = pm.getProfile(args[0]);
 
                 if (prof == null) {
-                    MessageManager.sendMessage(p, "&cThat player could not be found.");
+                    MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
                     return;
                 }
 
@@ -90,16 +84,10 @@ public class Command_eco extends BaseCommand {
                     return;
                 }
 
-                Profile prof = null;
-
-                for (Profile profs : pm.getLoadedProfiles()) {
-                    if (profs.getName().equalsIgnoreCase(args[1])) {
-                        prof = profs;
-                    }
-                }
+                Profile prof = pm.getProfile(args[0]);
 
                 if (prof == null) {
-                    MessageManager.sendMessage(p, "&cThat player could not be found.");
+                    MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
                     return;
                 }
 
@@ -122,16 +110,10 @@ public class Command_eco extends BaseCommand {
                     return;
                 }
 
-                Profile prof = null;
-
-                for (Profile profs : pm.getLoadedProfiles()) {
-                    if (profs.getName().equalsIgnoreCase(args[1])) {
-                        prof = profs;
-                    }
-                }
+                Profile prof = pm.getProfile(args[0]);
 
                 if (prof == null) {
-                    MessageManager.sendMessage(p, "&cThat player could not be found.");
+                    MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
                     return;
                 }
 
@@ -154,16 +136,10 @@ public class Command_eco extends BaseCommand {
                     return;
                 }
 
-                Profile prof = null;
-
-                for (Profile profs : pm.getLoadedProfiles()) {
-                    if (profs.getName().equalsIgnoreCase(args[1])) {
-                        prof = profs;
-                    }
-                }
+                Profile prof = pm.getProfile(args[0]);
 
                 if (prof == null) {
-                    MessageManager.sendMessage(p, "&cThat player could not be found.");
+                    MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
                     return;
                 }
 

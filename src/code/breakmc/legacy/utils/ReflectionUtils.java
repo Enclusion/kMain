@@ -1,14 +1,16 @@
 package code.breakmc.legacy.utils;
 
+import org.bukkit.Bukkit;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.bukkit.Bukkit;
 
 public class ReflectionUtils {
+
     private static final String PACKAGE_PREFIX = "org/bukkit/craftbukkit/v";
     private static String version = "";
 

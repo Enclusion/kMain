@@ -1,7 +1,5 @@
 package code.breakmc.legacy.utils;
 
-import org.bukkit.entity.Player;
-
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 

@@ -143,15 +143,8 @@ public class TeamManager {
             return;
         }
 
-        Team team;
-
-        if (password.equalsIgnoreCase("")) {
-            team = new Team(name, new ArrayList<>(), new ArrayList<>(), null, null, false, "", 0);
-            team.getManagers().add(id);
-        } else {
-            team = new Team(name, new ArrayList<>(), new ArrayList<>(), null, null, false, password, 0);
-            team.getManagers().add(id);
-        }
+        Team team = new Team(name, new ArrayList<>(), new ArrayList<>(), null, null, false, (password.equalsIgnoreCase("") ? "" : password), 0);
+        team.getManagers().add(id);
 
         MessageManager.sendMessage(id, "&3You have created team &b" + name);
 

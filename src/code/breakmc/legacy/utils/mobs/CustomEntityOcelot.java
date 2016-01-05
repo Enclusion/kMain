@@ -1,13 +1,16 @@
 package code.breakmc.legacy.utils.mobs;
 
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_7_R4.Entity;
+import net.minecraft.server.v1_7_R4.EntityOcelot;
+import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
+import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 
 import java.lang.reflect.Field;
 
-public class Dummy_chicken extends EntityChicken {
+public class CustomEntityOcelot extends EntityOcelot {
 
-    public Dummy_chicken(World world) {
+    public CustomEntityOcelot(World world) {
         super(world);
 
         try {

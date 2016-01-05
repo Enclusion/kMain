@@ -16,7 +16,7 @@ public class Command_home extends BaseCommand {
 
     public Command_home() {
         super("home", null, CommandUsageBy.PlAYER);
-        setUsage("&cInvalid usage! /home");
+        setUsage("&cImproper usage! /home");
         setMinArgs(0);
         setMaxArgs(0);
     }

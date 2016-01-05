@@ -1,15 +1,15 @@
 package code.breakmc.legacy.utils.mobs;
 
-import net.minecraft.server.v1_7_R4.EntityCreeper;
+import net.minecraft.server.v1_7_R4.EntityPigZombie;
 import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 
 import java.lang.reflect.Field;
 
-public class Dummy_creeper extends EntityCreeper {
+public class CustomEntityPigZombie extends EntityPigZombie {
 
-    public Dummy_creeper(World world) {
+    public CustomEntityPigZombie(World world) {
         super(world);
 
         try {

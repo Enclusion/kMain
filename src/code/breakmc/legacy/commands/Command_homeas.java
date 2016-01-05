@@ -7,7 +7,6 @@ import code.breakmc.legacy.utils.MessageManager;
 import code.breakmc.legacy.utils.PlayerUtility;
 import code.breakmc.legacy.utils.command.BaseCommand;
 import code.breakmc.legacy.utils.command.CommandUsageBy;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -23,7 +22,7 @@ public class Command_homeas extends BaseCommand {
 
     public Command_homeas() {
         super("homeas", "legacy.homeas", CommandUsageBy.PlAYER, "has");
-        setUsage("&cInvalid Usage! /homeas help");
+        setUsage("&cImproper usage! /homeas help");
         setMinArgs(0);
         setMaxArgs(1);
     }
@@ -39,12 +38,12 @@ public class Command_homeas extends BaseCommand {
         }
 
         if (args.length == 1) {
-            if (Bukkit.getOfflinePlayer(args[0]) == null) {
-                MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found");
+            Profile tprof = pm.getProfile(args[0]);
+
+            if (tprof == null) {
+                MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
                 return;
             }
-
-            Profile tprof = pm.getProfile(Bukkit.getOfflinePlayer(args[0]).getUniqueId());
 
             if (tprof.getHome() != null) {
                 p.teleport(tprof.getHome());

@@ -1,8 +1,7 @@
 package code.breakmc.legacy.mobcapture;
 
-import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.utils.MessageManager;
-import org.bukkit.ChatColor;
+import code.breakmc.legacy.utils.mobs.SpawnEggType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -12,9 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-/**
- * Created by Calvin on 5/5/2015.
- */
 public class MobCaptureListener implements Listener {
 
     @EventHandler

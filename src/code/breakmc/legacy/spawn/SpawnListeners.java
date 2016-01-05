@@ -78,7 +78,7 @@ public class SpawnListeners implements Listener {
                 || e.getMessage().toLowerCase().contains("/ewarp set")) {
             if (sm.getSpawn().isInStoneRadius(p.getLocation())) {
                 e.setCancelled(true);
-                MessageManager.sendMessage(p, "&cYou cannot use this command within " + sm.getSpawn().getStoneRadius() + " blocks of spawn!");
+                MessageManager.sendMessage(p, "&cYou cannot use this command within " + sm.getSpawn().getStoneHeight() + " blocks of spawn!");
             }
         } else {
             if (e.getMessage().toLowerCase().contains("/sell") || e.getMessage().toLowerCase().contains("/buy")) {

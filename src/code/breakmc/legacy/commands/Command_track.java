@@ -17,7 +17,7 @@ public class Command_track extends BaseCommand {
 
     public Command_track() {
         super("track", null, CommandUsageBy.PlAYER);
-        setUsage("/<command> (player;all)");
+        setUsage("&cImproper usage! /track (player;all)");
         setMinArgs(1);
         setMaxArgs(1);
     }

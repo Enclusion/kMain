@@ -8,10 +8,6 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-/**
- * Created by Calvin on 4/22/2015.
- * Project: Legacy
- */
 public class MessageManager {
 
     public static void sendMessage(Player p, String message) {

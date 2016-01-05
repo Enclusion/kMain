@@ -26,6 +26,7 @@ public class EnderchestListener implements Listener {
     public void onInventoryOpen(InventoryOpenEvent e) {
         Player p = (Player) e.getPlayer();
         Inventory inv = e.getInventory();
+
         if (inv.getType().equals(InventoryType.ENDER_CHEST)) {
             e.setCancelled(true);
 
@@ -37,42 +38,46 @@ public class EnderchestListener implements Listener {
             if (ecm.hasEnderchest(p)) {
                 Inventory ec = Bukkit.createInventory(p, 27, ChatColor.DARK_PURPLE + "Enderchest");
                 ec.setContents(ecm.getEnderchest(p).getContents());
+
+                ItemStack redBlock = new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build();
+                ItemStack donateBlock = new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build();
+
                 if (!p.hasPermission("legacy.enderchest.donator")) {
-                    ec.setItem(0, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(1, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(2, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(6, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(7, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(8, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(9, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(10, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(11, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(15, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(16, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(17, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(18, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(19, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(18, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(19, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(20, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(24, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(25, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(26, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
+                    ec.setItem(0, redBlock);
+                    ec.setItem(1, redBlock);
+                    ec.setItem(2, donateBlock);
+                    ec.setItem(6, donateBlock);
+                    ec.setItem(7, redBlock);
+                    ec.setItem(8, redBlock);
+                    ec.setItem(9, redBlock);
+                    ec.setItem(10, redBlock);
+                    ec.setItem(11, donateBlock);
+                    ec.setItem(15, donateBlock);
+                    ec.setItem(16, redBlock);
+                    ec.setItem(17, redBlock);
+                    ec.setItem(18, redBlock);
+                    ec.setItem(19, redBlock);
+                    ec.setItem(18, redBlock);
+                    ec.setItem(19, redBlock);
+                    ec.setItem(20, donateBlock);
+                    ec.setItem(24, donateBlock);
+                    ec.setItem(25, redBlock);
+                    ec.setItem(26, redBlock);
                 } else {
-                    ec.setItem(0, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(1, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(7, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(8, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(9, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(10, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(16, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(17, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(18, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(19, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(18, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(19, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(25, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(26, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
+                    ec.setItem(0, redBlock);
+                    ec.setItem(1, redBlock);
+                    ec.setItem(7, redBlock);
+                    ec.setItem(8, redBlock);
+                    ec.setItem(9, redBlock);
+                    ec.setItem(10, redBlock);
+                    ec.setItem(16, redBlock);
+                    ec.setItem(17, redBlock);
+                    ec.setItem(18, redBlock);
+                    ec.setItem(19, redBlock);
+                    ec.setItem(18, redBlock);
+                    ec.setItem(19, redBlock);
+                    ec.setItem(25, redBlock);
+                    ec.setItem(26, redBlock);
 
                     for (ItemStack item : ec.getContents()) {
                         if (item != null) {
@@ -93,42 +98,46 @@ public class EnderchestListener implements Listener {
                 p.openInventory(ec);
             } else {
                 Inventory ec = Bukkit.createInventory(p, 27, ChatColor.DARK_PURPLE + "Enderchest");
+
+                ItemStack redBlock = new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build();
+                ItemStack donateBlock = new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build();
+
                 if (!p.hasPermission("legacy.enderchest.donator")) {
-                    ec.setItem(0, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(1, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(2, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(6, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(7, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(8, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(9, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(10, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(11, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(15, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(16, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(17, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(18, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(19, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(18, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(19, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(20, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(24, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(14).name("&c&l\u2716").addLore("&dDonate to unlock this slot!").build());
-                    ec.setItem(25, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(26, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
+                    ec.setItem(0, redBlock);
+                    ec.setItem(1, redBlock);
+                    ec.setItem(2, donateBlock);
+                    ec.setItem(6, donateBlock);
+                    ec.setItem(7, redBlock);
+                    ec.setItem(8, redBlock);
+                    ec.setItem(9, redBlock);
+                    ec.setItem(10, redBlock);
+                    ec.setItem(11, donateBlock);
+                    ec.setItem(15, donateBlock);
+                    ec.setItem(16, redBlock);
+                    ec.setItem(17, redBlock);
+                    ec.setItem(18, redBlock);
+                    ec.setItem(19, redBlock);
+                    ec.setItem(18, redBlock);
+                    ec.setItem(19, redBlock);
+                    ec.setItem(20, donateBlock);
+                    ec.setItem(24, donateBlock);
+                    ec.setItem(25, redBlock);
+                    ec.setItem(26, redBlock);
                 } else {
-                    ec.setItem(0, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(1, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(7, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(8, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(9, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(10, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(16, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(17, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(18, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(19, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(18, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(19, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(25, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
-                    ec.setItem(26, new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name("&8&l\u2716").build());
+                    ec.setItem(0, redBlock);
+                    ec.setItem(1, redBlock);
+                    ec.setItem(7, redBlock);
+                    ec.setItem(8, redBlock);
+                    ec.setItem(9, redBlock);
+                    ec.setItem(10, redBlock);
+                    ec.setItem(16, redBlock);
+                    ec.setItem(17, redBlock);
+                    ec.setItem(18, redBlock);
+                    ec.setItem(19, redBlock);
+                    ec.setItem(18, redBlock);
+                    ec.setItem(19, redBlock);
+                    ec.setItem(25, redBlock);
+                    ec.setItem(26, redBlock);
 
                     for (ItemStack item : ec.getContents()) {
                         if (item != null) {

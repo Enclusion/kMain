@@ -19,7 +19,7 @@ public class Command_setspawn extends BaseCommand {
 
     public Command_setspawn() {
         super("setspawn", "legacy.setspawn", CommandUsageBy.ANYONE);
-        setUsage("/<command> (spawnradius, spawnheight, stoneradius, stoneheight)");
+        setUsage("&cImproper usage! /setspawn (spawnradius, spawnheight, stoneradius, stoneheight)");
         setMinArgs(4);
         setMaxArgs(4);
     }

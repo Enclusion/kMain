@@ -28,7 +28,7 @@ public class Command_logout extends BaseCommand {
 
     public Command_logout() {
         super("logout", null, CommandUsageBy.PlAYER, "disconnect");
-        setUsage("/<command>");
+        setUsage("&cImproper usage! /logout");
         setMinArgs(0);
         setMaxArgs(0);
     }

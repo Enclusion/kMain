@@ -1,15 +1,16 @@
 package code.breakmc.legacy.utils.mobs;
 
-import net.minecraft.server.v1_7_R4.EntitySheep;
+import net.minecraft.server.v1_7_R4.Entity;
+import net.minecraft.server.v1_7_R4.EntityChicken;
 import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 
 import java.lang.reflect.Field;
 
-public class Dummy_sheep extends EntitySheep {
+public class CustomEntityChicken extends EntityChicken {
 
-    public Dummy_sheep(World world) {
+    public CustomEntityChicken(World world) {
         super(world);
 
         try {
@@ -25,4 +26,7 @@ public class Dummy_sheep extends EntitySheep {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void a(Entity ent, float f) {}
 }

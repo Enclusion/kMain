@@ -15,12 +15,9 @@ import code.breakmc.legacy.spawn.SpawnManager;
 import code.breakmc.legacy.teams.BaseTeamCommand;
 import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.teams.TeamTagManager;
-import code.breakmc.legacy.teams.listeners.ChatListener;
-import code.breakmc.legacy.teams.listeners.FriendlyFireListener;
-import code.breakmc.legacy.teams.listeners.JoinListener;
+import code.breakmc.legacy.teams.listeners.TeamListeners;
 import code.breakmc.legacy.utils.BlockUtils;
 import code.breakmc.legacy.utils.LagTask;
-import code.breakmc.legacy.utils.NMSUtils;
 import code.breakmc.legacy.utils.command.Register;
 import code.breakmc.legacy.utils.mobs.*;
 import code.breakmc.legacy.warps.OverrideListener;
@@ -45,7 +42,6 @@ public class Legacy extends JavaPlugin {
 
     private static Legacy instance;
     private DB database;
-    private DB registerDatabase;
     private ProfileManager profileManager;
     private EconomyManager economyManager;
     private SpawnManager spawnManager;
@@ -118,6 +114,9 @@ public class Legacy extends JavaPlugin {
             register.registerCommand("track", new Command_track());
             register.registerCommand("toggledm", new Command_toggledm());
             register.registerCommand("clearspawn", new Command_clearspawn());
+            register.registerCommand("home", new Command_home());
+            register.registerCommand("sethome", new Command_sethome());
+            register.registerCommand("homeas", new Command_homeas());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,8 +128,6 @@ public class Legacy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new OverrideListener(), this);
         getServer().getPluginManager().registerEvents(new IronBoatListener(), this);
         getServer().getPluginManager().registerEvents(new KitListener(), this);
-        getServer().getPluginManager().registerEvents(new ChatListener(), this);
-        getServer().getPluginManager().registerEvents(new FriendlyFireListener(), this);
         getServer().getPluginManager().registerEvents(new SalvagingListeners(), this);
         getServer().getPluginManager().registerEvents(new EnderchestListener(), this);
         getServer().getPluginManager().registerEvents(new CooldownListeners(), this);
@@ -138,7 +135,7 @@ public class Legacy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new HungerListener(), this);
         getServer().getPluginManager().registerEvents(new SoupListener(), this);
         getServer().getPluginManager().registerEvents(new StrengthListener(), this);
-        getServer().getPluginManager().registerEvents(new JoinListener(), this);
+        getServer().getPluginManager().registerEvents(new TeamListeners(), this);
         getServer().getPluginManager().registerEvents(new CombatLogListener(), this);
         getServer().getPluginManager().registerEvents(new EconomyListener(), this);
         getServer().getPluginManager().registerEvents(new Command_toggledm(), this);
@@ -146,22 +143,21 @@ public class Legacy extends JavaPlugin {
 
     public void registerDummyEntities() {
         //Passive
-        new NMSUtils().registerEntity("Sheep", 91, EntitySheep.class, Dummy_sheep.class);
-        new NMSUtils().registerEntity("Pig", 90, EntityPig.class, Dummy_pig.class);
-        new NMSUtils().registerEntity("Cow", 92, EntityCow.class, Dummy_cow.class);
-        new NMSUtils().registerEntity("Chicken", 93, EntityChicken.class, Dummy_chicken.class);
-        new NMSUtils().registerEntity("Bat", 65, EntityBat.class, Dummy_bat.class);
-        new NMSUtils().registerEntity("MushroomCow", 96, EntityMushroomCow.class, Dummy_mooshroom.class);
-        new NMSUtils().registerEntity("Ocelot", 98, EntityOcelot.class, Dummy_ocelot.class);
+        new CustomEntityController().registerEntity("Sheep", 91, EntitySheep.class, CustomEntitySheep.class);
+        new CustomEntityController().registerEntity("Pig", 90, EntityPig.class, CustomEntityPig.class);
+        new CustomEntityController().registerEntity("Cow", 92, EntityCow.class, CustomEntityCow.class);
+        new CustomEntityController().registerEntity("Chicken", 93, EntityChicken.class, CustomEntityChicken.class);
+        new CustomEntityController().registerEntity("Bat", 65, EntityBat.class, CustomEntityBat.class);
+        new CustomEntityController().registerEntity("MushroomCow", 96, EntityMushroomCow.class, CustomEntityMooshroom.class);
+        new CustomEntityController().registerEntity("Ocelot", 98, EntityOcelot.class, CustomEntityOcelot.class);
 
         //Aggressive
-        new NMSUtils().registerEntity("Blaze", 61, EntityBlaze.class, Dummy_blaze.class);
-        new NMSUtils().registerEntity("CaveSpider", 59, EntityCaveSpider.class, Dummy_cave_spider.class);
-        new NMSUtils().registerEntity("Creeper", 50, EntityCreeper.class, Dummy_creeper.class);
-        new NMSUtils().registerEntity("SilverFish", 60, EntitySilverfish.class, Dummy_silverfish.class);
-        new NMSUtils().registerEntity("Skeleton", 51, EntitySkeleton.class, Dummy_skeleton.class);
-        new NMSUtils().registerEntity("Zombie", 54, EntityZombie.class, Dummy_zombie.class);
-        new NMSUtils().registerEntity("PigZombie", 57, EntityPigZombie.class, Dummy_zombiepigmen.class);
+        new CustomEntityController().registerEntity("Blaze", 61, EntityBlaze.class, CustomEntityBlaze.class);
+        new CustomEntityController().registerEntity("Creeper", 50, EntityCreeper.class, CustomEntityCreeper.class);
+        new CustomEntityController().registerEntity("SilverFish", 60, EntitySilverfish.class, CustomEntitySilverfish.class);
+        new CustomEntityController().registerEntity("Skeleton", 51, EntitySkeleton.class, CustomEntitySkeleton.class);
+        new CustomEntityController().registerEntity("Zombie", 54, EntityZombie.class, CustomEntityZombie.class);
+        new CustomEntityController().registerEntity("PigZombie", 57, EntityPigZombie.class, CustomEntityPigZombie.class);
     }
 
     public void clearVillagers() {
@@ -179,7 +175,6 @@ public class Legacy extends JavaPlugin {
     public void setupDatabase() {
         try {
             database = MongoClient.connect(new DBAddress(getConfig().getString("database.host"), getConfig().getString("database.database-name")));
-            registerDatabase = MongoClient.connect(new DBAddress(getConfig().getString("database.host"), "breakmc"));
             this.getLogger().log(Level.INFO, "Sucessfully connected to MongoDB.");
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -189,10 +184,6 @@ public class Legacy extends JavaPlugin {
 
     public DB getDb() {
         return database;
-    }
-
-    public DB getRegisterDatabase() {
-        return registerDatabase;
     }
 
     public ProfileManager getProfileManager() {

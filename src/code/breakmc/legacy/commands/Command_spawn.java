@@ -19,7 +19,7 @@ public class Command_spawn extends BaseCommand {
 
     public Command_spawn() {
         super("spawn", null, CommandUsageBy.PlAYER);
-        setUsage("/<command>");
+        setUsage("&cImproper usage! /spawn");
         setMinArgs(0);
         setMaxArgs(1);
     }

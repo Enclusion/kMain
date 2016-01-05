@@ -2,9 +2,10 @@ package code.breakmc.legacy.teams;
 
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.utils.MessageManager;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
+@Setter
 public class Team implements Listener {
 
     String name;
@@ -25,78 +28,22 @@ public class Team implements Listener {
     List<UUID> members;
     Location hq;
     Location rally;
-    boolean friendlyFire;
+    boolean friendlyFireEnabled;
     String password;
     int valorPoints = 0;
     HashMap<UUID, BukkitRunnable> dontMove = new HashMap<>();
 
-    public Team(String name, List<UUID> managers, List<UUID> members, Location hq, Location rally, boolean friendlyFire, String password, int valorPoints) {
+    public Team(String name, List<UUID> managers, List<UUID> members, Location hq, Location rally, boolean friendlyFireEnabled, String password, int valorPoints) {
         this.name = name;
         this.managers = managers;
         this.members = members;
         this.hq = hq;
         this.rally = rally;
-        this.friendlyFire = friendlyFire;
+        this.friendlyFireEnabled = friendlyFireEnabled;
         this.password = password;
         this.valorPoints = valorPoints;
 
         Bukkit.getServer().getPluginManager().registerEvents(this, Legacy.getInstance());
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<UUID> getManagers() {
-        return managers;
-    }
-
-    public List<UUID> getMembers() {
-        return members;
-    }
-
-    public Location getHq() {
-        return hq;
-    }
-
-    public Location getRally() {
-        return rally;
-    }
-
-    public boolean isFriendlyFireEnabled() {
-        return friendlyFire;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public int getValorPoints() {
-        return valorPoints;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setHq(Location hq) {
-        this.hq = hq;
-    }
-
-    public void setRally(Location rally) {
-        this.rally = rally;
-    }
-
-    public void setFriendlyFire(boolean friendlyFire) {
-        this.friendlyFire = friendlyFire;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setValorPoints(int valorPoints) {
-        this.valorPoints = valorPoints;
     }
 
     public boolean isManager(UUID id) {
@@ -131,27 +78,12 @@ public class Team implements Listener {
     public void getExtraInformation(UUID id) {
         MessageManager.sendMessage(id, "&3&m***&r &b" + getName() + " &3&m***&r");
         MessageManager.sendMessage(id, "&3Valor Points&7: &b" + getValorPoints());
-        if (getPassword().equalsIgnoreCase("")) {
-            MessageManager.sendMessage(id, "&3Password&7: &cUnset");
-        } else {
-            MessageManager.sendMessage(id, "&3Password&7: &b" + getPassword());
-        }
-        if (getHq() == null) {
-            MessageManager.sendMessage(id, "&3Team HQ&7: &cUnset");
-        } else {
-            MessageManager.sendMessage(id, "&3Team HQ&7: &bSet");
-        }
-        if (getRally() == null) {
-            MessageManager.sendMessage(id, "&3Team Rally&7: &cUnset");
-        } else {
-            MessageManager.sendMessage(id, "&3Team Rally&7: &bSet");
-        }
-        if (!isFriendlyFireEnabled()) {
-            MessageManager.sendMessage(id, "&3Friendly Fire&7: &aOff");
-        } else {
-            MessageManager.sendMessage(id, "&3Friendly Fire&7: &cOn");
-        }
+        MessageManager.sendMessage(id, "&3Password&7: " + (!getPassword().equalsIgnoreCase("") ? "&b" + getPassword() : "&cUnset"));
+        MessageManager.sendMessage(id, "&3Team HQ&7: " + (getHq() != null ? "&aSet" : "&cUnset"));
+        MessageManager.sendMessage(id, "&3Team Rally&7: " + (getRally() != null ? "&aSet" : "&cUnset"));
+        MessageManager.sendMessage(id, "&3Friendly Fire&7: " + (!isFriendlyFireEnabled() ? "&aOff" : "&cOn"));
         MessageManager.sendMessage(id, "&3Members &7(" + (getMembers().size() + getManagers().size()) + "/30):");
+
         for (UUID ids : getManagers()) {
             if (Bukkit.getPlayer(ids) != null) {
                 MessageManager.sendMessage(id, "&a\u2022 &b" + Bukkit.getPlayer(ids).getName() + formatHealth(Bukkit.getPlayer(ids).getHealth()));
@@ -159,6 +91,7 @@ public class Team implements Listener {
                 MessageManager.sendMessage(id, "&c\u2022 &b" + Bukkit.getOfflinePlayer(ids).getName());
             }
         }
+
         for (UUID ids : getMembers()) {
             if (Bukkit.getPlayer(ids) != null) {
                 MessageManager.sendMessage(id, "&a\u2022 &7" + Bukkit.getPlayer(ids).getName() + formatHealth(Bukkit.getPlayer(ids).getHealth()));
@@ -172,6 +105,7 @@ public class Team implements Listener {
         MessageManager.sendMessage(id, "&3&m***&r &b" + getName() + " &3&m***&r");
         MessageManager.sendMessage(id, "&3Valor Points&7: &b" + getValorPoints());
         MessageManager.sendMessage(id, "&3Members &7(" + (getMembers().size() + getManagers().size()) + "/30):");
+
         for (UUID ids : getManagers()) {
             if (Bukkit.getPlayer(ids) != null) {
                 MessageManager.sendMessage(id, "&a\u2022 &b" + Bukkit.getPlayer(ids).getName() + formatHealth(Bukkit.getPlayer(ids).getHealth()));
@@ -179,6 +113,7 @@ public class Team implements Listener {
                 MessageManager.sendMessage(id, "&c\u2022 &b" + Bukkit.getOfflinePlayer(ids).getName());
             }
         }
+
         for (UUID ids : getMembers()) {
             if (Bukkit.getPlayer(ids) != null) {
                 MessageManager.sendMessage(id, "&a\u2022 &7" + Bukkit.getPlayer(ids).getName() + formatHealth(Bukkit.getPlayer(ids).getHealth()));

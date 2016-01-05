@@ -1,13 +1,15 @@
 package code.breakmc.legacy.utils.mobs;
 
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_7_R4.EntityZombie;
+import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
+import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 
 import java.lang.reflect.Field;
 
-public class Dummy_cow extends EntityCow {
+public class CustomEntityZombie extends EntityZombie {
 
-    public Dummy_cow(World world) {
+    public CustomEntityZombie(World world) {
         super(world);
 
         try {
@@ -23,7 +25,4 @@ public class Dummy_cow extends EntityCow {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public void a(Entity ent, float f) {}
 }

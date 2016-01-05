@@ -1,10 +1,8 @@
 package code.breakmc.legacy.commands;
 
-import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.utils.MessageManager;
 import code.breakmc.legacy.utils.command.BaseCommand;
 import code.breakmc.legacy.utils.command.CommandUsageBy;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -21,7 +19,7 @@ public class Command_toggledm extends BaseCommand implements Listener {
 
     public Command_toggledm() {
         super("toggledm", null, CommandUsageBy.PlAYER, "tdm", "dm");
-        setUsage("/<command>");
+        setUsage("&cImproper usage! /toggledm");
         setMinArgs(0);
         setMaxArgs(0);
     }

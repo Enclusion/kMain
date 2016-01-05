@@ -18,7 +18,7 @@ public class Command_go extends BaseCommand {
 
     public Command_go() {
         super("go", null, CommandUsageBy.PlAYER, "warp");
-        setUsage("/<command> help");
+        setUsage("&cImproper usage! /go help");
         setMinArgs(0);
         setMaxArgs(2);
     }
@@ -28,7 +28,17 @@ public class Command_go extends BaseCommand {
         Player p = (Player) sender;
 
         if (args.length == 0) {
-            wm.listWarps(p.getUniqueId());
+            if (wm.getWarps().get(p.getUniqueId()).size() > 0) {
+                wm.listWarps(p.getUniqueId());
+            } else {
+                MessageManager.sendMessage(p, "&7&m--------------&r &bWarps &7&m--------------");
+                MessageManager.sendMessage(p, "&a/go &7- Lists your warps.");
+                MessageManager.sendMessage(p, "&a/go list &7- Lists your warps");
+                MessageManager.sendMessage(p, "&a/go set &b(name) &7- Sets a warp at your location.");
+                MessageManager.sendMessage(p, "&a/go del &b(name) &7- Deletes the warp.");
+                MessageManager.sendMessage(p, "&7&m----------------------------------");
+                return;
+            }
         }
 
         if (args.length == 1) {

@@ -15,7 +15,7 @@ public class Command_lag extends BaseCommand {
         super("lag", null, CommandUsageBy.ANYONE);
         setUsage("&cImproper usage! /lag");
         setMinArgs(0);
-        setMaxArgs(12311);
+        setMaxArgs(0);
 
     }
 

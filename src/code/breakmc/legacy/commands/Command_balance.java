@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class Command_balance extends BaseCommand {
 
     public Command_balance() {
         super("balance", null, CommandUsageBy.PlAYER, "bal", "money", "dinero");
-        setUsage("&c/balance");
+        setUsage("&cImproper usage! /bal");
         setMinArgs(0);
         setMaxArgs(1);
     }
@@ -54,11 +53,7 @@ public class Command_balance extends BaseCommand {
                         MessageManager.sendMessage(p, "&7&m***&r &3Top 10 Players &7&m***");
 
                         Object[] a = map.entrySet().toArray();
-                        Arrays.sort(a, new Comparator() {
-                            public int compare(Object o1, Object o2) {
-                                return ((Map.Entry<String, Double>) o2).getValue().compareTo(((Map.Entry<String, Double>) o1).getValue());
-                            }
-                        });
+                        Arrays.sort(a, (o1, o2) -> ((Map.Entry<String, Double>) o2).getValue().compareTo(((Map.Entry<String, Double>) o1).getValue()));
 
                         int topten = 0;
                         for (Object e : a) {
@@ -71,13 +66,7 @@ public class Command_balance extends BaseCommand {
                     }
                 }.runTaskAsynchronously(main);
             } else {
-                Profile tprof = null;
-
-                for (Profile prof : pm.getLoadedProfiles()) {
-                    if (prof.getName().equalsIgnoreCase(args[0])) {
-                        tprof = prof;
-                    }
-                }
+                Profile tprof = pm.getProfile(args[0]);
 
                 if (tprof == null) {
                     MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");

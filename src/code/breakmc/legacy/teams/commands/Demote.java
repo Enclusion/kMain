@@ -1,20 +1,20 @@
 package code.breakmc.legacy.teams.commands;
 
 import code.breakmc.legacy.Legacy;
+import code.breakmc.legacy.profiles.Profile;
+import code.breakmc.legacy.profiles.ProfileManager;
 import code.breakmc.legacy.teams.Team;
 import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.teams.TeamSubCommand;
 import code.breakmc.legacy.utils.MessageManager;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 public class Demote extends TeamSubCommand {
 
     private TeamManager tm = Legacy.getInstance().getTeamManager();
+    private ProfileManager pm = Legacy.getInstance().getProfileManager();
     
     public Demote() {
         super("demote", true, Arrays.asList("d"));
@@ -39,37 +39,37 @@ public class Demote extends TeamSubCommand {
             return;
         }
 
-        OfflinePlayer op = Bukkit.getOfflinePlayer(args[0]);
+        Profile prof = pm.getProfile(args[0]);
 
-        if (op == null) {
-            MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found!");
+        if (prof == null) {
+            MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
             return;
         }
 
-        if (!tm.hasTeam(op.getUniqueId())) {
-            MessageManager.sendMessage(p, "&c\"" + op.getName() + "\" is not in a team!");
+        if (!tm.hasTeam(prof.getUniqueId())) {
+            MessageManager.sendMessage(p, "&c\"" + prof.getName() + "\" is not in a team!");
             return;
         }
 
-        if (!tm.getTeam(op.getUniqueId()).equals(team)) {
-            MessageManager.sendMessage(p, "&c\"" + op.getName() + "\" is not in your team!");
+        if (!tm.getTeam(prof.getUniqueId()).equals(team)) {
+            MessageManager.sendMessage(p, "&c\"" + prof.getName() + "\" is not in your team!");
             return;
         }
 
-        if (!team.getManagers().contains(op.getUniqueId())) {
-            MessageManager.sendMessage(p, "&c\"" + op.getName() + "\" is already a member!");
+        if (!team.getManagers().contains(prof.getUniqueId())) {
+            MessageManager.sendMessage(p, "&c\"" + prof.getName() + "\" is already a member!");
             return;
         }
 
-        if (op.getName().equalsIgnoreCase(p.getName())) {
+        if (prof.getName().equalsIgnoreCase(p.getName())) {
             MessageManager.sendMessage(p, "&cYou cannot demote yourself!");
             return;
         }
 
-        team.getMembers().add(op.getUniqueId());
-        team.getManagers().remove(op.getUniqueId());
+        team.getMembers().add(prof.getUniqueId());
+        team.getManagers().remove(prof.getUniqueId());
 
 
-        team.sendMessage("&b" + op.getName() + " &3was demoted by&b " + p.getName() + "&3!");
+        team.sendMessage("&b" + prof.getName() + " &3was demoted by&b " + p.getName() + "&3!");
     }
 }

@@ -1,13 +1,15 @@
 package code.breakmc.legacy.utils.mobs;
 
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_7_R4.EntityBat;
+import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
+import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 
 import java.lang.reflect.Field;
 
-public class Dummy_bat extends EntityBat {
+public class CustomEntityBat extends EntityBat {
 
-    public Dummy_bat(World world) {
+    public CustomEntityBat(World world) {
         super(world);
 
         try {

@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +26,7 @@ public class Command_baltop extends BaseCommand {
 
     public Command_baltop() {
         super("balancetop", null, CommandUsageBy.ANYONE, "baltop", "moneytop", "dinerotop");
-        setUsage("/<command>");
+        setUsage("&cImproper usage! /baltop");
         setMinArgs(0);
         setMaxArgs(0);
     }

@@ -1,6 +1,8 @@
 package code.breakmc.legacy.teams.commands;
 
 import code.breakmc.legacy.Legacy;
+import code.breakmc.legacy.profiles.Profile;
+import code.breakmc.legacy.profiles.ProfileManager;
 import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.teams.TeamSubCommand;
 import code.breakmc.legacy.utils.MessageManager;
@@ -12,6 +14,7 @@ import java.util.Arrays;
 public class Info extends TeamSubCommand {
 
     private TeamManager tm = Legacy.getInstance().getTeamManager();
+    private ProfileManager pm = Legacy.getInstance().getProfileManager();
 
     public Info() {
         super("info", Arrays.asList("i"));
@@ -34,19 +37,19 @@ public class Info extends TeamSubCommand {
         }
 
         if (args.length == 1) {
-            if (Bukkit.getPlayer(args[0]) == null) {
-                MessageManager.sendMessage(p, "&cCould not find player \"" + args[0] + "\"!");
+            Profile prof = pm.getProfile(args[0]);
+
+            if (prof == null) {
+                MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
                 return;
             }
 
-            Player target = Bukkit.getPlayer(args[0]);
-
-            if (!tm.hasTeam(target.getUniqueId())) {
+            if (!tm.hasTeam(prof.getUniqueId())) {
                 MessageManager.sendMessage(p, "&c\"" + Bukkit.getPlayer(args[0]).getName() + "\" is not in a team!");
                 return;
             }
 
-            tm.getTeam(target.getUniqueId()).getInformation(p.getUniqueId());
+            tm.getTeam(prof.getUniqueId()).getInformation(p.getUniqueId());
         }
     }
 }

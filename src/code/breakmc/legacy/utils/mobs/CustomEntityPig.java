@@ -1,15 +1,16 @@
 package code.breakmc.legacy.utils.mobs;
 
-import net.minecraft.server.v1_7_R4.EntityZombie;
+import net.minecraft.server.v1_7_R4.Entity;
+import net.minecraft.server.v1_7_R4.EntityPig;
 import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R4.World;
 import org.bukkit.craftbukkit.v1_7_R4.util.UnsafeList;
 
 import java.lang.reflect.Field;
 
-public class Dummy_zombie extends EntityZombie {
+public class CustomEntityPig extends EntityPig {
 
-    public Dummy_zombie(World world) {
+    public CustomEntityPig(World world) {
         super(world);
 
         try {
@@ -25,4 +26,7 @@ public class Dummy_zombie extends EntityZombie {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void a(Entity ent, float f) {}
 }

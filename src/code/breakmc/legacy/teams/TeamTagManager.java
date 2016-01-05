@@ -180,34 +180,6 @@ public class TeamTagManager {
             e.printStackTrace();
         }
     }
-//
-//    public String getMainColor(Player p) {
-//        if (p.isOp()) {
-//            return "&4";
-//        } else {
-//            if (p.hasPermission("tag.member")) {
-//                return "&7";
-//            } else if (p.hasPermission("tag.premium")) {
-//                return "&9";
-//            } else if (p.hasPermission("tag.vip")) {
-//                return "&2";
-//            } else if (p.hasPermission("tag.pro")) {
-//                return "&6";
-//            } else if (p.hasPermission("tag.legend")) {
-//                return "&a";
-//            } else if (p.hasPermission("tag.master")) {
-//                return "&e";
-//            } else if (p.hasPermission("tag.infamous")) {
-//                return "&d&l";
-//            } else if (p.hasPermission("tag.advanced")) {
-//                return "&b&l";
-//            } else if (p.hasPermission("tag.extreme")) {
-//                return "&6&l";
-//            } else {
-//                return "&7";
-//            }
-//        }
-//    }
 
     public HashMap<String, HashMap<String, TeamInfo>> getTeamMap() {
         return teamMap;

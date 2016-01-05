@@ -24,12 +24,13 @@ public class ScoreboardTeamPacketMod {
     public ScoreboardTeamPacketMod(String name, String prefix, String suffix, Collection players, int paramInt) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, NoSuchFieldException, InvocationTargetException {
         this.packet = packetType.newInstance();
         this.setField("a", name);
-        this.setField("f", Integer.valueOf(paramInt));
+        this.setField("f", paramInt);
+
         if (paramInt == 0 || paramInt == 2) {
             this.setField("b", name);
             this.setField("c", prefix);
             this.setField("d", suffix);
-            this.setField("g", Integer.valueOf(3));
+            this.setField("g", 3);
         }
 
         if (paramInt == 0) {
@@ -40,25 +41,26 @@ public class ScoreboardTeamPacketMod {
 
     public ScoreboardTeamPacketMod(String name, Collection players, int paramInt) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, NoSuchFieldException, InvocationTargetException {
         this.packet = packetType.newInstance();
+
         if (paramInt != 3 && paramInt != 4) {
             throw new IllegalArgumentException("Method must be join or leave for player constructor");
         } else {
-            if (players == null || ((Collection) players).isEmpty()) {
+            if (players == null || (players).isEmpty()) {
                 players = new ArrayList();
             }
 
-            this.setField("g", Integer.valueOf(3));
+            this.setField("g", 3);
             this.setField("a", name);
-            this.setField("f", Integer.valueOf(paramInt));
-            this.addAll((Collection) players);
+            this.setField("f", paramInt);
+            this.addAll(players);
         }
     }
 
     public void sendToPlayer(Player bukkitPlayer) {
         try {
-            Object ex = getHandle.invoke(bukkitPlayer, new Object[0]);
+            Object ex = getHandle.invoke(bukkitPlayer);
             Object connection = playerConnection.get(ex);
-            sendPacket.invoke(connection, new Object[]{this.packet});
+            sendPacket.invoke(connection, this.packet);
         } catch (Exception var4) {
             var4.printStackTrace();
         }
@@ -89,9 +91,9 @@ public class ScoreboardTeamPacketMod {
             Class e = Class.forName(ReflectionUtils.getCraftPlayerClasspath());
             Class typeNMSPlayer = Class.forName(ReflectionUtils.getNMSPlayerClasspath());
             Class typePlayerConnection = Class.forName(ReflectionUtils.getPlayerConnectionClasspath());
-            getHandle = e.getMethod("getHandle", new Class[0]);
+            getHandle = e.getMethod("getHandle");
             playerConnection = typeNMSPlayer.getField("playerConnection");
-            sendPacket = typePlayerConnection.getMethod("sendPacket", new Class[]{Class.forName(ReflectionUtils.getPacketClasspath())});
+            sendPacket = typePlayerConnection.getMethod("sendPacket", Class.forName(ReflectionUtils.getPacketClasspath()));
         } catch (Exception var3) {
             System.out.println("Failed to setup reflection for Packet209Mod!");
             var3.printStackTrace();

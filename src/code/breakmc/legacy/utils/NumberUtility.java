@@ -4,9 +4,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Random;
 
-/**
- * Created by Charles Macoy on 2/18/2015.
- */
 public class NumberUtility {
 
     /**

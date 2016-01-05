@@ -1,12 +1,13 @@
 package code.breakmc.legacy.teams.commands;
 
 import code.breakmc.legacy.Legacy;
+import code.breakmc.legacy.profiles.Profile;
+import code.breakmc.legacy.profiles.ProfileManager;
 import code.breakmc.legacy.teams.Team;
 import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.teams.TeamSubCommand;
 import code.breakmc.legacy.utils.MessageManager;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -15,7 +16,8 @@ import java.util.UUID;
 public class Kick extends TeamSubCommand {
 
     private TeamManager tm = Legacy.getInstance().getTeamManager();
-    
+    private ProfileManager pm = Legacy.getInstance().getProfileManager();
+
     public Kick() {
         super("kick", true, Arrays.asList("k"), false);
     }
@@ -39,64 +41,43 @@ public class Kick extends TeamSubCommand {
             return;
         }
 
-        if (Bukkit.getPlayer(args[0]) != null) {
-            Player target = Bukkit.getPlayer(args[0]);
+        Profile prof = pm.getProfile(args[0]);
 
-            if (!tm.hasTeam(target.getUniqueId())) {
-                MessageManager.sendMessage(p, "&c\"" + target.getName() + "\" is not in your team!");
-                return;
-            }
+        if (prof == null) {
+            MessageManager.sendMessage(p, "&cPlayer \"" + args[0] + "\" could not be found.");
+            return;
+        }
 
-            if (!tm.getTeam(target.getUniqueId()).equals(team)) {
-                MessageManager.sendMessage(p, "&c\"" + target.getName() + "\" is not in your team!");
-                return;
-            }
+        if (!tm.hasTeam(prof.getUniqueId())) {
+            MessageManager.sendMessage(p, "&c\"" + prof.getName() + "\" is not in your team!");
+            return;
+        }
 
-            if (team.getMembers().contains(target.getUniqueId())) {
-                team.getMembers().remove(target.getUniqueId());
-            } else {
-                team.getManagers().remove(target.getUniqueId());
-            }
+        if (!tm.getTeam(prof.getUniqueId()).equals(team)) {
+            MessageManager.sendMessage(p, "&c\"" + prof.getName() + "\" is not in your team!");
+            return;
+        }
 
-            MessageManager.sendMessage(target, "&3You have been kicked from &b" + team.getName() + "&3!");
-            team.sendMessage("&b" + p.getName() + " &3has kicked&b " + target.getName() + " &3from the team!");
-
-            Legacy.getInstance().getTeamTagManager().reloadPlayer(p);
-
-            for (UUID id : team.getMembers()) {
-                if (Bukkit.getPlayer(id) != null) {
-                    Legacy.getInstance().getTeamTagManager().reloadPlayer(Bukkit.getPlayer(id));
-                }
-            }
-
-            for (UUID id : team.getManagers()) {
-                if (Bukkit.getPlayer(id) != null) {
-                    Legacy.getInstance().getTeamTagManager().reloadPlayer(Bukkit.getPlayer(id));
-                }
-            }
+        if (team.getMembers().contains(prof.getUniqueId())) {
+            team.getMembers().remove(prof.getUniqueId());
         } else {
-            if (Bukkit.getOfflinePlayer(args[0]) != null) {
-                OfflinePlayer op = Bukkit.getOfflinePlayer(args[0]);
+            team.getManagers().remove(prof.getUniqueId());
+        }
 
-                if (!tm.hasTeam(op.getUniqueId())) {
-                    MessageManager.sendMessage(p, "&c\"" + op.getName() + "\" is not in your team!");
-                    return;
-                }
+        MessageManager.sendMessage(prof.getUniqueId(), "&3You have been kicked from &b" + team.getName() + "&3!");
+        team.sendMessage("&b" + p.getName() + " &3has kicked&b " + prof.getName() + " &3from the team!");
 
-                if (!tm.getTeam(op.getUniqueId()).equals(team)) {
-                    MessageManager.sendMessage(p, "&c\"" + op.getName() + "\" is not in your team!");
-                    return;
-                }
+        Legacy.getInstance().getTeamTagManager().reloadPlayer(p);
 
-                if (team.getMembers().contains(op.getUniqueId())) {
-                    team.getMembers().remove(op.getUniqueId());
-                } else {
-                    team.getManagers().remove(op.getUniqueId());
-                }
-                MessageManager.sendMessage(op.getUniqueId(), "&3You have been kicked from &b" + team.getName() + "&3!");
-                team.sendMessage("&b" + p.getName() + " &3has kicked &b" + op.getName() + " &3from the team!");
-            } else {
-                MessageManager.sendMessage(p, "&c" + args[0] + " could not be found!");
+        for (UUID id : team.getMembers()) {
+            if (Bukkit.getPlayer(id) != null) {
+                Legacy.getInstance().getTeamTagManager().reloadPlayer(Bukkit.getPlayer(id));
+            }
+        }
+
+        for (UUID id : team.getManagers()) {
+            if (Bukkit.getPlayer(id) != null) {
+                Legacy.getInstance().getTeamTagManager().reloadPlayer(Bukkit.getPlayer(id));
             }
         }
     }

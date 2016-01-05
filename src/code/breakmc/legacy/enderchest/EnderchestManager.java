@@ -7,6 +7,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -69,7 +70,7 @@ public class EnderchestManager {
             BasicDBObject dbo = (BasicDBObject) dbc1.next();
             String invstring = dbo.getString("inventory");
 
-            Inventory inv = Bukkit.createInventory(p, 27, "§5Enderchest");
+            Inventory inv = Bukkit.createInventory(p, 27, ChatColor.DARK_PURPLE + "Enderchest");
             InventorySerialization.setInventory(inv, invstring);
 
             return inv;
@@ -84,7 +85,7 @@ public class EnderchestManager {
             BasicDBObject dbo = (BasicDBObject) dbc1.next();
             String invstring = dbo.getString("inventory");
 
-            Inventory inv = Bukkit.createInventory(null, 27, "§5Enderchest");
+            Inventory inv = Bukkit.createInventory(null, 27, ChatColor.DARK_PURPLE + "Enderchest");
             InventorySerialization.setInventory(inv, invstring);
 
             return inv;

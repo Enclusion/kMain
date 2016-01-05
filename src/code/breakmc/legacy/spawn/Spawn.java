@@ -3,6 +3,8 @@ package code.breakmc.legacy.spawn;
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.utils.MessageManager;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -13,39 +15,23 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashMap;
 import java.util.UUID;
 
-/**
- * Created by Calvin on 4/27/2015.
- * Project: Legacy
- */
+@Getter
+@Setter
 public class Spawn {
 
     private HashMap<UUID, BukkitRunnable> dontMove = new HashMap<>();
     private int radius;
     private int height;
-    private int stoneradius;
-    private int stoneheight;
+    private int stoneRadius;
+    private int stoneHeight;
 
-    public Spawn(int radius, int height, int stoneradius, int stoneheight) {
+    public Spawn(int radius, int height, int stoneRadius, int stoneHeight) {
         this.radius = radius;
         this.height = height;
-        this.stoneradius = stoneradius;
-        this.stoneheight = stoneheight;
+        this.stoneRadius = stoneRadius;
+        this.stoneHeight = stoneHeight;
 
         Bukkit.getServer().getWorld("world").setSpawnLocation(0, height, 0);
-    }
-
-    public int getRadius() {
-        return radius;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getStoneRadius() { return stoneradius; }
-
-    public int getStoneHeight() {
-        return stoneheight;
     }
 
     public boolean isInSpawnRadius(Location location) {
@@ -53,7 +39,7 @@ public class Spawn {
     }
 
     public boolean isInStoneRadius(Location location) {
-        return location.getWorld().getEnvironment() == World.Environment.NORMAL && (location.getBlockX() < stoneradius + 1) && (location.getBlockX() > -stoneradius - 1) && (location.getBlockZ() < stoneradius + 1) && (location.getBlockZ() >= -stoneradius - 1);
+        return location.getWorld().getEnvironment() == World.Environment.NORMAL && (location.getBlockX() < stoneRadius + 1) && (location.getBlockX() > -stoneRadius - 1) && (location.getBlockZ() < stoneRadius + 1) && (location.getBlockZ() >= -stoneRadius - 1);
     }
 
     public boolean isInNetherRadius(Location location) {

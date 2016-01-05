@@ -23,24 +23,24 @@ public class StrengthListener implements Listener {
                         int level = effect.getAmplifier() + 1;
 
                         double newDamage = event.getDamage(EntityDamageEvent.DamageModifier.BASE) / (level * 1.3D + 1.0D) + 2 * level;
-
                         double damagePercent = newDamage / event.getDamage(EntityDamageEvent.DamageModifier.BASE);
+
                         try {
                             event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, event.getDamage(EntityDamageEvent.DamageModifier.ARMOR) * damagePercent);
-                        } catch (Exception localException) {
-                        }
+                        } catch (Exception ignored) {}
+
                         try {
                             event.setDamage(EntityDamageEvent.DamageModifier.MAGIC, event.getDamage(EntityDamageEvent.DamageModifier.MAGIC) * damagePercent);
-                        } catch (Exception localException1) {
-                        }
+                        } catch (Exception ignored) {}
+
                         try {
                             event.setDamage(EntityDamageEvent.DamageModifier.RESISTANCE, event.getDamage(EntityDamageEvent.DamageModifier.RESISTANCE) * damagePercent);
-                        } catch (Exception localException2) {
-                        }
+                        } catch (Exception ignored) {}
+
                         try {
                             event.setDamage(EntityDamageEvent.DamageModifier.BLOCKING, event.getDamage(EntityDamageEvent.DamageModifier.BLOCKING) * damagePercent);
-                        } catch (Exception localException3) {
-                        }
+                        } catch (Exception ignored) {}
+
                         event.setDamage(EntityDamageEvent.DamageModifier.BASE, newDamage);
                         break;
                     }
