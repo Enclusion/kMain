@@ -1,13 +1,13 @@
 package code.breakmc.legacy.teams;
 
 import code.breakmc.legacy.Legacy;
+import code.breakmc.legacy.profiles.Profile;
+import code.breakmc.legacy.profiles.ProfileManager;
 import code.breakmc.legacy.teams.commands.*;
 import code.breakmc.legacy.utils.MessageManager;
 import code.breakmc.legacy.utils.PlayerUtility;
 import code.breakmc.legacy.utils.command.BaseCommand;
 import code.breakmc.legacy.utils.command.CommandUsageBy;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -19,6 +19,7 @@ public class BaseTeamCommand extends BaseCommand {
 
     private Legacy main = Legacy.getInstance();
     private TeamManager tm = main.getTeamManager();
+    private ProfileManager pm = main.getProfileManager();
     private List<TeamSubCommand> commands = new LinkedList<>();
 
     List<String> list = Arrays.asList("create", "join", "leave", "info", "roster", "chat", "hq", "rally", "ff", "password", "kick", "promote", "demote", "sethq", "setrally", "list");
@@ -189,9 +190,9 @@ public class BaseTeamCommand extends BaseCommand {
                     List<String> list2return = new ArrayList<>();
                     Team t = tm.getTeam(p.getUniqueId());
                     for (UUID id : t.getMembers()) {
-                        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-                        if (op.getName().toLowerCase().startsWith(args[1])) {
-                            list2return.add(op.getName());
+                        Profile prof = pm.getProfile(id);
+                        if (prof.getName().toLowerCase().startsWith(args[1])) {
+                            list2return.add(prof.getName());
                         }
                     }
                     Collections.sort(list2return);
@@ -202,11 +203,12 @@ public class BaseTeamCommand extends BaseCommand {
                     List<String> list2return = new ArrayList<>();
                     Team t = tm.getTeam(p.getUniqueId());
                     for (UUID id : t.getManagers()) {
-                        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-                        if (op.getName().toLowerCase().startsWith(args[1])) {
-                            list2return.add(op.getName());
+                        Profile prof = pm.getProfile(id);
+                        if (prof.getName().toLowerCase().startsWith(args[1])) {
+                            list2return.add(prof.getName());
                         }
                     }
+
                     Collections.sort(list2return);
                     return list2return;
                 }
@@ -215,15 +217,15 @@ public class BaseTeamCommand extends BaseCommand {
                     List<String> list2return = new ArrayList<>();
                     Team t = tm.getTeam(p.getUniqueId());
                     for (UUID id : t.getManagers()) {
-                        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-                        if (op.getName().toLowerCase().startsWith(args[1])) {
-                            list2return.add(op.getName());
+                        Profile prof = pm.getProfile(id);
+                        if (prof.getName().toLowerCase().startsWith(args[1])) {
+                            list2return.add(prof.getName());
                         }
                     }
                     for (UUID id : t.getMembers()) {
-                        OfflinePlayer op = Bukkit.getOfflinePlayer(id);
-                        if (op.getName().toLowerCase().startsWith(args[1])) {
-                            list2return.add(op.getName());
+                        Profile prof = pm.getProfile(id);
+                        if (prof.getName().toLowerCase().startsWith(args[1])) {
+                            list2return.add(prof.getName());
                         }
                     }
                     Collections.sort(list2return);
