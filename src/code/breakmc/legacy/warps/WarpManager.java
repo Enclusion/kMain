@@ -4,6 +4,7 @@ import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.utils.LocationSerialization;
 import code.breakmc.legacy.utils.MessageManager;
+import com.breakmc.pure.Pure;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.mongodb.BasicDBObject;
@@ -37,6 +38,13 @@ public class WarpManager {
 
     public WarpManager() {
         loadWarps();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                saveWarps();
+            }
+        }.runTaskTimerAsynchronously(main, 0L, 300*20L);
     }
 
     public void loadWarps() {
@@ -97,7 +105,7 @@ public class WarpManager {
         }
 
         if (warps.get(id) != null && warps.get(id).size() >= warpSize(p)) {
-            p.sendMessage("§cYou have set the max amount of warps!");
+            p.sendMessage("ï¿½cYou have set the max amount of warps!");
             return;
         }
 
@@ -110,7 +118,7 @@ public class WarpManager {
 
                     FancyMessage message = new FancyMessage(ChatColor.translateAlternateColorCodes('&', "&7Would you like to overwrite it? "));
                     message.then(ChatColor.GREEN + "/yes").command("/yes").tooltip(ChatColor.GREEN + "Yes");
-                    message.then(ChatColor.RED + "/no").command("/no").tooltip(ChatColor.RED + "No");
+                    message.then(ChatColor.RED + "/no").command("/no").tooltip(ChatColor.RED + " No");
                     message.send(p);
 
                     final TempWarp tempwarp = new TempWarp(ws, loc);
@@ -332,6 +340,8 @@ public class WarpManager {
                 Player near = (Player) ent;
 
                 if (near.equals(p)) continue;
+
+                if (Pure.getInstance().getPunishmentManager().isVanished(near)) continue;
 
                 if (tm.hasTeam(near.getUniqueId()) && tm.hasTeam(p.getUniqueId())) {
                     if (!tm.getTeam(p.getUniqueId()).equals(tm.getTeam(near.getUniqueId()))) {

@@ -2,6 +2,7 @@ package code.breakmc.legacy.teams;
 
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.utils.MessageManager;
+import com.breakmc.pure.Pure;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -213,9 +214,9 @@ public class Team implements Listener {
             if (ent instanceof Player) {
                 Player near = (Player) ent;
 
-                if (near.equals(p)) {
-                    continue;
-                }
+                if (near.equals(p)) continue;
+
+                if (Pure.getInstance().getPunishmentManager().isVanished(near)) continue;
 
                 if (tm.getTeam(near.getUniqueId()) != null) {
                     if (!this.equals(tm.getTeam(near.getUniqueId()))) {

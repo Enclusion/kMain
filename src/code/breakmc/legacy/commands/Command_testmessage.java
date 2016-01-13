@@ -1,6 +1,5 @@
 package code.breakmc.legacy.commands;
 
-import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.utils.command.BaseCommand;
 import code.breakmc.legacy.utils.command.CommandUsageBy;
 import org.apache.commons.lang.StringUtils;
@@ -14,8 +13,6 @@ import org.bukkit.command.CommandSender;
  */
 public class Command_testmessage extends BaseCommand {
 
-    private Legacy main = Legacy.getInstance();
-
     public Command_testmessage() {
         super("testmessage", "legacy.testmessage", CommandUsageBy.PlAYER, "tm");
         setUsage("/<command> (message)");
@@ -26,7 +23,7 @@ public class Command_testmessage extends BaseCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length >= 1) {
-            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', StringUtils.join(args, ' ', 1, args.length)));
+            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', StringUtils.join(args, ' ', 0, args.length)));
         }
     }
 }

@@ -4,7 +4,6 @@ import code.BreakMC.origin.util.event.UpdateNameEvent;
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.teams.Team;
 import code.breakmc.legacy.teams.TeamManager;
-import code.breakmc.legacy.utils.moon.ScoreboardManager;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -19,13 +18,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-/**
- * Created by Calvin on 5/4/2015.
- */
 public class TeamListeners implements Listener {
 
     private TeamManager tm = Legacy.getInstance().getTeamManager();
-    private ScoreboardManager sbm = Legacy.getInstance().getScoreboardManager();
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
@@ -91,9 +86,14 @@ public class TeamListeners implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
 
-        Legacy.getInstance().getTeamTagManager().initPlayer(p);
-        Legacy.getInstance().getTeamTagManager().sendTeamsToPlayer(p);
-        Legacy.getInstance().getTeamTagManager().reloadPlayer(p);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Legacy.getInstance().getTeamTagManager().initPlayer(p);
+                Legacy.getInstance().getTeamTagManager().sendTeamsToPlayer(p);
+                Legacy.getInstance().getTeamTagManager().reloadPlayer(p);
+            }
+        }.runTaskAsynchronously(Legacy.getInstance());
 
         if (tm.hasTeam(p.getUniqueId())) {
             Team team = tm.getTeam(p.getUniqueId());
@@ -134,29 +134,6 @@ public class TeamListeners implements Listener {
                 team.sendMessage("&3Team Death&7: " + p.getName());
             }
         }
-
-//        if (e.getEntity().getKiller() != null) {
-//            Player killer =  e.getEntity().getKiller();
-//            Team kt = null;
-//            Team pt = null;
-//
-//            if (tm.hasTeam(killer.getUniqueId())) {
-//                kt = tm.getTeam(killer.getUniqueId());
-//            }
-//
-//            if (tm.hasTeam(p.getUniqueId())) {
-//                pt = tm.getTeam(p.getUniqueId());
-//            }
-//
-//            final Hologram holo = HologramsAPI.createHologram(Legacy.getInstance(), p.getEyeLocation());
-//            holo.appendTextLine(ChatColor.translateAlternateColorCodes('&', p.getPlayerListName() + " " + (pt != null ? "&7(&3" + pt.getName() + "&7)" : "") + " &7was slain by " + killer.getPlayerListName() + " " + (kt != null ? "&7(&3" + kt.getName() + "&7)" : "")));
-//
-//            new BukkitRunnable() {
-//                public void run() {
-//                    holo.delete();
-//                }
-//            }.runTaskLater(Legacy.getInstance(), 10 * 20);
-//        }
     }
 
     @EventHandler

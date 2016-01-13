@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 
@@ -21,6 +22,15 @@ public class EnderchestManager {
 
     private Legacy main = Legacy.getInstance();
     private DBCollection eCollection = main.getDb().getCollection("enderchest");
+
+    public EnderchestManager() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                saveEnderchest();
+            }
+        }.runTaskTimerAsynchronously(main, 0L, 300*20L);
+    }
 
     public void saveEnderchest() {
         for (Player all : PlayerUtility.getOnlinePlayers()) {

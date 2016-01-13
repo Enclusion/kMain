@@ -81,10 +81,10 @@ public class SpawnListeners implements Listener {
                 MessageManager.sendMessage(p, "&cYou cannot use this command within " + sm.getSpawn().getStoneHeight() + " blocks of spawn!");
             }
         } else {
-            if (e.getMessage().toLowerCase().contains("/sell") || e.getMessage().toLowerCase().contains("/buy")) {
+            if (e.getMessage().toLowerCase().contains("/buy")) {
                 if (sm.getSpawn().isInStoneRadius(p.getLocation()) && !sm.hasSpawnProt(p.getUniqueId())) {
                     e.setCancelled(true);
-                    MessageManager.sendMessage(p, "&cYou cannot use the economy within " + sm.getSpawn().getStoneRadius() + " blocks of spawn without spawn protection!");
+                    MessageManager.sendMessage(p, "&cYou cannot buy items within " + sm.getSpawn().getStoneRadius() + " blocks of spawn without spawn protection!");
                 }
             }
         }
@@ -168,7 +168,6 @@ public class SpawnListeners implements Listener {
                 p.teleport(new Location(p.getWorld(), 0.5, sm.getSpawn().getHeight(), 0.5));
                 sm.getSpawnProtected().add(p.getUniqueId());
                 MessageManager.sendMessage(p, "&7You have regained spawn protection!");
-                p.kickPlayer(ChatColor.GREEN + "Your permissions have been updated! You may now rejoin!");
             }
         } else {
             if (sm.getSpawn().isInSpawnRadius(p.getLocation()) && !CombatLogListener.loggers.containsKey(p.getUniqueId()) && CombatLogListener.loggers.get(p.getUniqueId()) == null) {

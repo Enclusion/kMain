@@ -7,6 +7,7 @@ import code.breakmc.legacy.utils.MessageManager;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -22,7 +23,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -43,36 +43,38 @@ public class CombatLogListener implements Listener {
 
         Profile profile = Legacy.getInstance().getProfileManager().getProfile(p.getUniqueId());
 
-        if (!profile.isSafeLogged() && !p.hasMetadata("logout") && !Legacy.getInstance().getSpawnManager().hasSpawnProt(p.getUniqueId())) {
-            final Villager villager = (Villager) p.getLocation().getWorld().spawnCreature(p.getLocation(), EntityType.VILLAGER);
-            villager.setAdult();
-            villager.setMaxHealth(p.getMaxHealth());
-            villager.setHealth(p.getHealth());
-            villager.setCustomName(ChatColor.AQUA + p.getName());
-            villager.setCustomNameVisible(true);
-            villager.setFireTicks(p.getFireTicks());
-            p.getActivePotionEffects().forEach(villager::addPotionEffect);
-            villager.setCanPickupItems(false);
-            villager.setMetadata("logger", new FixedMetadataValue(Legacy.getInstance(), p.getUniqueId().toString()));
+        if (p.getGameMode() == GameMode.SURVIVAL) {
+            if (!profile.isSafeLogged() && !p.hasMetadata("logout") && !Legacy.getInstance().getSpawnManager().hasSpawnProt(p.getUniqueId())) {
+                final Villager villager = (Villager) p.getLocation().getWorld().spawnCreature(p.getLocation(), EntityType.VILLAGER);
+                villager.setAdult();
+                villager.setMaxHealth(p.getMaxHealth());
+                villager.setHealth(p.getHealth());
+                villager.setCustomName(ChatColor.AQUA + p.getName());
+                villager.setCustomNameVisible(true);
+                villager.setFireTicks(p.getFireTicks());
+                p.getActivePotionEffects().forEach(villager::addPotionEffect);
+                villager.setCanPickupItems(false);
+                villager.setMetadata("logger", new FixedMetadataValue(Legacy.getInstance(), p.getUniqueId().toString()));
 
-            loggers.put(p.getUniqueId(), villager);
-            inventories.get(p.getUniqueId()).add(p.getInventory().getContents());
-            inventories.get(p.getUniqueId()).add(p.getInventory().getArmorContents());
+                loggers.put(p.getUniqueId(), villager);
+                inventories.get(p.getUniqueId()).add(p.getInventory().getContents());
+                inventories.get(p.getUniqueId()).add(p.getInventory().getArmorContents());
 
-            if (villagerLog.containsKey(villager)) {
-                villagerLog.get(villager).cancel();
-            }
-
-            villagerLog.put(villager, new BukkitRunnable() {
-                public void run() {
-                    loggers.remove(villager.getMetadata("logger").get(0).value().toString());
-                    villager.removeMetadata("logger", Legacy.getInstance());
-                    villagerLog.remove(villager);
-                    villager.remove();
+                if (villagerLog.containsKey(villager)) {
+                    villagerLog.get(villager).cancel();
                 }
-            });
 
-            villagerLog.get(villager).runTaskLater(Legacy.getInstance(), 10 * 20L);
+                villagerLog.put(villager, new BukkitRunnable() {
+                    public void run() {
+                        loggers.remove(villager.getMetadata("logger").get(0).value().toString());
+                        villager.removeMetadata("logger", Legacy.getInstance());
+                        villagerLog.remove(villager);
+                        villager.remove();
+                    }
+                });
+
+                villagerLog.get(villager).runTaskLater(Legacy.getInstance(), 10 * 20L);
+            }
         }
     }
 

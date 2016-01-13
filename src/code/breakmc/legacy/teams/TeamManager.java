@@ -9,6 +9,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,6 +27,13 @@ public class TeamManager {
 
     public TeamManager() {
         loadTeams();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                saveTeams();
+            }
+        }.runTaskTimerAsynchronously(main, 0L, 300*20L);
     }
 
     public void loadTeams() {

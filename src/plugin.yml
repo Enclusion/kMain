@@ -2,7 +2,7 @@ main: code.breakmc.legacy.Legacy
 name: Legacy
 version: 1.0
 author: Young
-depends: [Origin, WorldEdit]
+depends: [Pure, Origin, WorldEdit]
 
 commands:
   buy:

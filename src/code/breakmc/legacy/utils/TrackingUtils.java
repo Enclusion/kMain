@@ -135,7 +135,6 @@ public class TrackingUtils {
             TrackDir(player, westDist * 25, 0, player2);
         }
         if (block.getType() == Material.OBSIDIAN) {
-            block.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getTypeId());
             block.breakNaturally(new ItemStack(Material.AIR));
         }
     }
@@ -162,7 +161,6 @@ public class TrackingUtils {
         TrackDir(player, 300, 0, player2);
 
         if (block.getType() == Material.OBSIDIAN) {
-            block.getWorld().playEffect(block.getLocation(), Effect.STEP_SOUND, block.getTypeId());
             block.breakNaturally(new ItemStack(Material.AIR));
         }
     }

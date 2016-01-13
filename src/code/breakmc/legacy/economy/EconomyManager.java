@@ -25,9 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-/**
- * Created by Calvin on 5/20/2015.
- */
 public class EconomyManager implements CommandExecutor {
 
     private Legacy main = Legacy.getInstance();
@@ -464,11 +461,11 @@ public class EconomyManager implements CommandExecutor {
         try {
             amount = Integer.parseInt(amountString);
         } catch (NumberFormatException e) {
-            MessageManager.sendMessage(p, "&cThe amount must be a number.");
+            MessageManager.sendMessage(p, "&cImproper usage! /buy (item) (amount)");
         }
 
         if (amount < 1) {
-            MessageManager.sendMessage(p, "&cThe amount must be greater than 0.");
+            MessageManager.sendMessage(p, "&cImproper usage! /buy (item) (amount)");
             return null;
         }
 

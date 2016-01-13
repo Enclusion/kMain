@@ -6,7 +6,6 @@ import code.breakmc.legacy.profiles.ProfileManager;
 import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.teams.TeamSubCommand;
 import code.breakmc.legacy.utils.MessageManager;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -45,7 +44,7 @@ public class Info extends TeamSubCommand {
             }
 
             if (!tm.hasTeam(prof.getUniqueId())) {
-                MessageManager.sendMessage(p, "&c\"" + Bukkit.getPlayer(args[0]).getName() + "\" is not in a team!");
+                MessageManager.sendMessage(p, "&c\"" + prof.getName() + "\" is not in a team!");
                 return;
             }
 

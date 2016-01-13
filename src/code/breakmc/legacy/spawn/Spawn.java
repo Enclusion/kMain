@@ -3,6 +3,7 @@ package code.breakmc.legacy.spawn;
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.utils.MessageManager;
+import com.breakmc.pure.Pure;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -84,9 +85,9 @@ public class Spawn {
             if (ent instanceof Player) {
                 Player near = (Player) ent;
 
-                if (near.equals(p)) {
-                    continue;
-                }
+                if (near.equals(p)) continue;
+
+                if (Pure.getInstance().getPunishmentManager().isVanished(near)) continue;
 
                 if (tm.getTeam(near.getUniqueId()) != null && tm.getTeam(p.getUniqueId()) != null) {
                     if (!tm.getTeam(p.getUniqueId()).equals(tm.getTeam(near.getUniqueId()))) {

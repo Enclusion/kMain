@@ -2,7 +2,6 @@ package code.breakmc.legacy.kitviewer;
 
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.utils.MessageManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -12,9 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-/**
- * Created by Calvin on 5/8/2015.
- */
 public class KitListener implements Listener {
 
     @EventHandler

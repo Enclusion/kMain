@@ -1,6 +1,8 @@
 package code.breakmc.legacy;
 
 import code.breakmc.legacy.commands.*;
+import code.breakmc.legacy.duels.DuelListeners;
+import code.breakmc.legacy.duels.DuelManager;
 import code.breakmc.legacy.economy.EconomyListener;
 import code.breakmc.legacy.economy.EconomyManager;
 import code.breakmc.legacy.enderchest.EnderchestListener;
@@ -49,6 +51,7 @@ public class Legacy extends JavaPlugin {
     private EconomyManager economyManager;
     private SpawnManager spawnManager;
     private TeamManager teamManager;
+    private DuelManager duelManager;
     private ScoreboardManager scoreboardManager;
     private TeamTagManager teamtagManager;
     private WarpManager warpManager;
@@ -66,6 +69,7 @@ public class Legacy extends JavaPlugin {
         economyManager = new EconomyManager();
         spawnManager = new SpawnManager();
         teamManager = new TeamManager();
+        duelManager = new DuelManager();
         scoreboardManager = new ScoreboardManager();
         teamtagManager = new TeamTagManager();
         warpManager = new WarpManager();
@@ -126,6 +130,8 @@ public class Legacy extends JavaPlugin {
             register.registerCommand("homeas", new Command_homeas());
             register.registerCommand("kit", new Command_kit());
             register.registerCommand("setkit", new Command_setkit());
+            register.registerCommand("accept", new Command_accept());
+            register.registerCommand("duel", new Command_duel());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -147,6 +153,7 @@ public class Legacy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CombatLogListener(), this);
         getServer().getPluginManager().registerEvents(new EconomyListener(), this);
         getServer().getPluginManager().registerEvents(new Command_toggledm(), this);
+        getServer().getPluginManager().registerEvents(new DuelListeners(), this);
     }
 
     public void registerDummyEntities() {
@@ -156,7 +163,6 @@ public class Legacy extends JavaPlugin {
         new CustomEntityController().registerEntity("Cow", 92, EntityCow.class, CustomEntityCow.class);
         new CustomEntityController().registerEntity("Chicken", 93, EntityChicken.class, CustomEntityChicken.class);
         new CustomEntityController().registerEntity("Bat", 65, EntityBat.class, CustomEntityBat.class);
-        new CustomEntityController().registerEntity("MushroomCow", 96, EntityMushroomCow.class, CustomEntityMooshroom.class);
         new CustomEntityController().registerEntity("Ocelot", 98, EntityOcelot.class, CustomEntityOcelot.class);
 
         //Aggressive
@@ -212,6 +218,10 @@ public class Legacy extends JavaPlugin {
 
     public TeamManager getTeamManager() {
         return teamManager;
+    }
+
+    public DuelManager getDuelManager() {
+        return duelManager;
     }
 
     public ScoreboardManager getScoreboardManager() {

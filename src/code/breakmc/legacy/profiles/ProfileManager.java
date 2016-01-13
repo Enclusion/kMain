@@ -7,6 +7,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,6 +22,13 @@ public class ProfileManager {
 
     public ProfileManager() {
         loadProfiles();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                saveProfiles();
+            }
+        }.runTaskTimerAsynchronously(main, 0L, 300*20L);
     }
 
     public void loadProfiles() {
