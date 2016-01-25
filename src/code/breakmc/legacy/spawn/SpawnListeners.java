@@ -75,10 +75,16 @@ public class SpawnListeners implements Listener {
                 || e.getMessage().toLowerCase().contains("/esethome")
                 || e.getMessage().toLowerCase().contains("/go set")
                 || e.getMessage().toLowerCase().contains("/warp set")
-                || e.getMessage().toLowerCase().contains("/ewarp set")) {
+                || e.getMessage().toLowerCase().contains("/ewarp set")
+                || e.getMessage().toLowerCase().contains("/tpa")
+                || e.getMessage().toLowerCase().contains("/tpaccept")
+                || e.getMessage().toLowerCase().contains("/tpyes")
+                || e.getMessage().toLowerCase().contains("/tpahere")
+                || e.getMessage().toLowerCase().contains("/tpdeny")
+                || e.getMessage().toLowerCase().contains("/tpno")) {
             if (sm.getSpawn().isInStoneRadius(p.getLocation())) {
                 e.setCancelled(true);
-                MessageManager.sendMessage(p, "&cYou cannot use this command within " + sm.getSpawn().getStoneHeight() + " blocks of spawn!");
+                MessageManager.sendMessage(p, "&cYou cannot use this command within " + sm.getSpawn().getStoneRadius() + " blocks of spawn!");
             }
         } else {
             if (e.getMessage().toLowerCase().contains("/buy")) {
@@ -281,6 +287,10 @@ public class SpawnListeners implements Listener {
         }
 
         if (sm.getSpawn().isInStoneRadius(e.getBlock().getLocation()) && !sm.getSpawn().isInSpawnRadius(e.getBlock().getLocation())) {
+            if (e.getBlock().getType() == Material.BED || e.getBlock().getType() == Material.SAND || e.getBlock().getType() == Material.GRAVEL || e.getBlock().getType() == Material.IRON_DOOR_BLOCK || e.getBlock().getType() == Material.IRON_DOOR || e.getBlock().getType() == Material.WOOD_DOOR || e.getBlock().getType() == Material.WOODEN_DOOR || e.getBlock().getType() == Material.BED_BLOCK) {
+                e.setCancelled(true);
+            }
+
             butils.onBlockPlace(new BlockPlaceEvent(e.getBlock(), e.getBlockReplacedState(), e.getBlockAgainst(), e.getItemInHand(), e.getPlayer(), true), 600 * 20);
         }
     }

@@ -38,40 +38,53 @@ public class Command_logout extends BaseCommand {
         final Player p = (Player) sender;
         final Profile prof = pm.getProfile(p.getUniqueId());
 
-        if (dontMove.containsKey(p.getUniqueId())) {
-            dontMove.get(p.getUniqueId()).cancel();
-        }
-
-        dontMove.put(p.getUniqueId(), new BukkitRunnable() {
+        new BukkitRunnable() {
+            @Override
             public void run() {
-                p.kickPlayer(ChatColor.YELLOW + "You have safely logged out of AdvancedPvP.");
-                prof.setSafeLogged(false);
-                counter.get(p.getUniqueId()).cancel();
-                counter.remove(p.getUniqueId());
-                count.remove(p.getUniqueId());
-                dontMove.remove(p.getUniqueId());
-            }
-        });
-
-        dontMove.get(p.getUniqueId()).runTaskLater(Legacy.getInstance(), 10 * 20L);
-        MessageManager.sendMessage(p, "&cLogging out of the server! Do not move!");
-
-        count.put(p.getUniqueId(), 11);
-
-        counter.put(p.getUniqueId(), new BukkitRunnable() {
-            public void run() {
-                if (count.get(p.getUniqueId()) <= 11 && count.get(p.getUniqueId()) >= 1) {
-                    count.put(p.getUniqueId(), count.get(p.getUniqueId()) - 1);
-                    MessageManager.sendMessage(p, "&cLogging out in " + count.get(p.getUniqueId()) + "..");
-                } else {
-                    MessageManager.sendMessage(p, "&cLogging out..");
+                if (dontMove.containsKey(p.getUniqueId())) {
+                    dontMove.get(p.getUniqueId()).cancel();
+                    dontMove.remove(p.getUniqueId());
                 }
+
+                dontMove.put(p.getUniqueId(), new BukkitRunnable() {
+                    public void run() {
+                        p.kickPlayer(ChatColor.YELLOW + "You have safely logged out of AdvancedPvP.");
+                        prof.setSafeLogged(false);
+                        counter.get(p.getUniqueId()).cancel();
+                        counter.remove(p.getUniqueId());
+                        count.remove(p.getUniqueId());
+                        dontMove.remove(p.getUniqueId());
+                        this.cancel();
+                    }
+                });
+
+                dontMove.get(p.getUniqueId()).runTaskLater(Legacy.getInstance(), 10 * 20L);
+
+                MessageManager.sendMessage(p, "&cLogging out of the server! Do not move!");
+
+                count.put(p.getUniqueId(), 11);
+
+                if (counter.containsKey(p.getUniqueId())) {
+                    counter.get(p.getUniqueId()).cancel();
+                    counter.remove(p.getUniqueId());
+                }
+
+                counter.put(p.getUniqueId(), new BukkitRunnable() {
+                    public void run() {
+                        if (count.get(p.getUniqueId()) <= 11 && count.get(p.getUniqueId()) >= 1) {
+                            count.put(p.getUniqueId(), count.get(p.getUniqueId()) - 1);
+                            MessageManager.sendMessage(p, "&cLogging out in " + count.get(p.getUniqueId()) + "..");
+                        } else {
+                            MessageManager.sendMessage(p, "&cLogging out..");
+                        }
+                    }
+                });
+
+                prof.setSafeLogged(true);
+
+                counter.get(p.getUniqueId()).runTaskTimer(main, 0L, 20);
             }
-        });
-
-        prof.setSafeLogged(true);
-
-        counter.get(p.getUniqueId()).runTaskTimer(main, 0L, 20);
+        }.runTaskAsynchronously(Legacy.getInstance());
     }
 
     public static HashMap<UUID, BukkitRunnable> getCounter() {

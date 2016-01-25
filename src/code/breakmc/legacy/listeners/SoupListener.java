@@ -115,6 +115,7 @@ public class SoupListener implements Listener {
                     e.setCancelled(true);
                     p.setHealth(PlayerUtility.getHealth(p) + 7 > PlayerUtility.getMaxHealth(p) ? PlayerUtility.getMaxHealth(p) : PlayerUtility.getHealth(p) + 7);
                     e.getItem().setType(Material.BOWL);
+                    Legacy.getInstance().getTeamTagManager().reloadPlayer(p);
                 }
             } else {
                 if (p.getFoodLevel() < 20) {
@@ -143,7 +144,7 @@ public class SoupListener implements Listener {
     public void onItemSpawn(final ItemSpawnEvent e) {
         new BukkitRunnable() {
             public void run() {
-                if (e.getEntity().getItemStack().getType() == Material.BOWL || e.getEntity().getItemStack().getType() == Material.MUSHROOM_SOUP || e.getEntity().getItemStack().getType() == Material.GLASS_BOTTLE || e.getEntity().getItemStack().getType() == Material.SAND || e.getEntity().getItemStack().getType() == Material.GRAVEL || e.getEntity().getItemStack().getType() == Material.DIRT || e.getEntity().getItemStack().getType() == Material.COBBLESTONE || e.getEntity().getItemStack().getType() == Material.ROTTEN_FLESH || e.getEntity().getItemStack().getType() == Material.STRING || e.getEntity().getItemStack().getType() == Material.BONE || e.getEntity().getItemStack().getType() == Material.ARROW) {
+                if (e.getEntity().getItemStack().getType() == Material.BOWL || e.getEntity().getItemStack().getType() == Material.MUSHROOM_SOUP || e.getEntity().getItemStack().getType() == Material.GLASS_BOTTLE || e.getEntity().getItemStack().getType() == Material.SAND || e.getEntity().getItemStack().getType() == Material.GRAVEL || e.getEntity().getItemStack().getType() == Material.DIRT || e.getEntity().getItemStack().getType() == Material.COBBLESTONE || e.getEntity().getItemStack().getType() == Material.ROTTEN_FLESH || e.getEntity().getItemStack().getType() == Material.STRING || e.getEntity().getItemStack().getType() == Material.BONE || e.getEntity().getItemStack().getType() == Material.ARROW || e.getEntity().getItemStack().getType() == Material.NETHERRACK) {
                     e.getEntity().remove();
                 }
             }

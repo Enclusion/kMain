@@ -8,6 +8,7 @@ scoreboard:
 
 economy:
   buy-sell-ratio: 1.5
+  default-balance: 50.0
 
 shop-items:
 - 3:dirt:1:0.25

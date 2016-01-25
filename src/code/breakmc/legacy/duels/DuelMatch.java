@@ -20,7 +20,7 @@ public class DuelMatch {
     private Player p2;
     private Player winner;
     private int preCountdown = 10;
-    private int postCountdown = 20;
+    private int postCountdown = 10;
     private boolean started;
     private boolean ended;
     private List<Entity> loot = new ArrayList<>();
@@ -145,7 +145,7 @@ public class DuelMatch {
         return Arrays.asList(p1, p2);
     }
 
-    public boolean isWinner(Player p) { return winner.getUniqueId() == p.getUniqueId(); }
+    public boolean isWinner(Player p) { return winner != null && winner.getUniqueId() == p.getUniqueId(); }
 
     public Player getP1() {
         return p1;

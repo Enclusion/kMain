@@ -6,6 +6,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayerUtility {
 
     public static double getHealth(Player p) {
@@ -47,5 +50,15 @@ public class PlayerUtility {
         }
 
         return emptySlots;
+    }
+
+    public static List<String> toList(Player[] array) {
+        List<String> list = new ArrayList<>();
+
+        for (Player t : array) {
+            list.add(t.getName());
+        }
+
+        return list;
     }
 }

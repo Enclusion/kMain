@@ -1,6 +1,7 @@
 package code.breakmc.legacy.economy;
 
 import code.breakmc.legacy.Legacy;
+import code.breakmc.legacy.profiles.Profile;
 import code.breakmc.legacy.profiles.ProfileManager;
 import code.breakmc.legacy.utils.ItemBuilder;
 import code.breakmc.legacy.utils.MessageManager;
@@ -323,6 +324,7 @@ public class EconomyManager implements CommandExecutor {
     }
 
     public boolean sellAllItemInHand(Player player) {
+        Profile profile = pm.getProfile(player.getUniqueId());
         ItemStack item = player.getItemInHand();
 
         if (item == null || item.getType() == Material.AIR) {
@@ -366,6 +368,19 @@ public class EconomyManager implements CommandExecutor {
             removeList.add(is);
         }
 
+        if (item.getType() == Material.EMERALD) {
+            profile.setEmeraldsSold(profile.getEmeraldsSold() + amount);
+        }
+        if (item.getType() == Material.DIAMOND) {
+            profile.setDiamondsSold(profile.getDiamondsSold() + amount);
+        }
+        if (item.getType() == Material.GOLD_INGOT) {
+            profile.setGoldSold(profile.getGoldSold() + amount);
+        }
+        if (item.getType() == Material.IRON_INGOT) {
+            profile.setIronSold(profile.getIronSold() + amount);
+        }
+
         addFunds(player, price);
         MessageManager.sendMessage(player, "&7You got &a$" + formatDouble(price) + " &7for selling &a" + amount + " " + itemText + "&7.");
 
@@ -375,6 +390,7 @@ public class EconomyManager implements CommandExecutor {
     }
 
     public boolean sellItemInHand(Player player, Integer amount) {
+        Profile profile = pm.getProfile(player.getUniqueId());
         ItemStack item = player.getItemInHand();
 
         if (item == null || item.getType() == Material.AIR) {
@@ -417,15 +433,26 @@ public class EconomyManager implements CommandExecutor {
             }
         }
 
+        if (item.getType() == Material.EMERALD) {
+            profile.setEmeraldsSold(profile.getEmeraldsSold() + 1);
+        }
+        if (item.getType() == Material.DIAMOND) {
+            profile.setDiamondsSold(profile.getDiamondsSold() + 1);
+        }
+        if (item.getType() == Material.GOLD_INGOT) {
+            profile.setGoldSold(profile.getGoldSold() + 1);
+        }
+        if (item.getType() == Material.IRON_INGOT) {
+            profile.setIronSold(profile.getIronSold() + 1);
+        }
+
         addFunds(player, price);
         MessageManager.sendMessage(player, "&7You got &a$" + formatDouble(price) + " &7for selling &a" + amount + " " + itemText + "&7.");
 
-        if (amount == null) {
+        holdingitem.setAmount(holdingitem.getAmount() - amount);
+
+        if (holdingitem.getAmount() == 0)
             player.setItemInHand(null);
-        } else {
-            holdingitem.setAmount(holdingitem.getAmount() - amount);
-            if (holdingitem.getAmount() == 0) player.setItemInHand(null);
-        }
 
         return true;
     }

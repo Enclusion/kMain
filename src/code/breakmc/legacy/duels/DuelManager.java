@@ -112,7 +112,7 @@ public class DuelManager {
 
     public DuelMatch getDuel(Player p) {
         for (DuelMatch d : duels) {
-            if (d.getP1() == p || d.getP2() == p) {
+            if (d.getPlayers().contains(p)) {
                 return d;
             }
         }
@@ -122,7 +122,7 @@ public class DuelManager {
 
     public boolean isInDuel(Player p) {
         for (DuelMatch d : duels) {
-            if (d.getP1() == p || d.getP2() == p) {
+            if (d.getPlayers().contains(p)) {
                 return true;
             }
         }

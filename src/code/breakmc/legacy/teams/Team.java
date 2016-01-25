@@ -150,6 +150,7 @@ public class Team implements Listener {
             }
 
             if (canTeleport(p)) {
+                hq.getChunk().load(true);
                 p.teleport(hq);
                 MessageManager.sendMessage(p, "&3You have teleported to the team's HQ!\n&7You can not attack for 5 seconds.");
                 return;
@@ -161,6 +162,7 @@ public class Team implements Listener {
 
             dontMove.put(p.getUniqueId(), new BukkitRunnable() {
                 public void run() {
+                    hq.getChunk().load(true);
                     p.teleport(hq);
                     dontMove.remove(p.getUniqueId());
                     MessageManager.sendMessage(p, "&3You have teleported to the team's HQ!\n&7You can not attack for 5 seconds.");
@@ -174,7 +176,7 @@ public class Team implements Listener {
 
         if (locName.equalsIgnoreCase("rally")) {
             if (Legacy.getInstance().getSpawnManager().hasSpawnProt(p.getUniqueId())) {
-                MessageManager.sendMessage(p, "&cYou cannot warp within spawn");
+                MessageManager.sendMessage(p, "&cYou cannot warp within spawn.");
                 return;
             }
 
@@ -184,6 +186,7 @@ public class Team implements Listener {
             }
 
             if (canTeleport(p)) {
+                rally.getChunk().load(true);
                 p.teleport(rally);
                 MessageManager.sendMessage(p, "&3You have teleported to the team's rally point!\n&7You can not attack for 5 seconds.");
                 return;
@@ -195,6 +198,7 @@ public class Team implements Listener {
 
             dontMove.put(p.getUniqueId(), new BukkitRunnable() {
                 public void run() {
+                    rally.getChunk().load(true);
                     p.teleport(rally);
                     dontMove.remove(p.getUniqueId());
                     MessageManager.sendMessage(p, "&3You have teleported to the team's rally point!\n&7You can not attack for 5 seconds.");
@@ -210,6 +214,7 @@ public class Team implements Listener {
     public boolean canTeleport(Player p) {
         TeamManager tm = Legacy.getInstance().getTeamManager();
         boolean canTeleport = true;
+
         for (Entity ent : p.getNearbyEntities(40, 20, 40)) {
             if (ent instanceof Player) {
                 Player near = (Player) ent;
@@ -227,6 +232,7 @@ public class Team implements Listener {
                 }
             }
         }
+
         return canTeleport;
     }
 

@@ -47,6 +47,7 @@ public class Command_eco extends BaseCommand {
                 MessageManager.sendMessage(p, "&a/eco take &b(player) (amount) &7- Take from a players balance.");
                 MessageManager.sendMessage(p, "&a/eco set &b(player) (amount) &7- Set a players balance.");
                 MessageManager.sendMessage(p, "&a/eco clear &b(player) &7- Clear a players balance.");
+                MessageManager.sendMessage(p, "&a/eco check &b(player) &7- Checks a players sold gems.");
             }
 
             MessageManager.sendMessage(p, "&e&m-------------------------------------");
@@ -76,6 +77,21 @@ public class Command_eco extends BaseCommand {
 
                 prof.setBalance(0.0);
                 MessageManager.sendMessage(p, "&7You have cleared &b" + prof.getName() + "'s &7balance.");
+            }
+            if (args[0].equalsIgnoreCase("check")) {
+                if (!p.hasPermission("legacy.eco.admin")) {
+                    MessageManager.sendMessage(p, "&cYou do not have permission to use this command.");
+                    return;
+                }
+
+                Profile prof = pm.getProfile(args[1]);
+
+                if (prof == null) {
+                    MessageManager.sendMessage(p, "&cPlayer \"" + args[1] + "\" could not be found.");
+                    return;
+                }
+
+                MessageManager.sendMessage(p, "&b" + prof.getName() + "&7: &aE&7: &c" + prof.getEmeraldsSold() + " &bD&7: &c" + prof.getDiamondsSold() + " &6G&7: &c" + prof.getGoldSold() + " &7I: &c" + prof.getIronSold());
             }
         } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("add")) {

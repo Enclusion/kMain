@@ -4,7 +4,6 @@ import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.utils.LocationSerialization;
 import code.breakmc.legacy.utils.MessageManager;
-import com.breakmc.pure.Pure;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.mongodb.BasicDBObject;
@@ -15,7 +14,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -232,12 +230,6 @@ public class WarpManager {
                 return;
             }
 
-            if (canTeleport(p)) {
-                p.teleport(warp.getLocation());
-                MessageManager.sendMessage(p, "&7You have warped to \"&b" + warp.getName() + "&7\"");
-                return;
-            }
-
             warp.teleport(p);
         } else {
             MessageManager.sendMessage(p, "&cYou have not set any warps.");
@@ -332,27 +324,6 @@ public class WarpManager {
             }
         }
         return warpCount;
-    }
-
-    public boolean canTeleport(Player p) {
-        for (Entity ent : p.getNearbyEntities(40, 20, 40)) {
-            if (ent instanceof Player) {
-                Player near = (Player) ent;
-
-                if (near.equals(p)) continue;
-
-                if (Pure.getInstance().getPunishmentManager().isVanished(near)) continue;
-
-                if (tm.hasTeam(near.getUniqueId()) && tm.hasTeam(p.getUniqueId())) {
-                    if (!tm.getTeam(p.getUniqueId()).equals(tm.getTeam(near.getUniqueId()))) {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     public class TempWarp {

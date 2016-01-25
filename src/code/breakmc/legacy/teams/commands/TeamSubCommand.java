@@ -1,4 +1,4 @@
-package code.breakmc.legacy.teams;
+package code.breakmc.legacy.teams.commands;
 
 import org.bukkit.entity.Player;
 

@@ -25,16 +25,17 @@ public class Profile implements Listener {
 
     private ScoreboardManager sbm = Legacy.getInstance().getScoreboardManager();
     private TeamManager tm = Legacy.getInstance().getTeamManager();
-    HashMap<UUID, BukkitRunnable> dontMove = new HashMap<>();
-    UUID uniqueId;
-    String name;
-    String youtubename;
-    Double balance;
-    boolean safeLogged;
-    Location home;
-    HashMap<String, Long> usedKits = new HashMap<>();
+    private HashMap<UUID, BukkitRunnable> dontMove = new HashMap<>();
+    private UUID uniqueId;
+    private String name;
+    private String youtubename;
+    private Double balance;
+    private boolean safeLogged;
+    private Location home;
+    private HashMap<String, Long> usedKits = new HashMap<>();
+    private int emeraldsSold, diamondsSold, goldSold, ironSold;
 
-    public Profile(UUID uniqueId, String name, String youtubename, Double balance, Location home, boolean safeLogged, HashMap<String, Long> usedKits) {
+    public Profile(UUID uniqueId, String name, String youtubename, Double balance, Location home, boolean safeLogged, HashMap<String, Long> usedKits, int emeraldsSold, int diamondsSold, int goldSold, int ironSold) {
         this.uniqueId = uniqueId;
         this.name = name;
         this.youtubename = youtubename;
@@ -42,6 +43,10 @@ public class Profile implements Listener {
         this.safeLogged = safeLogged;
         this.usedKits = usedKits;
         this.home = home;
+        this.emeraldsSold = emeraldsSold;
+        this.diamondsSold = diamondsSold;
+        this.goldSold = goldSold;
+        this.ironSold = ironSold;
 
         Bukkit.getPluginManager().registerEvents(this, Legacy.getInstance());
     }
@@ -117,8 +122,8 @@ public class Profile implements Listener {
 
     public void setBalance(Double balance) {
         this.balance = balance;
-        if (this.balance >= 100000.00)
-            this.balance = 100000.00;
+        if (this.balance >= 250000.00)
+            this.balance = 250000.00;
 
     }
 

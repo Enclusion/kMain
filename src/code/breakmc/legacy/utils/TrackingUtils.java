@@ -215,7 +215,7 @@ public class TrackingUtils {
                     boolean can = checkPlayer(pl, x, z);
 
                     if (can) {
-                        in ++;
+                        in++;
                         if (pl.hasPermission("tracking.donator")) {
                             m2.then(pl.getName()).command("/track " + pl.getName()).color(ChatColor.AQUA).tooltip(ChatColor.translateAlternateColorCodes('&', "&aDonator"), " ", ChatColor.translateAlternateColorCodes('&', getEnvironmentName(pl.getWorld().getEnvironment()))).then(", ").color(ChatColor.GRAY);
                         } else {
@@ -227,7 +227,7 @@ public class TrackingUtils {
                     boolean can = checkPlayer(pl, x, z);
 
                     if (can) {
-                        in ++;
+                        in++;
                         if (pl.hasPermission("tracking.donator")) {
                             m2.then(pl.getName()).command("/track " + pl.getName()).color(ChatColor.AQUA).tooltip(ChatColor.translateAlternateColorCodes('&', "&aDonator"), " ", ChatColor.translateAlternateColorCodes('&', getEnvironmentName(pl.getWorld().getEnvironment())));
                         } else {
@@ -240,7 +240,7 @@ public class TrackingUtils {
             boolean can = checkPlayer(player2, x, z);
 
             if (can) {
-                in ++;
+                in++;
             }
         }
 
@@ -288,50 +288,44 @@ public class TrackingUtils {
     }
 
     public void TrackAll(final Material mat1, final Material mat2, final Player player, final Player player2) {
+        int northDist = findBlock(player.getWorld(), 0, -1, mat1, mat2);
+        int southDist = findBlock(player.getWorld(), 0, 1, mat1, mat2);
+        int eastDist = findBlock(player.getWorld(), -1, 0, mat1, mat2);
+        int westDist = findBlock(player.getWorld(), 1, 0, mat1, mat2);
+        boolean northDists = findEnd(player.getWorld(), 0, -1, mat2);
+        boolean southDists = findEnd(player.getWorld(), 0, 1, mat2);
+        boolean eastDists = findEnd(player.getWorld(), -1, 0, mat2);
+        boolean westDists = findEnd(player.getWorld(), 1, 0, mat2);
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                int northDist = findBlock(player.getWorld(), 0, -1, mat1, mat2);
-                int southDist = findBlock(player.getWorld(), 0, 1, mat1, mat2);
-                int eastDist = findBlock(player.getWorld(), -1, 0, mat1, mat2);
-                int westDist = findBlock(player.getWorld(), 1, 0, mat1, mat2);
-                boolean northDists = findEnd(player.getWorld(), 0, -1, mat2);
-                boolean southDists = findEnd(player.getWorld(), 0, 1, mat2);
-                boolean eastDists = findEnd(player.getWorld(), -1, 0, mat2);
-                boolean westDists = findEnd(player.getWorld(), 1, 0, mat2);
+        MessageManager.sendMessage(player, "&3Results&7:");
+        if (northDist > 0 && northDists) {
+            TrackDirAll(player, 0, -northDist * 25, player2);
+        }
 
-                MessageManager.sendMessage(player, "&3Results&7:");
-                if (northDist > 0 && northDists) {
-                    TrackDirAll(player, 0, -northDist * 25, player2);
-                }
+        if (eastDist > 0 && eastDists) {
+            TrackDirAll(player, -eastDist * 25, 0, player2);
+        }
+        if (southDist > 0 && southDists) {
 
-                if (eastDist > 0 && eastDists) {
-                    TrackDirAll(player, -eastDist * 25, 0, player2);
-                }
-                if (southDist > 0 && southDists) {
-
-                    TrackDirAll(player, 0, southDist * 25, player2);
-                }
-                if (westDist > 0 && westDists) {
-                    TrackDirAll(player, westDist * 25, 0, player2);
-                }
-            }
-        }.runTask(Legacy.getInstance());
+            TrackDirAll(player, 0, southDist * 25, player2);
+        }
+        if (westDist > 0 && westDists) {
+            TrackDirAll(player, westDist * 25, 0, player2);
+        }
     }
 
     public void TrackAllSpawn(final Player player, final Player player2) {
+        MessageManager.sendMessage(player, "&3Results&7:");
+
         new BukkitRunnable() {
             @Override
             public void run() {
-                MessageManager.sendMessage(player, "&3Results&7:");
-
-                TrackDirAll(player, 0, -300, player2);
-                TrackDirAll(player, -300, 0, player2);
-                TrackDirAll(player, 0, 300, player2);
-                TrackDirAll(player, 300, 0, player2);
+                TrackDirAll(player, 0, -800, player2);
+                TrackDirAll(player, -800, 0, player2);
+                TrackDirAll(player, 0, 800, player2);
+                TrackDirAll(player, 800, 0, player2);
             }
-        }.runTask(Legacy.getInstance());
+        }.runTaskAsynchronously(Legacy.getInstance());
     }
 
     public void TrackAll(Player player, Player player2) {
@@ -339,7 +333,12 @@ public class TrackingUtils {
         if (block.getType() == Material.DIAMOND_BLOCK && sm.getSpawn().isInSpawnRadius(block.getLocation())) {
             TrackAllSpawn(player, player2);
         } else if (block.getType() == Material.DIAMOND_BLOCK && isPerm(block)) {
-            TrackAll(Material.OBSIDIAN, Material.GOLD_BLOCK, player, player2);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    TrackAll(Material.OBSIDIAN, Material.GOLD_BLOCK, player, player2);
+                }
+            }.runTaskAsynchronously(Legacy.getInstance());
         } else if (isTemp(block) && block.getType().equals(Material.OBSIDIAN)) {
             MessageManager.sendMessage(player, "&cYou cannot /track all on a temptracker.");
         } else {

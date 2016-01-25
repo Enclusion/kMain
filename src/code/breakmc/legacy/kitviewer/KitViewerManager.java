@@ -1,13 +1,11 @@
 package code.breakmc.legacy.kitviewer;
 
 import code.breakmc.legacy.utils.ItemBuilder;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,22 +13,6 @@ import org.bukkit.inventory.ItemStack;
  * Created by Calvin on 5/8/2015.
  */
 public class KitViewerManager {
-
-    public static Inventory workbench1 = Bukkit.createInventory(null, InventoryType.WORKBENCH);
-
-    public KitViewerManager() {
-        workbench1 = Bukkit.createInventory(null, InventoryType.WORKBENCH);
-        workbench1.setItem(0, new ItemBuilder(Material.MINECART).name("&7Iron Boat").addLore("&cPlace this on lava to safely float across!").build());
-        workbench1.setItem(1, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(2, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(3, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(4, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(5, new ItemBuilder(Material.MINECART).name("&rMinecart").build());
-        workbench1.setItem(6, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(7, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(8, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(9, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-    }
 
     public static void openPremiumView(Player p) {
         Inventory inv = Bukkit.createInventory(p, 36, ChatColor.translateAlternateColorCodes('&', "&dHover over the items for info!"));
@@ -997,22 +979,5 @@ public class KitViewerManager {
         inv.setItem(26, saddle);
 
         p.openInventory(inv);
-    }
-
-    public static void openIronBoatRecipe(Player p) {
-        workbench1 = Bukkit.createInventory(null, InventoryType.WORKBENCH);
-        workbench1.setItem(0, new ItemBuilder(Material.MINECART).name("&7Iron Boat").addLore("&cPlace this on lava to safely float across!").build());
-        workbench1.setItem(1, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(2, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(3, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(4, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(5, new ItemBuilder(Material.MINECART).name("&rMinecart").build());
-        workbench1.setItem(6, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(7, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(8, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-        workbench1.setItem(9, new ItemBuilder(Material.IRON_INGOT).name("&rIron Ingot").build());
-
-        p.openInventory(workbench1);
-        p.updateInventory();
     }
 }

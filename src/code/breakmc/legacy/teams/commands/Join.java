@@ -4,11 +4,10 @@ package code.breakmc.legacy.teams.commands;
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.teams.Team;
 import code.breakmc.legacy.teams.TeamManager;
-import code.breakmc.legacy.teams.TeamSubCommand;
 import code.breakmc.legacy.utils.MessageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+
 import java.util.Arrays;
 import java.util.UUID;
 

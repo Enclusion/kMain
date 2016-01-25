@@ -5,11 +5,17 @@ import code.breakmc.legacy.duels.DuelManager;
 import code.breakmc.legacy.profiles.ProfileManager;
 import code.breakmc.legacy.spawn.SpawnManager;
 import code.breakmc.legacy.utils.MessageManager;
+import code.breakmc.legacy.utils.PlayerUtility;
 import code.breakmc.legacy.utils.command.BaseCommand;
 import code.breakmc.legacy.utils.command.CommandUsageBy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Command_duel extends BaseCommand {
 
@@ -71,13 +77,17 @@ public class Command_duel extends BaseCommand {
                     return;
                 }
 
+                if (t.getUniqueId().equals(p.getUniqueId())) {
+                    MessageManager.sendMessage(p, "&cYou cannot request a 1v1 with yourself.");
+                }
+
                 if (dm.getNotAcceptingRequests().contains(t.getUniqueId())) {
                     MessageManager.sendMessage(p, "&cPlayer \"" + t.getName() + "\" is not accepting 1v1 requests.");
                     return;
                 }
 
                 if (!sm.hasSpawnProt(p.getUniqueId())) {
-                    MessageManager.sendMessage(p, "&cYou must have spawn protection to request a 1v1!");
+                    MessageManager.sendMessage(p, "&cYou must have spawn protection to request a 1v1.");
                     return;
                 }
 
@@ -104,5 +114,23 @@ public class Command_duel extends BaseCommand {
                 dm.requestDuel(p, t);
             }
         }
+    }
+
+    public List<String> tabComplete(String[] args, CommandSender sender) {
+        if (sender instanceof Player) {
+            if (args.length == 0) {
+                List<String> list2return = PlayerUtility.toList(PlayerUtility.getOnlinePlayers());
+                Collections.sort(list2return);
+                return list2return;
+            }
+
+            if (args.length == 1) {
+                List<String> list2return = PlayerUtility.toList(PlayerUtility.getOnlinePlayers()).stream().filter(opt -> opt.toLowerCase().startsWith(args[0])).collect(Collectors.toList());
+                Collections.sort(list2return);
+                return list2return.stream().filter(s -> s.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+            }
+        }
+
+        return new ArrayList<>();
     }
 }

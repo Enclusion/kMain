@@ -159,9 +159,7 @@ public class TeamListeners implements Listener {
         if (e.getEntity() instanceof Player) {
             Player hit = (Player) e.getEntity();
 
-            if (tm.hasTeam(hit.getUniqueId())) {
-                Legacy.getInstance().getTeamTagManager().reloadPlayer(hit);
-            }
+            Legacy.getInstance().getTeamTagManager().reloadPlayer(hit);
         }
     }
 
@@ -179,9 +177,7 @@ public class TeamListeners implements Listener {
         if (e.getEntity() instanceof Player) {
             Player p = (Player) e.getEntity();
 
-            if (tm.hasTeam(p.getUniqueId())) {
-                Legacy.getInstance().getTeamTagManager().reloadPlayer(p);
-            }
+            Legacy.getInstance().getTeamTagManager().reloadPlayer(p);
         }
     }
 }

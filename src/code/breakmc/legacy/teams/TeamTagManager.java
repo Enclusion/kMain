@@ -6,6 +6,7 @@ import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.utils.PacketHandler;
 import code.breakmc.legacy.utils.PlayerUtility;
 import code.breakmc.legacy.utils.ScoreboardTeamPacketMod;
+import code.breakmc.legacy.utils.TeamInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

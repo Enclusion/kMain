@@ -3,39 +3,49 @@ package code.breakmc.legacy.listeners;
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.commands.Command_logout;
 import code.breakmc.legacy.profiles.Profile;
+import code.breakmc.legacy.spawn.SpawnManager;
 import code.breakmc.legacy.utils.MessageManager;
+import code.breakmc.legacy.utils.PlayerUtility;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Calvin on 5/9/2015.
  */
 public class CombatLogListener implements Listener {
 
+    private SpawnManager sm = Legacy.getInstance().getSpawnManager();
     public static HashMap<UUID, Villager> loggers = new HashMap<>();
     private Multimap<UUID, ItemStack[]> inventories = ArrayListMultimap.create();
     private HashMap<Villager, BukkitRunnable> villagerLog = new HashMap<>();
+    private ArrayList<String> blockedCommands = new ArrayList<>();
+
+    public CombatLogListener() {
+        blockedCommands.add("/buy soup");
+    }
 
     @EventHandler
     public void onLogout(PlayerQuitEvent e) {
@@ -168,5 +178,150 @@ public class CombatLogListener implements Listener {
                 }
             }
         }
+    }
+
+    //30 Second Cooldown
+
+    private ConcurrentHashMap<UUID, Long> tagged = new ConcurrentHashMap<>();
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onHit(EntityDamageByEntityEvent e) {
+        if (e.isCancelled() || (PlayerUtility.getDamage(e) == 0)) {
+            return;
+        }
+
+        Entity damager = e.getDamager();
+
+        if (damager instanceof Projectile) {
+            if (((Projectile) damager).getShooter() != null) {
+                damager = ((Projectile) damager).getShooter();
+            }
+        }
+
+        if (e.getEntity() instanceof Player) {
+            Player tagged = (Player) e.getEntity();
+
+            if (sm.hasSpawnProt(tagged.getUniqueId())) {
+                return;
+            }
+
+            if (damager instanceof Player) {
+                Player tagger = (Player) damager;
+
+                if (tagger != tagged) {
+                    if (sm.hasSpawnProt(tagger.getUniqueId())) {
+                        return;
+                    }
+
+                    addTagged(tagger, 30);
+                    addTagged(tagged, 30);
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        removeTagged(e.getEntity().getUniqueId());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onQuit(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+
+        if (p.isDead() || PlayerUtility.getHealth(p) <= 0) {
+            removeTagged(p.getUniqueId());
+            return;
+        }
+
+        if (isInCombat(p.getUniqueId())) {
+            removeTagged(p.getUniqueId());
+        }
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent e) {
+        removeTagged(e.getPlayer().getUniqueId());
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onCommand(PlayerCommandPreprocessEvent e) {
+        Player p = e.getPlayer();
+        if (isInCombat(p.getUniqueId())) {
+            String command = e.getMessage();
+            for (String disabledCommand : blockedCommands) {
+                if (command.indexOf(" ") == disabledCommand.length()) {
+                    if (command.substring(0, command.indexOf(" ")).equalsIgnoreCase(disabledCommand)) {
+                        MessageManager.sendMessage(p, "&cYou cannot buy soup in combat!");
+                        e.setCancelled(true);
+                        return;
+                    }
+                } else if (disabledCommand.indexOf(" ") > 0) {
+                    if (command.toLowerCase().startsWith(disabledCommand.toLowerCase())) {
+                        MessageManager.sendMessage(p, "&cYou cannot buy soup in combat!");
+                        e.setCancelled(true);
+                        return;
+                    }
+                } else if (!command.contains(" ") && command.equalsIgnoreCase(disabledCommand)) {
+                    MessageManager.sendMessage(p, "&cYou cannot buy soup in combat!");
+                    e.setCancelled(true);
+                    return;
+                }
+            }
+        }
+    }
+
+    public long getRemainingTime(UUID id) {
+        Long tag = tagged.get(id);
+
+        if (tag == null) {
+            return -1;
+        }
+
+        return tag - System.currentTimeMillis();
+    }
+
+    public boolean addTagged(Player p, int seconds) {
+        if (p.isOnline()) {
+            tagged.put(p.getUniqueId(), PvPTimeout(seconds));
+            return true;
+        }
+
+        return false;
+    }
+
+    public long removeTagged(UUID id) {
+        if (isInCombat(id)) {
+            MessageManager.sendMessage(id, "&7You are no longer in combat");
+            return tagged.remove(id);
+        }
+
+        return -1;
+    }
+
+    public long PvPTimeout(int seconds) {
+        return System.currentTimeMillis() + (seconds * 1000);
+    }
+
+    public boolean isInCombat(UUID id) {
+        if (getRemainingTime(id) < 0) {
+            if (tagged.contains(id)) {
+                tagged.remove(id);
+                MessageManager.sendMessage(id, "&7You are no longer in combat");
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static String formatTime(long difference) {
+        Calendar call = Calendar.getInstance();
+        call.setTimeInMillis(difference);
+        return new SimpleDateFormat("ss.S").format(difference);
+    }
+
+    public ImmutableSet<UUID> listTagged() {
+        return ImmutableSet.copyOf(tagged.keySet());
     }
 }

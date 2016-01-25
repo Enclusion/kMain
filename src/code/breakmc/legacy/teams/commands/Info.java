@@ -4,7 +4,6 @@ import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.profiles.Profile;
 import code.breakmc.legacy.profiles.ProfileManager;
 import code.breakmc.legacy.teams.TeamManager;
-import code.breakmc.legacy.teams.TeamSubCommand;
 import code.breakmc.legacy.utils.MessageManager;
 import org.bukkit.entity.Player;
 

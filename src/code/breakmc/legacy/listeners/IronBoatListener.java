@@ -67,22 +67,24 @@ public class IronBoatListener implements Listener {
                     }
                 }
             } else {
-                for (Block b : p.getLineOfSight(null, 5)) {
-                    if (b.getType() != Material.AIR) {
-                        if (b.getType() == Material.LAVA || b.getType() == Material.STATIONARY_LAVA) {
-                            if (e.getItem() != null) {
-                                if (e.getItem().getType() == Material.MINECART) {
-                                    if (e.getItem().hasItemMeta()) {
-                                        if (e.getItem().getItemMeta().hasDisplayName()) {
-                                            if (e.getItem().getItemMeta().getDisplayName().contains(ChatColor.GRAY + "Iron Boat")) {
-                                                e.setUseItemInHand(Event.Result.DENY);
-                                                e.setCancelled(true);
+                try {
+                    for (Block b : p.getLineOfSight(null, 5)) {
+                        if (b.getType() != Material.AIR) {
+                            if (b.getType() == Material.LAVA || b.getType() == Material.STATIONARY_LAVA) {
+                                if (e.getItem() != null) {
+                                    if (e.getItem().getType() == Material.MINECART) {
+                                        if (e.getItem().hasItemMeta()) {
+                                            if (e.getItem().getItemMeta().hasDisplayName()) {
+                                                if (e.getItem().getItemMeta().getDisplayName().contains(ChatColor.GRAY + "Iron Boat")) {
+                                                    e.setUseItemInHand(Event.Result.DENY);
+                                                    e.setCancelled(true);
 
-                                                Minecart cart = b.getWorld().spawn(b.getLocation().add(0.0D, 2.0D, 0.0D), Minecart.class);
-                                                cart.setMetadata("IronBoat", new FixedMetadataValue(Legacy.getInstance(), true));
+                                                    Minecart cart = b.getWorld().spawn(b.getLocation().add(0.0D, 2.0D, 0.0D), Minecart.class);
+                                                    cart.setMetadata("IronBoat", new FixedMetadataValue(Legacy.getInstance(), true));
 
-                                                if (p.getGameMode() == GameMode.SURVIVAL) {
-                                                    p.getInventory().removeItem(p.getItemInHand());
+                                                    if (p.getGameMode() == GameMode.SURVIVAL) {
+                                                        p.getInventory().removeItem(p.getItemInHand());
+                                                    }
                                                 }
                                             }
                                         }
@@ -91,6 +93,8 @@ public class IronBoatListener implements Listener {
                             }
                         }
                     }
+                } catch (IllegalStateException ex) {
+                    e.setCancelled(true);
                 }
             }
         }

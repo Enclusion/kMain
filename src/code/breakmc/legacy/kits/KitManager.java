@@ -84,4 +84,12 @@ public class KitManager {
     public List<Kit> getKits() {
         return kits;
     }
+
+    public FileConfiguration getConfig() {
+        return config;
+    }
+
+    public File getFile() {
+        return file;
+    }
 }

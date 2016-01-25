@@ -1,9 +1,10 @@
-package code.breakmc.legacy.teams;
+package code.breakmc.legacy.teams.commands;
 
 import code.breakmc.legacy.Legacy;
 import code.breakmc.legacy.profiles.Profile;
 import code.breakmc.legacy.profiles.ProfileManager;
-import code.breakmc.legacy.teams.commands.*;
+import code.breakmc.legacy.teams.Team;
+import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.utils.MessageManager;
 import code.breakmc.legacy.utils.PlayerUtility;
 import code.breakmc.legacy.utils.command.BaseCommand;
@@ -64,7 +65,6 @@ public class BaseTeamCommand extends BaseCommand {
 
         commands.add(new Chat());
         commands.add(new Create());
-        commands.add(new Debug());
         commands.add(new Demote());
         commands.add(new Hq());
         commands.add(new Info());
@@ -175,7 +175,7 @@ public class BaseTeamCommand extends BaseCommand {
                 }
 
                 if (args[0].equalsIgnoreCase("i") || args[0].equalsIgnoreCase("info")) {
-                    List<String> list2return = toList(PlayerUtility.getOnlinePlayers()).stream().filter(opt -> opt.toLowerCase().startsWith(args[1])).collect(Collectors.toList());
+                    List<String> list2return = PlayerUtility.toList(PlayerUtility.getOnlinePlayers()).stream().filter(opt -> opt.toLowerCase().startsWith(args[1])).collect(Collectors.toList());
                     Collections.sort(list2return);
                     return list2return;
                 }
@@ -246,14 +246,5 @@ public class BaseTeamCommand extends BaseCommand {
         String[] subArgs = new String[args.length - 1];
         System.arraycopy(args, 1, subArgs, 0, args.length - 1);
         return subArgs;
-    }
-
-
-    public List<String> toList(Player[] array) {
-        List<String> list = new ArrayList<>();
-        for (Player t : array) {
-            list.add(t.getName());
-        }
-        return list;
     }
 }

@@ -15,9 +15,9 @@ import code.breakmc.legacy.profiles.ProfileListeners;
 import code.breakmc.legacy.profiles.ProfileManager;
 import code.breakmc.legacy.spawn.SpawnListeners;
 import code.breakmc.legacy.spawn.SpawnManager;
-import code.breakmc.legacy.teams.BaseTeamCommand;
 import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.teams.TeamTagManager;
+import code.breakmc.legacy.teams.commands.BaseTeamCommand;
 import code.breakmc.legacy.teams.listeners.TeamListeners;
 import code.breakmc.legacy.utils.BlockUtils;
 import code.breakmc.legacy.utils.LagTask;
@@ -130,6 +130,7 @@ public class Legacy extends JavaPlugin {
             register.registerCommand("homeas", new Command_homeas());
             register.registerCommand("kit", new Command_kit());
             register.registerCommand("setkit", new Command_setkit());
+            register.registerCommand("delkit", new Command_delkit());
             register.registerCommand("accept", new Command_accept());
             register.registerCommand("duel", new Command_duel());
         } catch (Exception e) {

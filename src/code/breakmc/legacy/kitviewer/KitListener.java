@@ -16,6 +16,7 @@ public class KitListener implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
+
         if (e.getInventory().getName().contains("Hover") ||
                 e.getInventory().getName().contains("Premium") ||
                 e.getInventory().getName().contains("Vip") ||
@@ -27,8 +28,7 @@ public class KitListener implements Listener {
                 e.getInventory().getName().contains("Extreme") ||
                 e.getInventory().getName().contains("High") ||
                 e.getInventory().getName().contains("Higher") ||
-                e.getInventory().getName().contains("Highest") ||
-                e.getInventory().equals(KitViewerManager.workbench1)) {
+                e.getInventory().getName().contains("Highest")) {
             e.setCancelled(true);
 
             if (e.getCurrentItem() != null) {
@@ -145,8 +145,6 @@ public class KitListener implements Listener {
                         KitViewerManager.openAdvancedView(p);
                     } else if (sign.getLine(1).contains("Extreme")) {
                         KitViewerManager.openExtremeView(p);
-                    } else if (sign.getLine(1).contains("Iron Boat")) {
-                        KitViewerManager.openIronBoatRecipe(p);
                     } else if (sign.getLine(1).contains("Economy")) {
                         p.openInventory(Legacy.getInstance().getEconomyManager().getItemInventory1());
                     }

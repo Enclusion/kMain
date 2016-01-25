@@ -1,9 +1,12 @@
 package code.breakmc.legacy.warps;
 
 import code.breakmc.legacy.Legacy;
+import code.breakmc.legacy.teams.TeamManager;
 import code.breakmc.legacy.utils.MessageManager;
+import com.breakmc.pure.Pure;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -46,7 +49,19 @@ public class Warp implements Listener {
 
     public void teleport(final Player p) {
         if (Legacy.getInstance().getSpawnManager().hasSpawnProt(p.getUniqueId())) {
-            MessageManager.sendMessage(p, "&cYou cannot warp within spawn");
+            MessageManager.sendMessage(p, "&cYou cannot warp within spawn.");
+            return;
+        }
+
+        if (location == null) {
+            MessageManager.sendMessage(p, "&cThat warp location is not valid.");
+            return;
+        }
+
+        if (canTeleport(p)) {
+            location.getChunk().load(true);
+            p.teleport(location);
+            MessageManager.sendMessage(p, "&7You have warped to \"&b" + name + "&7\"");
             return;
         }
 
@@ -56,15 +71,41 @@ public class Warp implements Listener {
 
         dontMove.put(p.getUniqueId(), new BukkitRunnable() {
             public void run() {
-                p.teleport(getLocation());
+                location.getChunk().load(true);
+                p.teleport(location);
                 dontMove.remove(p.getUniqueId());
-                MessageManager.sendMessage(p, "&7You have warped to \"&b" + getName() + "\"");
+                MessageManager.sendMessage(p, "&7You have warped to \"&b" + name + "&7\"");
             }
         });
 
         dontMove.get(p.getUniqueId()).runTaskLater(Legacy.getInstance(), 10 * 20);
 
         MessageManager.sendMessage(p, "&7Someone is nearby! Warping in 10 seconds, do not move!");
+    }
+
+    public boolean canTeleport(Player p) {
+        TeamManager tm = Legacy.getInstance().getTeamManager();
+        boolean canTeleport = true;
+
+        for (Entity ent : p.getNearbyEntities(40, 20, 40)) {
+            if (ent instanceof Player) {
+                Player near = (Player) ent;
+
+                if (near.equals(p)) continue;
+
+                if (Pure.getInstance().getPunishmentManager().isVanished(near)) continue;
+
+                if (tm.getTeam(near.getUniqueId()) != null) {
+                    if (!tm.getTeam(owner).equals(tm.getTeam(near.getUniqueId()))) {
+                        canTeleport = false;
+                    }
+                } else {
+                    canTeleport = false;
+                }
+            }
+        }
+
+        return canTeleport;
     }
 
     @EventHandler
