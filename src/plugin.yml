@@ -1,8 +1,9 @@
-main: code.breakmc.legacy.Legacy
-name: Legacy
+main: com.mccritz.kmain.Legacy
+name: kMain
 version: 1.0
 author: Young
-depends: [Pure, Origin, WorldEdit]
+authors: [The McCritz Development Team]
+depends: [WorldEdit, kBasic]
 
 commands:
   buy:

@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="kMain">
+    <output-path>$PROJECT_DIR$/../../Compiled</output-path>
+    <root id="archive" name="kMain.jar">
+      <element id="module-output" name="McCritz" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/mkremins/fanciful/0.3.2-SNAPSHOT/fanciful-0.3.2-SNAPSHOT.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/de/svenkubiak/jBCrypt/0.4/jBCrypt-0.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mongodb/mongo-java-driver/3.2.0/mongo-java-driver-3.2.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mongodb/morphia/morphia/1.0.1/morphia-1.0.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
