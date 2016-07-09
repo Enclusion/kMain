@@ -1,7 +1,7 @@
 main: com.mccritz.kmain.Legacy
 name: kMain
 version: 1.0
-author: Young
+author: McCritZ Development
 authors: [The McCritz Development Team]
 depends: [WorldEdit, kBasic]
 
