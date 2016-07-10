@@ -1,6 +1,7 @@
 main: com.mccritz.kmain.Legacy
 name: kMain
 version: 1.0
+description: Advanced all in one plugin which containts utilities reltaed to the Teams gamemode that utilizes MongoDB.
 author: McCritZ Development
 authors: [The McCritz Development Team]
 depends: [WorldEdit, kBasic]
