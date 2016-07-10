@@ -1,15 +1,17 @@
 package com.mccritz.kmain.utils.glaedr;
 
-import com.mccritz.kmain.utils.PlayerUtility;
-import com.mccritz.kmain.utils.glaedr.listeners.ScoreboardListeners;
-import com.mccritz.kmain.utils.glaedr.scoreboards.PlayerScoreboard;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.mccritz.kmain.utils.PlayerUtility;
+import com.mccritz.kmain.utils.glaedr.listeners.ScoreboardListeners;
+import com.mccritz.kmain.utils.glaedr.scoreboards.PlayerScoreboard;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /*
  * Copyright (c) 2016, Alexander Maxwell. All rights reserved.
@@ -44,10 +46,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Glaedr is a simple Scoreboard API that features:
  *
- *   - Up to 32 characters per line
- *   - Automatic countdowns with millis
- *   - Effortless usability and easy-to-understand methods
- *   - Much more coming soon
+ * - Up to 32 characters per line - Automatic countdowns with millis -
+ * Effortless usability and easy-to-understand methods - Much more coming soon
  *
  */
 @Getter
@@ -60,62 +60,72 @@ public class Glaedr implements Listener {
     private JavaPlugin plugin;
 
     /**
-     * @param plugin Plugin instance, used to register scoreboard listeners
-     * @param title Title of scoreboard, used as objective display name
-     * @param hook Boolean to check whether Glaedr should attempt to hook into an already existing scoreboard
+     * @param plugin
+     *            Plugin instance, used to register scoreboard listeners
+     * @param title
+     *            Title of scoreboard, used as objective display name
+     * @param hook
+     *            Boolean to check whether Glaedr should attempt to hook into an
+     *            already existing scoreboard
      */
     public Glaedr(JavaPlugin plugin, String title, boolean hook) {
-        Bukkit.getPluginManager().registerEvents(new ScoreboardListeners(), plugin);
-        this.plugin = plugin;
-        this.title = ChatColor.translateAlternateColorCodes('&', title);
-        this.hook = hook;
-        instance = this;
+	Bukkit.getPluginManager().registerEvents(new ScoreboardListeners(), plugin);
+	this.plugin = plugin;
+	this.title = ChatColor.translateAlternateColorCodes('&', title);
+	this.hook = hook;
+	instance = this;
 
-        checkPlayers();
+	checkPlayers();
     }
 
     /**
-     * @param plugin Plugin instance, used to register scoreboard listeners
+     * @param plugin
+     *            Plugin instance, used to register scoreboard listeners
      */
     public Glaedr(JavaPlugin plugin) {
-        this(plugin, "Title", false);
+	this(plugin, "Title", false);
     }
 
     /**
-     * @param plugin Plugin instance, used to register scoreboard listeners
-     * @param title Title of scoreboard, used as objective display name
+     * @param plugin
+     *            Plugin instance, used to register scoreboard listeners
+     * @param title
+     *            Title of scoreboard, used as objective display name
      */
     public Glaedr(JavaPlugin plugin, String title) {
-        this(plugin, title, false);
+	this(plugin, title, false);
     }
 
     /**
-     * @param plugin Plugin instance, used to register scoreboard listeners
-     * @param hook Boolean to check whether Glaedr should attempt to hook into an already existing scoreboard
+     * @param plugin
+     *            Plugin instance, used to register scoreboard listeners
+     * @param hook
+     *            Boolean to check whether Glaedr should attempt to hook into an
+     *            already existing scoreboard
      */
     public Glaedr(JavaPlugin plugin, boolean hook) {
-        this(plugin, "Title", hook);
+	this(plugin, "Title", hook);
     }
 
     /**
      * Creates a scorebaord for all online players
      */
     private void checkPlayers() {
-        for (Player player : PlayerUtility.getOnlinePlayers()) {
-            PlayerScoreboard playerScoreboard = PlayerScoreboard.getScoreboard(player);
-            if (playerScoreboard == null) {
-                long startTime = System.currentTimeMillis();
-                new PlayerScoreboard(player);
-                long endTime = System.currentTimeMillis();
-                player.sendMessage(ChatColor.GREEN + "Scoreboard created in " + (endTime - startTime) + "ms.");
-            }
-        }
+	for (Player player : PlayerUtility.getOnlinePlayers()) {
+	    PlayerScoreboard playerScoreboard = PlayerScoreboard.getScoreboard(player);
+	    if (playerScoreboard == null) {
+		long startTime = System.currentTimeMillis();
+		new PlayerScoreboard(player);
+		long endTime = System.currentTimeMillis();
+		player.sendMessage(ChatColor.GREEN + "Scoreboard created in " + (endTime - startTime) + "ms.");
+	    }
+	}
     }
 
     /**
      * @return Glaedr instance
      */
     public static Glaedr getInstance() {
-        return instance;
+	return instance;
     }
 }

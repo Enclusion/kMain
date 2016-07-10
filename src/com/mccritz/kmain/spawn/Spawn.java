@@ -1,16 +1,18 @@
 package com.mccritz.kmain.spawn;
 
-import com.mccritz.kmain.Legacy;
-import com.mccritz.kmain.listeners.TeleportationHandler;
-import com.mccritz.kmain.utils.MessageManager;
-import com.mccritz.kmain.utils.PlayerUtility;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import com.mccritz.kmain.Legacy;
+import com.mccritz.kmain.listeners.TeleportationHandler;
+import com.mccritz.kmain.utils.MessageManager;
+import com.mccritz.kmain.utils.PlayerUtility;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -23,58 +25,67 @@ public class Spawn {
     private int stoneHeight;
 
     public Spawn(int radius, int height, int stoneRadius, int stoneHeight) {
-        this.radius = radius;
-        this.height = height;
-        this.stoneRadius = stoneRadius;
-        this.stoneHeight = stoneHeight;
+	this.radius = radius;
+	this.height = height;
+	this.stoneRadius = stoneRadius;
+	this.stoneHeight = stoneHeight;
 
-        Bukkit.getServer().getWorld("world").setSpawnLocation(0, height, 0);
+	Bukkit.getServer().getWorld("world").setSpawnLocation(0, height, 0);
     }
 
     public boolean isInSpawnRadius(Location location) {
-        return location.getWorld().getEnvironment() == World.Environment.NORMAL && (location.getBlockX() < radius + 1) && (location.getBlockX() > -radius - 1) && (location.getBlockZ() < radius + 1) && (location.getBlockZ() >= -radius - 1);
+	return location.getWorld().getEnvironment() == World.Environment.NORMAL && location.getBlockX() < radius + 1
+		&& location.getBlockX() > -radius - 1 && location.getBlockZ() < radius + 1
+		&& location.getBlockZ() >= -radius - 1;
     }
 
     public boolean isInStoneRadius(Location location) {
-        return location.getWorld().getEnvironment() == World.Environment.NORMAL && (location.getBlockX() < stoneRadius + 1) && (location.getBlockX() > -stoneRadius - 1) && (location.getBlockZ() < stoneRadius + 1) && (location.getBlockZ() >= -stoneRadius - 1);
+	return location.getWorld().getEnvironment() == World.Environment.NORMAL
+		&& location.getBlockX() < stoneRadius + 1 && location.getBlockX() > -stoneRadius - 1
+		&& location.getBlockZ() < stoneRadius + 1 && location.getBlockZ() >= -stoneRadius - 1;
     }
 
     public boolean isIn512Radius(Location location) {
-        return location.getWorld().getEnvironment() == World.Environment.NORMAL && (location.getBlockX() < 512 + 1) && (location.getBlockX() > -512 - 1) && (location.getBlockZ() < 512 + 1) && (location.getBlockZ() >= -512 - 1);
+	return location.getWorld().getEnvironment() == World.Environment.NORMAL && location.getBlockX() < 512 + 1
+		&& location.getBlockX() > -512 - 1 && location.getBlockZ() < 512 + 1
+		&& location.getBlockZ() >= -512 - 1;
     }
 
     public boolean isInNetherRadius(Location location) {
-        return location.getWorld().getEnvironment() != World.Environment.THE_END && location.getWorld().getEnvironment() != World.Environment.NORMAL && (location.getBlockX() < 30 + 1) && (location.getBlockX() > -30 - 1) && (location.getBlockZ() < 30 + 1) && (location.getBlockZ() >= -30 - 1);
+	return location.getWorld().getEnvironment() != World.Environment.THE_END
+		&& location.getWorld().getEnvironment() != World.Environment.NORMAL && location.getBlockX() < 30 + 1
+		&& location.getBlockX() > -30 - 1 && location.getBlockZ() < 30 + 1 && location.getBlockZ() >= -30 - 1;
     }
 
     public void spawnTeleport(final Player p) {
-        if (th.canTeleport(p)) {
-            p.teleport(new Location(Bukkit.getWorld("world"), 0.5, getHeight(), 0.5));
+	if (th.canTeleport(p)) {
+	    p.teleport(new Location(Bukkit.getWorld("world"), 0.5, getHeight(), 0.5));
 
-            MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
+	    MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
 
-            Legacy.getInstance().getSpawnManager().getSpawnProtected().add(p.getUniqueId());
+	    Legacy.getInstance().getSpawnManager().getSpawnProtected().add(p.getUniqueId());
 
-            PlayerUtility.updateScoreboard(p);
-        } else {
-            if (th.getTeleporters().containsKey(p.getUniqueId())) {
-                th.getTeleporters().get(p.getUniqueId()).cancel();
-            }
+	    PlayerUtility.updateScoreboard(p);
+	} else {
+	    if (th.getTeleporters().containsKey(p.getUniqueId())) {
+		th.getTeleporters().get(p.getUniqueId()).cancel();
+	    }
 
-            th.getTeleporters().put(p.getUniqueId(), new BukkitRunnable() {
-                public void run() {
-                    p.teleport(new Location(Bukkit.getWorld("world"), 0.5, getHeight(), 0.5));
+	    th.getTeleporters().put(p.getUniqueId(), new BukkitRunnable() {
+		@Override
+		public void run() {
+		    p.teleport(new Location(Bukkit.getWorld("world"), 0.5, getHeight(), 0.5));
 
-                    MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
-                    Legacy.getInstance().getSpawnManager().getSpawnProtected().add(p.getUniqueId());
-                    th.getTeleporters().remove(p.getUniqueId());
+		    MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
+		    Legacy.getInstance().getSpawnManager().getSpawnProtected().add(p.getUniqueId());
+		    th.getTeleporters().remove(p.getUniqueId());
 
-                    PlayerUtility.updateScoreboard(p);
-                }
-            });
+		    PlayerUtility.updateScoreboard(p);
+		}
+	    });
 
-            th.getTeleporters().get(p.getUniqueId()).runTaskLater(Legacy.getInstance(), 10 * 20L);
-            MessageManager.sendMessage(p, "&7Someone is nearby. Warping in 10 seconds. Do not move.");
-        }
+	    th.getTeleporters().get(p.getUniqueId()).runTaskLater(Legacy.getInstance(), 10 * 20L);
+	    MessageManager.sendMessage(p, "&7Someone is nearby. Warping in 10 seconds. Do not move.");
+	}
     }
 }

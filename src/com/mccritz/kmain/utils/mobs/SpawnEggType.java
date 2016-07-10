@@ -36,52 +36,48 @@ public enum SpawnEggType {
     private int exp_cost;
 
     private SpawnEggType(int id, EntityType entityType, int exp_cost) {
-        this.id = id;
-        this.entityType = entityType;
-        this.exp_cost = exp_cost;
+	this.id = id;
+	this.entityType = entityType;
+	this.exp_cost = exp_cost;
     }
 
     public static SpawnEggType getByName(String name) {
-        if (name == null) {
-            return null;
-        }
-        for (SpawnEggType spawnEggType : values()) {
-            if (spawnEggType.getName().equalsIgnoreCase(name)) {
-                return spawnEggType;
-            }
-        }
-        return null;
+	if (name == null)
+	    return null;
+	for (SpawnEggType spawnEggType : values()) {
+	    if (spawnEggType.getName().equalsIgnoreCase(name))
+		return spawnEggType;
+	}
+	return null;
     }
 
     public static SpawnEggType getByEntityType(EntityType entityType) {
-        if (entityType == null) {
-            return null;
-        }
-        for (SpawnEggType spawnEggType : values()) {
-            if (spawnEggType.getEntityType().equals(entityType)) {
-                return spawnEggType;
-            }
-        }
-        return null;
+	if (entityType == null)
+	    return null;
+	for (SpawnEggType spawnEggType : values()) {
+	    if (spawnEggType.getEntityType().equals(entityType))
+		return spawnEggType;
+	}
+	return null;
     }
 
     public int getId() {
-        return this.id;
+	return this.id;
     }
 
     public int getCost() {
-        return exp_cost;
+	return exp_cost;
     }
 
     public boolean isInstance(Entity e) {
-        return e.getType().equals(getEntityType());
+	return e.getType().equals(getEntityType());
     }
 
     public String getName() {
-        return this.entityType.getName();
+	return this.entityType.getName();
     }
 
     public EntityType getEntityType() {
-        return this.entityType;
+	return this.entityType;
     }
 }
