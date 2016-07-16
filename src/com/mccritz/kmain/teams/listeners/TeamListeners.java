@@ -89,7 +89,7 @@ public class TeamListeners implements Listener {
 	if (tm.hasTeam(p.getUniqueId())) {
 	    Team team = tm.getTeam(p.getUniqueId());
 
-	    team.sendMessage("&3Team Login&f: " + p.getName());
+	    team.sendMessage("&3Team Login&7: " + p.getName());
 	}
     }
 
@@ -98,7 +98,7 @@ public class TeamListeners implements Listener {
 	if (tm.hasTeam(e.getPlayer().getUniqueId())) {
 	    Team team = tm.getTeam(e.getPlayer().getUniqueId());
 
-	    team.sendMessage("&3Team Logout&d: " + e.getPlayer().getName());
+	    team.sendMessage("&3Team Logout&7: " + e.getPlayer().getName());
 	}
     }
 
