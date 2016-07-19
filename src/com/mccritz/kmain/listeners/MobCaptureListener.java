@@ -1,21 +1,15 @@
-package com.mccritz.kmain.mobcapture;
+package com.mccritz.kmain.listeners;
 
+import com.mccritz.kmain.utils.MessageManager;
+import com.mccritz.kmain.utils.mobs.SpawnEggType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.Ageable;
-import org.bukkit.entity.Animals;
-import org.bukkit.entity.Egg;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
-
-import com.mccritz.kmain.utils.MessageManager;
-import com.mccritz.kmain.utils.mobs.SpawnEggType;
 
 public class MobCaptureListener implements Listener {
 

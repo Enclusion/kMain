@@ -1,20 +1,19 @@
 package com.mccritz.kmain.utils.glaedr.events;
 
+import com.mccritz.kmain.utils.glaedr.scoreboards.Entry;
+import com.mccritz.kmain.utils.glaedr.scoreboards.PlayerScoreboard;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.mccritz.kmain.utils.glaedr.scoreboards.Entry;
-import com.mccritz.kmain.utils.glaedr.scoreboards.PlayerScoreboard;
-
-import lombok.Getter;
-import lombok.Setter;
+/**
+ * This event is called when an entry is abruptly cancelled by entry#cancel
+ */
 
 @Getter
 @Setter
-/**
- * This event is called every time an entry is updated to a player scoreboard
- */
 public class EntryTickEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
