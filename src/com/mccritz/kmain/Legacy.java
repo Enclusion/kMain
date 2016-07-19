@@ -1,44 +1,10 @@
 package com.mccritz.kmain;
 
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import com.mccritz.kmain.commands.CommandBalance;
-import com.mccritz.kmain.commands.CommandBaltop;
-import com.mccritz.kmain.commands.CommandClearSpawn;
-import com.mccritz.kmain.commands.CommandDelkit;
-import com.mccritz.kmain.commands.CommandEco;
-import com.mccritz.kmain.commands.CommandGo;
-import com.mccritz.kmain.commands.CommandGoAs;
-import com.mccritz.kmain.commands.CommandHome;
-import com.mccritz.kmain.commands.CommandHomeAs;
-import com.mccritz.kmain.commands.CommandHud;
-import com.mccritz.kmain.commands.CommandKit;
-import com.mccritz.kmain.commands.CommandSetHome;
-import com.mccritz.kmain.commands.CommandSetKit;
-import com.mccritz.kmain.commands.CommandSetSpawn;
-import com.mccritz.kmain.commands.CommandSpawn;
-import com.mccritz.kmain.commands.CommandTestMessage;
-import com.mccritz.kmain.commands.CommandToggleDM;
-import com.mccritz.kmain.commands.CommandTPA;
-import com.mccritz.kmain.commands.CommandTPAccept;
-import com.mccritz.kmain.commands.CommandTPAHere;
-import com.mccritz.kmain.commands.CommandTPDeny;
-import com.mccritz.kmain.commands.CommandTrack;
+import com.mccritz.kmain.commands.*;
 import com.mccritz.kmain.economy.EconomyListener;
 import com.mccritz.kmain.economy.EconomyManager;
 import com.mccritz.kmain.kits.KitManager;
-import com.mccritz.kmain.listeners.CombatLogListener;
-import com.mccritz.kmain.listeners.IronBoatListener;
-import com.mccritz.kmain.listeners.OptimzationsListener;
-import com.mccritz.kmain.listeners.SalvagingListeners;
-import com.mccritz.kmain.listeners.SoupListener;
-import com.mccritz.kmain.listeners.TeleportationHandler;
+import com.mccritz.kmain.listeners.*;
 import com.mccritz.kmain.mobcapture.MobCaptureListener;
 import com.mccritz.kmain.profiles.ProfileListeners;
 import com.mccritz.kmain.profiles.ProfileManager;
@@ -52,41 +18,21 @@ import com.mccritz.kmain.utils.BlockUtils;
 import com.mccritz.kmain.utils.PlayerUtility;
 import com.mccritz.kmain.utils.command.Register;
 import com.mccritz.kmain.utils.glaedr.Glaedr;
-import com.mccritz.kmain.utils.mobs.CustomEntityBat;
-import com.mccritz.kmain.utils.mobs.CustomEntityBlaze;
-import com.mccritz.kmain.utils.mobs.CustomEntityChicken;
-import com.mccritz.kmain.utils.mobs.CustomEntityController;
-import com.mccritz.kmain.utils.mobs.CustomEntityCow;
-import com.mccritz.kmain.utils.mobs.CustomEntityCreeper;
-import com.mccritz.kmain.utils.mobs.CustomEntityOcelot;
-import com.mccritz.kmain.utils.mobs.CustomEntityPig;
-import com.mccritz.kmain.utils.mobs.CustomEntityPigZombie;
-import com.mccritz.kmain.utils.mobs.CustomEntitySheep;
-import com.mccritz.kmain.utils.mobs.CustomEntitySilverfish;
-import com.mccritz.kmain.utils.mobs.CustomEntitySkeleton;
-import com.mccritz.kmain.utils.mobs.CustomEntityZombie;
+import com.mccritz.kmain.utils.mobs.*;
 import com.mccritz.kmain.warps.OverrideListener;
 import com.mccritz.kmain.warps.WarpManager;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.client.MongoDatabase;
+import net.minecraft.server.v1_7_R4.*;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import net.minecraft.server.v1_7_R4.EntityBat;
-import net.minecraft.server.v1_7_R4.EntityBlaze;
-import net.minecraft.server.v1_7_R4.EntityChicken;
-import net.minecraft.server.v1_7_R4.EntityCow;
-import net.minecraft.server.v1_7_R4.EntityCreeper;
-import net.minecraft.server.v1_7_R4.EntityOcelot;
-import net.minecraft.server.v1_7_R4.EntityPig;
-import net.minecraft.server.v1_7_R4.EntityPigZombie;
-import net.minecraft.server.v1_7_R4.EntitySheep;
-import net.minecraft.server.v1_7_R4.EntitySilverfish;
-import net.minecraft.server.v1_7_R4.EntitySkeleton;
-import net.minecraft.server.v1_7_R4.EntityZombie;
-
-/**
- * Created by Calvin on 4/22/2015. Project: Legacy
- */
 public class Legacy extends JavaPlugin {
 
     private static Legacy instance;

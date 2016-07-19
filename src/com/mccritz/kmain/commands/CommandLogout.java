@@ -1,19 +1,18 @@
 package com.mccritz.kmain.commands;
 
-import java.util.HashMap;
-import java.util.UUID;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.mccritz.kmain.Legacy;
 import com.mccritz.kmain.profiles.Profile;
 import com.mccritz.kmain.profiles.ProfileManager;
 import com.mccritz.kmain.utils.MessageManager;
 import com.mccritz.kmain.utils.command.BaseCommand;
 import com.mccritz.kmain.utils.command.CommandUsageBy;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * Created by Calvin on 4/22/2015. Project: Legacy
@@ -76,7 +75,7 @@ public class CommandLogout extends BaseCommand {
 		    public void run() {
 			if (count.get(p.getUniqueId()) <= 11 && count.get(p.getUniqueId()) >= 1) {
 			    count.put(p.getUniqueId(), count.get(p.getUniqueId()) - 1);
-			    MessageManager.sendMessage(p, "&cLogging out in " + count.get(p.getUniqueId()) + "..");
+			    MessageManager.sendMessage(p, "&cLogging out in " + count.get(p.getUniqueId()) + "");
 			} else {
 			    MessageManager.sendMessage(p, "&cLogging out..");
 			    this.cancel();
