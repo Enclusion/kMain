@@ -17,7 +17,7 @@ import com.mccritz.kmain.utils.command.BaseCommand;
 import com.mccritz.kmain.utils.command.CommandUsageBy;
 
 /**
- * Created by Calvin on 4/22/2015. Project: Legacy
+ * Created by Calvin on 4/22/2015. Project: kMain
  */
 public class CommandBalance extends BaseCommand {
 
