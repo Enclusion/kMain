@@ -16,7 +16,7 @@ public class Rally extends TeamSubCommand {
     @Override
     public void execute(Player p, String[] args) {
         if (!tm.hasTeam(p.getUniqueId())) {
-            MessageManager.sendMessage(p, "&7You are not in a team.");
+            MessageManager.message(p, "&7You are not in a team.");
             return;
         }
 

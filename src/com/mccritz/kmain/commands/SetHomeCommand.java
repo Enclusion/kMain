@@ -29,7 +29,7 @@ public class SetHomeCommand extends BaseCommand {
             Profile prof = pm.getProfile(p.getUniqueId());
             prof.setHome(p.getLocation());
 
-            MessageManager.sendMessage(p, "&7Your home has been set.");
+            MessageManager.message(p, "&7Your home has been set.");
         }
     }
 }

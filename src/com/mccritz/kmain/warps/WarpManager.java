@@ -41,72 +41,86 @@ public class WarpManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                saveWarps();
+                saveWarps(true);
             }
-        }.runTaskTimerAsynchronously(main, 0L, 300*20L);
+        }.runTaskTimer(main, 0L, 300 * 20L);
     }
 
     public void loadWarps() {
-        main.getLogger().log(Level.INFO, "Preparing to load " + warpCollection.count() + " player warps.");
+        MessageManager.debug("&7Preparing to load &c" + warpCollection.count() + " &7player warps.");
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Document document : warpCollection.find()) {
-                    UUID id = UUID.fromString(document.getString("uuid"));
-                    String name = document.getString("name");
-                    Location location = LocationSerialization.deserializeLocation(document.getString("location"));
+        for (Document document : warpCollection.find()) {
+            UUID id = UUID.fromString(document.getString("uuid"));
+            String name = document.getString("name");
+            Location location = LocationSerialization.deserializeLocation(document.getString("location"));
 
-                    Warp warp = new Warp(id, name, location);
+            Warp warp = new Warp(id, name, location);
 
-                    if (!warps.containsKey(id)) {
-                        warps.put(id, warp);
-                    } else {
-                        warps.get(id).add(warp);
-                    }
-                }
-
-                main.getLogger().log(Level.INFO, "Successfully loaded " + warps.size() + " players warps.");
-            }
-        }.runTaskAsynchronously(main);
-    }
-
-    public void saveWarps() {
-        main.getLogger().log(Level.INFO, "Preparing to save " + warps.size() + " players warps.");
-
-        for (UUID ids : warps.keySet()) {
-            for (Warp ws : warps.get(ids)) {
-                if (ws.getLocation() != null && ws.getLocation().getWorld() != null) {
-                    Document document = new Document("uuid", ws.getOwner().toString()).append("name", ws.getName());
-                    document.append("location", LocationSerialization.serializeLocation(ws.getLocation()));
-
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            for (Document documents : warpCollection.find(Filters.eq("uuid", ws.getOwner().toString()))) {
-                                if (documents.getString("name").equalsIgnoreCase(ws.getName())) {
-                                    warpCollection.replaceOne(documents, document, new UpdateOptions().upsert(true));
-                                }
-                            }
-                        }
-                    }.runTaskAsynchronously(main);
-                }
+            if (!warps.containsKey(id)) {
+                warps.put(id, warp);
+            } else {
+                warps.get(id).add(warp);
             }
         }
 
-        main.getLogger().log(Level.INFO, "Successfully saved " + warps.size() + " players warps.");
+        MessageManager.debug("&7Successfully loaded &c" + warps.size() + " &7players warps.");
+    }
+
+    public void saveWarps(boolean async) {
+        MessageManager.debug("&7Preparing to save &c" + warps.size() + " &7players warps.");
+
+        if (async) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (UUID ids : warps.keySet()) {
+                        for (Warp ws : warps.get(ids)) {
+                            if (ws.getLocation() != null && ws.getLocation().getWorld() != null) {
+                                Document document = new Document("uuid", ws.getOwner().toString()).append("name", ws.getName());
+                                document.append("location", LocationSerialization.serializeLocation(ws.getLocation()));
+
+                                for (Document documents : warpCollection.find(Filters.eq("uuid", ws.getOwner().toString()))) {
+                                    if (documents.getString("name").equalsIgnoreCase(ws.getName())) {
+                                        warpCollection.replaceOne(documents, document, new UpdateOptions().upsert(true));
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    MessageManager.debug("&7Successfully saved &c" + warps.size() + " &7players warps.");
+                }
+            }.runTaskAsynchronously(main);
+        } else {
+            for (UUID ids : warps.keySet()) {
+                for (Warp ws : warps.get(ids)) {
+                    if (ws.getLocation() != null && ws.getLocation().getWorld() != null) {
+                        Document document = new Document("uuid", ws.getOwner().toString()).append("name", ws.getName());
+                        document.append("location", LocationSerialization.serializeLocation(ws.getLocation()));
+
+                        for (Document documents : warpCollection.find(Filters.eq("uuid", ws.getOwner().toString()))) {
+                            if (documents.getString("name").equalsIgnoreCase(ws.getName())) {
+                                warpCollection.replaceOne(documents, document, new UpdateOptions().upsert(true));
+                            }
+                        }
+                    }
+                }
+            }
+
+            MessageManager.debug("&7Successfully saved &c" + warps.size() + " &7players warps.");
+        }
     }
 
     public void setWarp(UUID id, String name, Location loc) {
         final Player p = Bukkit.getPlayer(id);
 
         if (!name.matches("^[A-Za-z0-9_+-]*$")) {
-            MessageManager.sendMessage(id, "&7Warp names must be alphanumerical.");
+            MessageManager.message(id, "&7Warp names must be alphanumerical.");
             return;
         }
 
         if (warps.get(id) != null && warps.get(id).size() >= warpSize(p)) {
-            MessageManager.sendMessage(id, "&7You have set the maximum amount of warps.");
+            MessageManager.message(id, "&7You have set the maximum amount of warps.");
             return;
         }
 
@@ -115,7 +129,7 @@ public class WarpManager {
         if (warps.containsKey(id)) {
             for (Warp ws : warps.get(id)) {
                 if (ws.getName().equalsIgnoreCase(name)) {
-                    MessageManager.sendMessage(id, "&7You already have a warp named &c" + ws.getName() + "&7.");
+                    MessageManager.message(id, "&7You already have a warp named &c" + ws.getName() + "&7.");
 
                     FancyMessage message = new FancyMessage(ChatColor.translateAlternateColorCodes('&', "&7Would you like to overwrite it? "));
                     message.then(ChatColor.GREEN + "/yes").command("/yes").tooltip(ChatColor.GREEN + "Yes");
@@ -129,7 +143,7 @@ public class WarpManager {
 
                     overriding.put(p.getUniqueId(), new BukkitRunnable() {
                         public void run() {
-                            MessageManager.sendMessage(p, "&7You ran out of time. Cancelling overwrite of &c" + tempwarp.getWarp().getName() + "&7.");
+                            MessageManager.message(p, "&7You ran out of time. Cancelling overwrite of &c" + tempwarp.getWarp().getName() + "&7.");
                         }
                     });
 
@@ -148,7 +162,7 @@ public class WarpManager {
             warps.put(id, warp);
         }
 
-        MessageManager.sendMessage(id, "&7You have set " + warp.getName() + " as a warp.");
+        MessageManager.message(id, "&7You have set " + warp.getName() + " as a warp.");
 
         Document document = new Document("uuid", id.toString()).append("name", warp.getName());
         document.append("location", LocationSerialization.serializeLocation(warp.getLocation()));
@@ -171,7 +185,7 @@ public class WarpManager {
             }
 
             if (warp == null) {
-                MessageManager.sendMessage(id, "&7Warp &c" + name + "&7 could not be found.");
+                MessageManager.message(id, "&7Warp &c" + name + "&7 could not be found.");
                 return;
             }
 
@@ -189,9 +203,9 @@ public class WarpManager {
                 }
             }.runTaskAsynchronously(main);
 
-            MessageManager.sendMessage(id, "&7Warp &c" + warp.getName() + "&7 has been deleted.");
+            MessageManager.message(id, "&7Warp &c" + warp.getName() + "&7 has been deleted.");
         } else {
-            MessageManager.sendMessage(id, "&7You have not set any warps yet.");
+            MessageManager.message(id, "&7You have not set any warps yet.");
         }
     }
 
@@ -205,7 +219,7 @@ public class WarpManager {
             }
 
             if (warp == null) {
-                MessageManager.sendMessage(id, "&7Warp &c" + name + "&7 could not be found.");
+                MessageManager.message(id, "&7Warp &c" + name + "&7 could not be found.");
                 return;
             }
 
@@ -223,9 +237,9 @@ public class WarpManager {
                 }
             }.runTaskAsynchronously(main);
 
-            MessageManager.sendMessage(id, "&7You deleted &c" + Bukkit.getOfflinePlayer(target).getName() + " &7warp &c" + warp.getName() + "&7.");
+            MessageManager.message(id, "&7You deleted &c" + Bukkit.getOfflinePlayer(target).getName() + " &7warp &c" + warp.getName() + "&7.");
         } else {
-            MessageManager.sendMessage(id, "&c" + Bukkit.getOfflinePlayer(target).getName() + " &7does not have any warps.");
+            MessageManager.message(id, "&c" + Bukkit.getOfflinePlayer(target).getName() + " &7does not have any warps.");
         }
     }
 
@@ -239,13 +253,13 @@ public class WarpManager {
             }
 
             if (warp == null) {
-                MessageManager.sendMessage(p, "&7Warp &c" + name + "&7 could not be found.");
+                MessageManager.message(p, "&7Warp &c" + name + "&7 could not be found.");
                 return;
             }
 
             warp.teleport(p);
         } else {
-            MessageManager.sendMessage(p, "&7You have not set any warps yet.");
+            MessageManager.message(p, "&7You have not set any warps yet.");
         }
     }
 
@@ -259,24 +273,24 @@ public class WarpManager {
             }
 
             if (warp == null) {
-                MessageManager.sendMessage(p, "&7Warp &c" + name + "&7 could not be found.");
+                MessageManager.message(p, "&7Warp &c" + name + "&7 could not be found.");
                 return;
             }
 
             p.teleport(warp.getLocation());
-            MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
+            MessageManager.message(p, "&7You cannot attack for 10 seconds.");
             kMain.getInstance().getLogger().log(Level.INFO, "[Admin Teleport]: " + p.getName() + " to " + Bukkit.getOfflinePlayer(name).getName() + "'s warp");
         } else {
-            MessageManager.sendMessage(p, "&c" + Bukkit.getOfflinePlayer(target).getName() + "&7does not have any warps.");
+            MessageManager.message(p, "&c" + Bukkit.getOfflinePlayer(target).getName() + "&7does not have any warps.");
         }
     }
 
     public void listWarps(UUID id) {
         if (!warps.containsKey(id) || warps.containsKey(id) && warps.get(id).size() == 0) {
-            MessageManager.sendMessage(id, "&7You have not set any warps yet.");
+            MessageManager.message(id, "&7You have not set any warps yet.");
         } else {
             if (Bukkit.getPlayer(id) != null) {
-                MessageManager.sendMessage(id, "&7***Warp List*** (" + getWarps().get(id).size() + "/" + warpSize(Bukkit.getPlayer(id)) + ")");
+                MessageManager.message(id, "&7***Warp List*** (" + getWarps().get(id).size() + "/" + warpSize(Bukkit.getPlayer(id)) + ")");
                 FancyMessage message = new FancyMessage(ChatColor.translateAlternateColorCodes('&', "&r"));
                 for (int i = 0; i < warps.get(id).size(); i++) {
                     if (i < warps.get(id).size() - 1) {
@@ -295,10 +309,10 @@ public class WarpManager {
         OfflinePlayer op = Bukkit.getOfflinePlayer(target);
 
         if (!warps.containsKey(target) || warps.containsKey(target) && warps.get(target).size() == 0) {
-            MessageManager.sendMessage(id, "&c" + op.getName() + " &7does not have any warps.");
+            MessageManager.message(id, "&c" + op.getName() + " &7does not have any warps.");
         } else {
             if (Bukkit.getPlayer(target) != null) {
-                MessageManager.sendMessage(id, "&7***Warp List*** (" + getWarps().get(target).size() + "/" + warpSize(Bukkit.getPlayer(target)) + ")");
+                MessageManager.message(id, "&7***Warp List*** (" + getWarps().get(target).size() + "/" + warpSize(Bukkit.getPlayer(target)) + ")");
                 FancyMessage message = new FancyMessage(ChatColor.translateAlternateColorCodes('&', "&r"));
 
                 for (int i = 0; i < warps.get(target).size(); i++) {

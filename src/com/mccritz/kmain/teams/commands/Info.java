@@ -21,13 +21,13 @@ public class Info extends TeamSubCommand {
     @Override
     public void execute(Player p, String[] args) {
         if (args.length > 1) {
-            MessageManager.sendMessage(p, "&cImproper usage! /team info <player>");
+            MessageManager.message(p, "&cImproper usage! /team info <player>");
             return;
         }
 
         if (args.length == 0) {
             if (!tm.hasTeam(p.getUniqueId())) {
-                MessageManager.sendMessage(p, "&7You are not in a team.");
+                MessageManager.message(p, "&7You are not in a team.");
                 return;
             }
 
@@ -38,12 +38,12 @@ public class Info extends TeamSubCommand {
             Profile prof = pm.getProfile(args[0]);
 
             if (prof == null) {
-                MessageManager.sendMessage(p, "&c" + args[0] + " &7could not be found.");
+                MessageManager.message(p, "&c" + args[0] + " &7could not be found.");
                 return;
             }
 
             if (!tm.hasTeam(prof.getUniqueId())) {
-                MessageManager.sendMessage(p, "&c" + prof.getName() + " &7is not in a team.");
+                MessageManager.message(p, "&c" + prof.getName() + " &7is not in a team.");
                 return;
             }
 

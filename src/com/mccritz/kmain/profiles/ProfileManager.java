@@ -2,6 +2,7 @@ package com.mccritz.kmain.profiles;
 
 import com.mccritz.kmain.kMain;
 import com.mccritz.kmain.utils.LocationSerialization;
+import com.mccritz.kmain.utils.MessageManager;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
@@ -12,7 +13,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.UUID;
-import java.util.logging.Level;
 
 public class ProfileManager {
 
@@ -26,67 +26,77 @@ public class ProfileManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                saveProfiles();
+                saveProfiles(true);
             }
-        }.runTaskTimerAsynchronously(main, 0L, 300*20L);
+        }.runTaskTimerAsynchronously(main, 0L, 300 * 20L);
     }
 
     public void loadProfiles() {
-        main.getLogger().log(Level.INFO, "Loading " + profileCollection.count() + " profiles.");
+        MessageManager.debug("&7Preparing to load &c" + profileCollection.count() + " &7profiles.");
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Document document : profileCollection.find()) {
-                    UUID id = UUID.fromString(document.getString("uniqueId"));
-                    String name = document.getString("name");
-                    Double gold = document.getDouble("gold");
-                    Location home = null;
+        for (Document document : profileCollection.find()) {
+            UUID id = UUID.fromString(document.getString("uniqueId"));
+            String name = document.getString("name");
+            Double gold = document.getDouble("gold");
+            Location home = null;
 
-                    if (document.getString("home") != null) {
-                        home = LocationSerialization.deserializeLocation(document.getString("home"));
-                    }
-
-                    boolean safeLogged = true;
-
-                    if (document.getBoolean("safeLogged") != null) {
-                        safeLogged = document.getBoolean("safeLogged");
-                    }
-
-                    Profile profile = new Profile(id);
-                    profile.setName(name);
-                    profile.setGold(gold);
-                    profile.setHome(home);
-                    profile.setSafeLogged(safeLogged);
-
-                    loadedProfiles.add(profile);
-                }
-
-                main.getLogger().log(Level.INFO, "Successfully loaded " + profileCollection.count() + " profiles.");
+            if (document.getString("home") != null) {
+                home = LocationSerialization.deserializeLocation(document.getString("home"));
             }
-        }.runTaskAsynchronously(main);
+
+            boolean safeLogged = true;
+
+            if (document.getBoolean("safeLogged") != null) {
+                safeLogged = document.getBoolean("safeLogged");
+            }
+
+            Profile profile = new Profile(id);
+            profile.setName(name);
+            profile.setGold(gold);
+            profile.setHome(home);
+            profile.setSafeLogged(safeLogged);
+
+            loadedProfiles.add(profile);
+        }
+
+        MessageManager.debug("&7Successfully loaded &c" + profileCollection.count() + " &7profiles.");
     }
 
-    public void saveProfiles() {
-        main.getLogger().log(Level.INFO, "Saving " + getLoadedProfiles().size() + " profiles.");
+    public void saveProfiles(boolean async) {
+        MessageManager.debug("&7Preparing to save &c" + getLoadedProfiles().size() + " &7profiles.");
 
-        for (Profile profile : getLoadedProfiles()) {
-            Document document = new Document("uniqueId", profile.getUniqueId().toString());
-            document.append("name", profile.getName());
-            document.append("gold", profile.getGold());
-            if (profile.getHome() != null)
-                document.append("home", LocationSerialization.serializeLocation(profile.getHome()));
-            document.append("safeLogged", profile.isSafeLogged());
-
+        if (async) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    profileCollection.updateOne(Filters.eq("uniqueId", profile.getUniqueId().toString()), document, new UpdateOptions().upsert(true));
+                    for (Profile profile : getLoadedProfiles()) {
+                        Document document = new Document("uniqueId", profile.getUniqueId().toString());
+                        document.append("name", profile.getName());
+                        document.append("gold", profile.getGold());
+                        if (profile.getHome() != null)
+                            document.append("home", LocationSerialization.serializeLocation(profile.getHome()));
+                        document.append("safeLogged", profile.isSafeLogged());
+
+                        profileCollection.replaceOne(Filters.eq("uniqueId", profile.getUniqueId().toString()), document, new UpdateOptions().upsert(true));
+                    }
+
+                    MessageManager.debug("&7Successfully saved &c" + getLoadedProfiles().size() + " &7profiles.");
                 }
             }.runTaskAsynchronously(main);
-        }
+        } else {
+            for (Profile profile : getLoadedProfiles()) {
+                Document document = new Document("uniqueId", profile.getUniqueId().toString());
+                document.append("name", profile.getName());
+                document.append("gold", profile.getGold());
+                if (profile.getHome() != null)
+                    document.append("home", LocationSerialization.serializeLocation(profile.getHome()));
+                document.append("safeLogged", profile.isSafeLogged());
 
-        main.getLogger().log(Level.INFO, "Successfully saved " + getLoadedProfiles().size() + " profiles.");
+                profileCollection.replaceOne(Filters.eq("uniqueId", profile.getUniqueId().toString()), document, new UpdateOptions().upsert(true));
+            }
+
+            MessageManager.debug("&7Successfully saved &c" + getLoadedProfiles().size() + " &7profiles.");
+        }
     }
 
     public void createProfile(Player p) {

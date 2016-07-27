@@ -1,29 +1,21 @@
 package com.mccritz.kmain.spawn;
 
-import com.mccritz.kmain.commands.HudCommand;
 import com.mccritz.kmain.kMain;
 import com.mccritz.kmain.utils.BlockUtils;
 import com.mccritz.kmain.utils.MessageManager;
-import com.mccritz.kmain.utils.PlayerUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.StructureGrowEvent;
@@ -62,24 +54,13 @@ public class SpawnListeners implements Listener {
                 || e.getMessage().toLowerCase().contains("/ewarp set")) {
             if (sm.getSpawn().isIn512Radius(p.getLocation())) {
                 e.setCancelled(true);
-                MessageManager.sendMessage(p, "&7You cannot use that within 512 blocks of spawn.");
+                MessageManager.message(p, "&7You cannot use that within 512 blocks of spawn.");
             }
         } else {
             if (e.getMessage().toLowerCase().contains("/buy")) {
                 if (sm.getSpawn().isIn512Radius(p.getLocation()) && !sm.hasSpawnProt(p.getUniqueId())) {
                     e.setCancelled(true);
-                    MessageManager.sendMessage(p, "&7You may not use the economy within 512 blocks of spawn.");
-                }
-            }
-            if (e.getMessage().toLowerCase().contains("/tpa")
-                    || e.getMessage().toLowerCase().contains("/tpaccept")
-                    || e.getMessage().toLowerCase().contains("/tpyes")
-                    || e.getMessage().toLowerCase().contains("/tpahere")
-                    || e.getMessage().toLowerCase().contains("/tpdeny")
-                    || e.getMessage().toLowerCase().contains("/tpno")) {
-                if (sm.hasSpawnProt(p.getUniqueId())) {
-                    e.setCancelled(true);
-                    MessageManager.sendMessage(p, "&7You may not teleport this close to spawn.");
+                    MessageManager.message(p, "&7You may not use the economy within 512 blocks of spawn.");
                 }
             }
         }
@@ -103,10 +84,9 @@ public class SpawnListeners implements Listener {
                     }
 
                     if (sm.hasSpawnProt(attacker.getUniqueId()) && !sm.hasSpawnProt(attacked.getUniqueId())) {
-                        MessageManager.sendMessage(attacker, "&7You no longer have spawn protection.");
+                        MessageManager.message(attacker, "&7You no longer have spawn protection.");
 
                         sm.getSpawnProtected().remove(attacker.getUniqueId());
-                        PlayerUtility.updateScoreboard(attacker);
                         return;
                     }
                 }
@@ -122,10 +102,9 @@ public class SpawnListeners implements Listener {
                         }
 
                         if (sm.hasSpawnProt(attacker.getUniqueId()) && !sm.hasSpawnProt(attacked.getUniqueId())) {
-                            MessageManager.sendMessage(attacker, "&7You no longer have spawn protection.");
+                            MessageManager.message(attacker, "&7You no longer have spawn protection.");
 
                             sm.getSpawnProtected().remove(attacker.getUniqueId());
-                            PlayerUtility.updateScoreboard(attacker);
                         }
                     }
                 }
@@ -144,9 +123,7 @@ public class SpawnListeners implements Listener {
         if (!sm.getSpawn().isInSpawnRadius(e.getPlayer().getLocation()) && sm.hasSpawnProt(p.getUniqueId())) {
             sm.getSpawnProtected().remove(p.getUniqueId());
 
-            PlayerUtility.updateScoreboard(p);
-
-            MessageManager.sendMessage(p, "&7You no longer have spawn protection.");
+            MessageManager.message(p, "&7You no longer have spawn protection.");
         }
 
         new BukkitRunnable() {
@@ -157,16 +134,6 @@ public class SpawnListeners implements Listener {
                 }
             }
         }.runTaskAsynchronously(kMain.getInstance());
-    }
-
-    @EventHandler
-    public void onSpawn(PlayerRespawnEvent e) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                PlayerUtility.updateScoreboard(e.getPlayer());
-            }
-        }.runTaskLaterAsynchronously(main, 10L);
     }
 
     @EventHandler
@@ -182,18 +149,14 @@ public class SpawnListeners implements Listener {
             if (sm.getSpawn().isInSpawnRadius(p.getLocation())) {
                 p.teleport(new Location(p.getWorld(), 0.5, sm.getSpawn().getHeight(), 0.5));
                 sm.getSpawnProtected().add(p.getUniqueId());
-                MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
+                MessageManager.message(p, "&7You cannot attack for 10 seconds.");
             }
         } else {
             if (sm.getSpawn().isInSpawnRadius(p.getLocation())) {
                 sm.getSpawnProtected().add(p.getUniqueId());
-                MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
+                MessageManager.message(p, "&7You cannot attack for 10 seconds.");
             }
         }
-
-        HudCommand.getDisplayList().add(p.getUniqueId());
-
-        PlayerUtility.updateScoreboard(p);
     }
 
     @EventHandler()
@@ -428,7 +391,7 @@ public class SpawnListeners implements Listener {
 
         if (p.getWorld().getEnvironment() == World.Environment.NETHER && p.getLocation().getY() >= 127) {
             e.setTo(e.getFrom());
-            MessageManager.sendMessage(p, "&7You cannot go on top of the nether. Type /spawn to leave.");
+            MessageManager.message(p, "&7You cannot go on top of the nether. Type /spawn to leave.");
         }
 
 //        Location standBlock = p.getWorld().getBlockAt(p.getLocation().add(0.0D, -0.1D, 0.0D)).getLocation();
@@ -534,6 +497,32 @@ public class SpawnListeners implements Listener {
 
         if (sm.getSpawn().isInStoneRadius(e.getBlock().getLocation()) && e.getItem().getType() == Material.LAVA_BUCKET || e.getItem().getType() == Material.WATER_BUCKET) {
             e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onSplash(PotionSplashEvent e) {
+        if (e.getEntity().getShooter() instanceof Player) {
+            Player player = (Player) e.getEntity().getShooter();
+
+            if (sm.getSpawnProtected().contains(player.getUniqueId())) {
+                boolean spawnprot = true;
+
+                for (Entity entity : e.getAffectedEntities()) {
+                    if (entity instanceof Player) {
+                        Player affected = (Player) entity;
+
+                        if (!sm.getSpawnProtected().contains(affected.getUniqueId())) {
+                            spawnprot = false;
+                        }
+                    }
+                }
+
+                if (!spawnprot) {
+                    sm.getSpawnProtected().remove(player.getUniqueId());
+                    MessageManager.message(player, "&7You no longer have spawn protection.");
+                }
+            }
         }
     }
 }

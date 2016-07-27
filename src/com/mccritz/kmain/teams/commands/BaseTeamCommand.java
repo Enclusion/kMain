@@ -101,37 +101,37 @@ public class BaseTeamCommand extends BaseCommand {
 
     public void execute(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            MessageManager.sendMessage(sender, "&7*** &3Members &7***");
-            MessageManager.sendMessage(sender, "&7/team create <name> <password>  &3- &bCreate a new team");
-            MessageManager.sendMessage(sender, "&7/team join <name> <password> &3- &bJoin a team");
-            MessageManager.sendMessage(sender, "&7/team leave &3- &bLeave your current team");
-            MessageManager.sendMessage(sender, "&7/team info <player> &3- &b&bShows information about a player's team");
-            MessageManager.sendMessage(sender, "&7/team roster <team> &3- &bShows information about a given team");
-            MessageManager.sendMessage(sender, "&7/team chat &3- &bToggle team chat mode");
-            MessageManager.sendMessage(sender, "&7/team hq &3- &bTeleports you to your team's headquarters");
-            MessageManager.sendMessage(sender, "&7/team rally &3- &bTeleports you to your team's rally point");
-            MessageManager.sendMessage(sender, "&7/team list &3- &bShows the top 5 teams by players.");
+            MessageManager.message(sender, "&7*** &3Members &7***");
+            MessageManager.message(sender, "&7/team create <name> <password>  &3- &bCreate a new team");
+            MessageManager.message(sender, "&7/team join <name> <password> &3- &bJoin a team");
+            MessageManager.message(sender, "&7/team leave &3- &bLeave your current team");
+            MessageManager.message(sender, "&7/team info <player> &3- &b&bShows information about a player's team");
+            MessageManager.message(sender, "&7/team roster <team> &3- &bShows information about a given team");
+            MessageManager.message(sender, "&7/team chat &3- &bToggle team chat mode");
+            MessageManager.message(sender, "&7/team hq &3- &bTeleports you to your team's headquarters");
+            MessageManager.message(sender, "&7/team rally &3- &bTeleports you to your team's rally point");
+            MessageManager.message(sender, "&7/team list &3- &bShows the top 5 teams by players.");
 
-            MessageManager.sendMessage(sender, "&7*** &3Managers Only &7***");
-            MessageManager.sendMessage(sender, "&7/team ff <on/off> &3- &bToggle friendly fire");
-            MessageManager.sendMessage(sender, "&7/team password <password/none> &3- &bSets your team's password");
-            MessageManager.sendMessage(sender, "&7/team kick <player> &3- &bKicks a player from the team");
-            MessageManager.sendMessage(sender, "&7/team promote <player> &3- &bPromote a player to manager");
-            MessageManager.sendMessage(sender, "&7/team demote <player> &3- &bDemote a player to member");
-            MessageManager.sendMessage(sender, "&7/team sethq &3- &bSets the team's headquarters");
-            MessageManager.sendMessage(sender, "&7/team setrally &3- &bSets the team's rally point");
+            MessageManager.message(sender, "&7*** &3Managers Only &7***");
+            MessageManager.message(sender, "&7/team ff <on/off> &3- &bToggle friendly fire");
+            MessageManager.message(sender, "&7/team password <password/none> &3- &bSets your team's password");
+            MessageManager.message(sender, "&7/team kick <player> &3- &bKicks a player from the team");
+            MessageManager.message(sender, "&7/team promote <player> &3- &bPromote a player to manager");
+            MessageManager.message(sender, "&7/team demote <player> &3- &bDemote a player to member");
+            MessageManager.message(sender, "&7/team sethq &3- &bSets the team's headquarters");
+            MessageManager.message(sender, "&7/team setrally &3- &bSets the team's rally point");
         } else {
             try {
                 TeamSubCommand tc = getSubCommand(args[0]);
 
                 if (tc == null) {
-                    MessageManager.sendMessage(sender, "&7Unknown team command. Type &c/team &7for help.");
+                    MessageManager.message(sender, "&7Unknown team command. Type &c/team &7for help.");
                     return;
                 }
 
                 tc.execute(((Player) sender), fixArgs(args));
             } catch (Exception ex) {
-                MessageManager.sendMessage(sender, "&cAn unexpected error occured: " + ex.getLocalizedMessage() + "\nContact an admin!");
+                MessageManager.message(sender, "&cAn unexpected error occured: " + ex.getLocalizedMessage() + "\nContact an admin!");
                 ex.printStackTrace();
             }
         }

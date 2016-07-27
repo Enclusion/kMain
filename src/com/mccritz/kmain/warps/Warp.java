@@ -32,19 +32,19 @@ public class Warp {
 
     public void teleport(final Player p) {
         if (kMain.getInstance().getSpawnManager().hasSpawnProt(p.getUniqueId())) {
-            MessageManager.sendMessage(p, "&7You cannot warp this close to the spawn.");
+            MessageManager.message(p, "&7You cannot warp this close to the spawn.");
             return;
         }
 
         if (location == null) {
-            MessageManager.sendMessage(p, "&7That warp location does not exist.");
+            MessageManager.message(p, "&7That warp location does not exist.");
             return;
         }
 
         if (th.canTeleport(p)) {
             location.getChunk().load(true);
             p.teleport(location);
-            MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
+            MessageManager.message(p, "&7You cannot attack for 10 seconds.");
             return;
         }
 
@@ -57,11 +57,11 @@ public class Warp {
                 location.getChunk().load(true);
                 p.teleport(location);
                 th.getTeleporters().remove(p.getUniqueId());
-                MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
+                MessageManager.message(p, "&7You cannot attack for 10 seconds.");
             }
         });
 
-        th.getTeleporters().get(p.getUniqueId()).runTaskLaterAsynchronously(kMain.getInstance(), 10 * 20);
-        MessageManager.sendMessage(p, "&7Someone is nearby. Warping in 10 seconds. Do not move.");
+        th.getTeleporters().get(p.getUniqueId()).runTaskLater(kMain.getInstance(), 10 * 20);
+        MessageManager.message(p, "&7Someone is nearby. Warping in 10 seconds. Do not move.");
     }
 }

@@ -24,12 +24,12 @@ public class GoCommand extends BaseCommand {
         Player p = (Player) sender;
 
         if (args.length == 0) {
-            MessageManager.sendMessage(p, "&7***/go help***");
-            MessageManager.sendMessage(p, "&7/go - &cLists your warps.");
-            MessageManager.sendMessage(p, "&7/go list - &cLists your warps");
-            MessageManager.sendMessage(p, "&7/go set <name> - &cSets a warp at your location.");
-            MessageManager.sendMessage(p, "&7/go del <name> - &cDeletes the warp.");
-            MessageManager.sendMessage(p, "&7/go - &cDisplays this page.");
+            MessageManager.message(p, "&7***/go help***");
+            MessageManager.message(p, "&7/go - &cLists your warps.");
+            MessageManager.message(p, "&7/go list - &cLists your warps");
+            MessageManager.message(p, "&7/go set <name> - &cSets a warp at your location.");
+            MessageManager.message(p, "&7/go del <name> - &cDeletes the warp.");
+            MessageManager.message(p, "&7/go - &cDisplays this page.");
             return;
         }
 
@@ -40,12 +40,12 @@ public class GoCommand extends BaseCommand {
             }
 
             if (args[0].equalsIgnoreCase("set")) {
-                MessageManager.sendMessage(p, "&cImproper Usage! /go set <name>");
+                MessageManager.message(p, "&cImproper Usage! /go set <name>");
                 return;
             }
 
             if (args[0].equalsIgnoreCase("del") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove")) {
-                MessageManager.sendMessage(p, "Improper Usage! /go del <name>");
+                MessageManager.message(p, "Improper Usage! /go del <name>");
                 return;
             }
 

@@ -38,12 +38,12 @@ public class Team {
         return managers.contains(id);
     }
 
-    public void sendMessage(String message) {
+    public void message(String message) {
         for (UUID id : getManagers()) {
-            MessageManager.sendMessage(id, message);
+            MessageManager.message(id, message);
         }
         for (UUID id : getMembers()) {
-            MessageManager.sendMessage(id, message);
+            MessageManager.message(id, message);
         }
     }
 
@@ -66,64 +66,63 @@ public class Team {
     }
 
     public void getExtraInformation(UUID id) {
-        MessageManager.sendMessage(id, "&7*** &3" + getName() + " &7***");
-        MessageManager.sendMessage(id, "&7Password: " + (!getPassword().equalsIgnoreCase("") ? "&3" + getPassword() : "&3Unset"));
-        MessageManager.sendMessage(id, "&7Team HQ: " + (getHq() != null ? "&3Set" : "&3Unset"));
-        MessageManager.sendMessage(id, "&7Team Rally: " + (getRally() != null ? "&3Set" : "&3Unset"));
-        MessageManager.sendMessage(id, "&7Friendly Fire: " + (!isFriendlyFireEnabled() ? "&3Off" : "&3On"));
-        MessageManager.sendMessage(id, "&3Members &7(" + (getMembers().size() + getManagers().size()) + "/30):");
+        MessageManager.message(id, "&7*** &3" + getName() + " &7***");
+        MessageManager.message(id, "&7Password: " + (!getPassword().equalsIgnoreCase("") ? "&3" + getPassword() : "&3Unset"));
+        MessageManager.message(id, "&7Team HQ: " + (getHq() != null ? "&3Set" : "&3Unset"));
+        MessageManager.message(id, "&7Team Rally: " + (getRally() != null ? "&3Set" : "&3Unset"));
+        MessageManager.message(id, "&7Friendly Fire: " + (!isFriendlyFireEnabled() ? "&3Off" : "&3On"));
+        MessageManager.message(id, "&3Members &7(" + (getMembers().size() + getManagers().size()) + "/30):");
 
         for (UUID ids : getManagers()) {
             if (Bukkit.getPlayer(ids) != null) {
-                MessageManager.sendMessage(id, "&3" + Bukkit.getOfflinePlayer(ids).getName() + " &7- " + formatHealth(Bukkit.getPlayer(ids)) + "%");
+                MessageManager.message(id, "&3" + Bukkit.getOfflinePlayer(ids).getName() + " &7- " + formatHealth(Bukkit.getPlayer(ids)) + "%");
             } else {
-                MessageManager.sendMessage(id, "&3" + Bukkit.getOfflinePlayer(ids).getName() + " &7- Offline");
+                MessageManager.message(id, "&3" + Bukkit.getOfflinePlayer(ids).getName() + " &7- Offline");
             }
         }
 
         for (UUID ids : getMembers()) {
             if (Bukkit.getPlayer(ids) != null) {
-                MessageManager.sendMessage(id, "&7" + Bukkit.getOfflinePlayer(ids).getName() + " - " + formatHealth(Bukkit.getPlayer(ids)) + "%");
+                MessageManager.message(id, "&7" + Bukkit.getOfflinePlayer(ids).getName() + " - " + formatHealth(Bukkit.getPlayer(ids)) + "%");
             } else {
-                MessageManager.sendMessage(id, "&7" + Bukkit.getOfflinePlayer(ids).getName() + " - Offline");
+                MessageManager.message(id, "&7" + Bukkit.getOfflinePlayer(ids).getName() + " - Offline");
             }
         }
     }
 
     public void getInformation(UUID id) {
-        MessageManager.sendMessage(id, "&7*** &3" + getName() + " &7***");
-        MessageManager.sendMessage(id, "&3Members &7(" + (getMembers().size() + getManagers().size()) + "/30):");
+        MessageManager.message(id, "&7*** &3" + getName() + " &7***");
+        MessageManager.message(id, "&3Members &7(" + (getMembers().size() + getManagers().size()) + "/30):");
 
         for (UUID ids : getManagers()) {
-            MessageManager.sendMessage(id, "&3" + Bukkit.getOfflinePlayer(ids).getName());
+            MessageManager.message(id, "&3" + Bukkit.getOfflinePlayer(ids).getName());
         }
 
         for (UUID ids : getMembers()) {
-            MessageManager.sendMessage(id, "&7" + Bukkit.getOfflinePlayer(ids).getName());
+            MessageManager.message(id, "&7" + Bukkit.getOfflinePlayer(ids).getName());
         }
     }
 
     int formatHealth(Player player) {
-        int percent = Math.round(((float) player.getHealth() / (float) player.getMaxHealth()) * 100.0F);
-        return percent;
+        return Math.round(((float) player.getHealth() / (float) player.getMaxHealth()) * 100.0F);
     }
 
     public void teleport(final Player p, final String locName) {
         if (locName.equalsIgnoreCase("hq")) {
             if (kMain.getInstance().getSpawnManager().getSpawn().isInSpawnRadius(p.getLocation())) {
-                MessageManager.sendMessage(p, "&cYou cannot warp this close to spawn.");
+                MessageManager.message(p, "&cYou cannot warp this close to spawn.");
                 return;
             }
 
             if (hq == null) {
-                MessageManager.sendMessage(p, "&7Your team does not have a headquaters set.");
+                MessageManager.message(p, "&7Your team does not have a headquaters set.");
                 return;
             }
 
             if (th.canTeleport(p)) {
                 hq.getChunk().load(true);
                 p.teleport(hq);
-                MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
+                MessageManager.message(p, "&7You cannot attack for 10 seconds.");
                 return;
             }
 
@@ -136,30 +135,30 @@ public class Team {
                     hq.getChunk().load(true);
                     p.teleport(hq);
                     th.getTeleporters().remove(p.getUniqueId());
-                    MessageManager.sendMessage(p, "&7You can not attack for 10 seconds.");
+                    MessageManager.message(p, "&7You can not attack for 10 seconds.");
                 }
             });
 
-            th.getTeleporters().get(p.getUniqueId()).runTaskLaterAsynchronously(kMain.getInstance(), 10 * 20);
+            th.getTeleporters().get(p.getUniqueId()).runTaskLater(kMain.getInstance(), 10 * 20);
 
-            MessageManager.sendMessage(p, "&7Someone is nearby. Warping in 10 seconds. Do not move.");
+            MessageManager.message(p, "&7Someone is nearby. Warping in 10 seconds. Do not move.");
         }
 
         if (locName.equalsIgnoreCase("rally")) {
             if (kMain.getInstance().getSpawnManager().hasSpawnProt(p.getUniqueId())) {
-                MessageManager.sendMessage(p, "&7Your cannot warp this close to spawn.");
+                MessageManager.message(p, "&7Your cannot warp this close to spawn.");
                 return;
             }
 
             if (rally == null) {
-                MessageManager.sendMessage(p, "&7Your team does not have a headquaters set.");
+                MessageManager.message(p, "&7Your team does not have a headquaters set.");
                 return;
             }
 
             if (th.canTeleport(p)) {
                 rally.getChunk().load(true);
                 p.teleport(rally);
-                MessageManager.sendMessage(p, "&7You can not attack for 10 seconds.");
+                MessageManager.message(p, "&7You can not attack for 10 seconds.");
                 return;
             }
 
@@ -172,13 +171,13 @@ public class Team {
                     rally.getChunk().load(true);
                     p.teleport(rally);
                     th.getTeleporters().remove(p.getUniqueId());
-                    MessageManager.sendMessage(p, "&7You can not attack for 10 seconds.");
+                    MessageManager.message(p, "&7You can not attack for 10 seconds.");
                 }
             });
 
-            th.getTeleporters().get(p.getUniqueId()).runTaskLaterAsynchronously(kMain.getInstance(), 10 * 20);
+            th.getTeleporters().get(p.getUniqueId()).runTaskLater(kMain.getInstance(), 10 * 20);
 
-            MessageManager.sendMessage(p, "&7Someone is nearby. Warping in 10 seconds. Do not move.");
+            MessageManager.message(p, "&7Someone is nearby. Warping in 10 seconds. Do not move.");
         }
     }
 }

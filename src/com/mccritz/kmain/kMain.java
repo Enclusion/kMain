@@ -1,6 +1,8 @@
 package com.mccritz.kmain;
 
 import com.mccritz.kmain.commands.*;
+import com.mccritz.kmain.economy.EconomyManager;
+import com.mccritz.kmain.economy.commands.*;
 import com.mccritz.kmain.listeners.*;
 import com.mccritz.kmain.profiles.ProfileListeners;
 import com.mccritz.kmain.profiles.ProfileManager;
@@ -10,9 +12,11 @@ import com.mccritz.kmain.teams.TeamManager;
 import com.mccritz.kmain.teams.commands.BaseTeamCommand;
 import com.mccritz.kmain.teams.listeners.TeamListeners;
 import com.mccritz.kmain.utils.BlockUtils;
+import com.mccritz.kmain.utils.ItemDb;
 import com.mccritz.kmain.utils.PlayerUtility;
 import com.mccritz.kmain.utils.command.Register;
 import com.mccritz.kmain.utils.glaedr.Glaedr;
+import com.mccritz.kmain.utils.glaedr.scoreboards.PlayerScoreboard;
 import com.mccritz.kmain.utils.mobs.*;
 import com.mccritz.kmain.warps.OverrideListener;
 import com.mccritz.kmain.warps.WarpManager;
@@ -33,11 +37,13 @@ public class kMain extends JavaPlugin {
     private MongoDatabase mongoDatabase;
     private TeleportationHandler teleportationHandler;
     private ProfileManager profileManager;
+    private EconomyManager economyManager;
     private SpawnManager spawnManager;
     private TeamManager teamManager;
     private WarpManager warpManager;
     private BlockUtils blockUtils;
     private Glaedr glaedr;
+    private ItemDb itemDb;
 
     public void onEnable() {
         instance = this;
@@ -49,11 +55,15 @@ public class kMain extends JavaPlugin {
 
         teleportationHandler = new TeleportationHandler();
         profileManager = new ProfileManager();
+        economyManager = new EconomyManager();
         spawnManager = new SpawnManager();
         teamManager = new TeamManager();
         warpManager = new WarpManager();
         blockUtils = new BlockUtils(this);
-        glaedr = new Glaedr("&c&lTeams");
+        glaedr = new Glaedr(this, "&c&lMcCritZ");
+//        glaedr.getTopWrappers().add("&7&m--------------------------");
+//        glaedr.getBottomWrappers().add("&7&m--------------------------");
+        itemDb = new ItemDb();
 
         registerCommands();
         registerListeners();
@@ -62,6 +72,8 @@ public class kMain extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
+                glaedr.checkPlayers();
+
                 for (Player all : PlayerUtility.getOnlinePlayers()) {
                     if (all.hasMetadata("spawnprotected")) {
                         all.removeMetadata("spawnprotected", instance);
@@ -69,6 +81,7 @@ public class kMain extends JavaPlugin {
                         spawnManager.getSpawnProtected().add(all.getUniqueId());
 
                         HudCommand.getDisplayList().add(all.getUniqueId());
+                        new PlayerScoreboard(all);
                     }
                 }
             }
@@ -81,14 +94,15 @@ public class kMain extends JavaPlugin {
                     PlayerUtility.updateScoreboard(all);
                 }
             }
-        }.runTaskTimerAsynchronously(this, 10L, 10L);
+        }.runTaskTimerAsynchronously(this, 10L, 5L);
     }
 
     public void onDisable() {
-        profileManager.saveProfiles();
-        teamManager.saveTeams();
-        warpManager.saveWarps();
+        profileManager.saveProfiles(false);
+        teamManager.saveTeams(false);
+        warpManager.saveWarps(false);
         spawnManager.saveSpawn();
+        economyManager.saveSales(false);
 
         for (Player all : PlayerUtility.getOnlinePlayers()) {
             all.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
@@ -108,9 +122,6 @@ public class kMain extends JavaPlugin {
             Register register = new Register();
 
             register.registerCommand("team", new BaseTeamCommand());
-            register.registerCommand("balance", new BalanceCommand());
-            register.registerCommand("balancetop", new BalanceTopCommand());
-            register.registerCommand("economy", new EconomyCommand());
             register.registerCommand("go", new GoCommand());
             register.registerCommand("goas", new GoAsCommand());
             register.registerCommand("setspawn", new SetSpawnCommand());
@@ -123,6 +134,18 @@ public class kMain extends JavaPlugin {
             register.registerCommand("sethome", new SetHomeCommand());
             register.registerCommand("homeas", new HomeAsCommand());
             register.registerCommand("hud", new HudCommand());
+            register.registerCommand("debug", new DebugCommand());
+            register.registerCommand("forcesave", new ForceSaveCommand());
+
+            /*
+             Economy Commands
+            */
+            register.registerCommand("balance", new BalanceCommand());
+            register.registerCommand("buy", new BuyCommand());
+            register.registerCommand("sell", new SellCommand());
+            register.registerCommand("price", new PriceCommand());
+            register.registerCommand("deposit", new DepositCommand());
+            register.registerCommand("withdraw", new WithdrawCommand());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -179,6 +202,10 @@ public class kMain extends JavaPlugin {
         return profileManager;
     }
 
+    public EconomyManager getEconomyManager() {
+        return economyManager;
+    }
+
     public SpawnManager getSpawnManager() {
         return spawnManager;
     }
@@ -201,6 +228,10 @@ public class kMain extends JavaPlugin {
 
     public Glaedr getGlaedr() {
         return glaedr;
+    }
+
+    public ItemDb getItemDb() {
+        return itemDb;
     }
 
     public static kMain getInstance() {

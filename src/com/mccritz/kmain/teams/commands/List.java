@@ -32,7 +32,7 @@ public class List extends TeamSubCommand {
                     map.put(team, (team.getMembers().size() + team.getManagers().size()));
                 }
 
-                MessageManager.sendMessage(p, "&7*** &3Teams &7(&3" + tm.getTeams().size() + "&7) ***");
+                MessageManager.message(p, "&7*** &3Teams &7(&3" + tm.getTeams().size() + "&7) ***");
 
                 Object[] a = map.entrySet().toArray();
                 Arrays.sort(a, (o1, o2) -> ((Map.Entry<Team, Integer>) o2).getValue().compareTo(((Map.Entry<Team, Integer>) o1).getValue()));
@@ -40,7 +40,7 @@ public class List extends TeamSubCommand {
                 int topten = 0;
                 for (Object e : a) {
                     if (topten <= 4) {
-                        MessageManager.sendMessage(p, "&3" + ((Map.Entry<Team, Integer>) e).getKey().getName() + " &7(&a" + ((Map.Entry<Team, Integer>) e).getValue() + "&7/30)");
+                        MessageManager.message(p, "&3" + ((Map.Entry<Team, Integer>) e).getKey().getName() + " &7(&a" + ((Map.Entry<Team, Integer>) e).getValue() + "&7/30)");
                     }
                     topten++;
                 }

@@ -17,7 +17,7 @@ public class TeamListeners implements Listener {
 
     private TeamManager tm = kMain.getInstance().getTeamManager();
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
 
@@ -28,9 +28,9 @@ public class TeamListeners implements Listener {
                 e.setCancelled(true);
 
                 if (team.isManager(p.getUniqueId())) {
-                    team.sendMessage(String.format("%s &7[%s&7] &f%s", "&f<&3" + p.getName() + "&f>", team.getName(), e.getMessage()));
+                    team.message(String.format("%s &7[%s&7] &f%s", "&f<&3" + p.getName() + "&f>", team.getName(), e.getMessage()));
                 } else {
-                    team.sendMessage(String.format("%s &7[%s&7] &f%s", "&f<&7" + p.getName() + "&f>", team.getName(), e.getMessage()));
+                    team.message(String.format("%s &7[%s&7] &f%s", "&f<&7" + p.getName() + "&f>", team.getName(), e.getMessage()));
                 }
             }
         } else {
@@ -86,7 +86,7 @@ public class TeamListeners implements Listener {
         if (tm.hasTeam(p.getUniqueId())) {
             Team team = tm.getTeam(p.getUniqueId());
 
-            team.sendMessage("&3Team Login&f: " + p.getName());
+            team.message("&3Team Login&7: " + p.getName());
         }
     }
 
@@ -95,7 +95,7 @@ public class TeamListeners implements Listener {
         if (tm.hasTeam(e.getPlayer().getUniqueId())) {
             Team team = tm.getTeam(e.getPlayer().getUniqueId());
 
-            team.sendMessage("&3Team Logout&d: " + e.getPlayer().getName());
+            team.message("&3Team Logout&7: " + e.getPlayer().getName());
         }
     }
 
@@ -106,7 +106,7 @@ public class TeamListeners implements Listener {
         if (tm.hasTeam(p.getUniqueId())) {
             Team team = tm.getTeam(p.getUniqueId());
 
-            team.sendMessage("&3Team Death&7: " + p.getName());
+            team.message("&3Team Death&7: " + p.getName());
         }
     }
 }

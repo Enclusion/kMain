@@ -24,7 +24,7 @@ public class TrackCommand extends BaseCommand {
 
         if (p.getWorld().getEnvironment().equals(World.Environment.NETHER) || p.getWorld().getEnvironment().equals(World.Environment.THE_END)) {
             String env = p.getWorld().getEnvironment().equals(World.Environment.NETHER) ? "the nether." : "the end.";
-            MessageManager.sendMessage(p, "&7Tracking is disabled in " + env);
+            MessageManager.message(p, "&7Tracking is disabled in " + env);
             return;
         }
 
@@ -37,7 +37,7 @@ public class TrackCommand extends BaseCommand {
             Player tracked = Bukkit.getPlayer(args[0]);
 
             if (tracked == null) {
-                MessageManager.sendMessage(p, "&c" + args[0] + " &7could not be found.");
+                MessageManager.message(p, "&c" + args[0] + " &7could not be found.");
             } else {
                 track.setLoc(p.getLocation().getBlockX(), p.getLocation().getBlockY() - 1, p.getLocation().getBlockZ());
                 track.Track(p, tracked);

@@ -1,4 +1,4 @@
-package com.mccritz.kmain.commands;
+package com.mccritz.kmain.economy.commands;
 
 import com.mccritz.kmain.kMain;
 import com.mccritz.kmain.profiles.Profile;
@@ -21,7 +21,7 @@ public class BalanceCommand extends BaseCommand {
 
     public BalanceCommand() {
         super("balance", null, CommandUsageBy.PlAYER, "bal", "money", "dinero");
-        setUsage("&cImproper usage! /bal");
+        setUsage("&c<command>");
         setMinArgs(0);
         setMaxArgs(1);
     }
@@ -31,12 +31,17 @@ public class BalanceCommand extends BaseCommand {
         final Player p = (Player) sender;
 
         if (args.length == 0) {
-            MessageManager.sendMessage(p, "&7Balance: &c" + MessageManager.formatDouble(pm.getProfile(p.getUniqueId()).getGold()));
+            MessageManager.message(p, "&7You currently have " + MessageManager.formatDouble(pm.getProfile(p.getUniqueId()).getGold()) + " gold in your account.");
             return;
         }
 
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("top")) {
+                if (!p.hasPermission("kmain.baltop")) {
+                    MessageManager.message(p, getUsage());
+                    return;
+                }
+
                 new BukkitRunnable() {
                     public void run() {
                         HashMap<String, Double> map = new HashMap<>();
@@ -44,7 +49,7 @@ public class BalanceCommand extends BaseCommand {
                             map.put(profs.getName(), profs.getGold());
                         }
 
-                        MessageManager.sendMessage(p, "&7&m***&r &3Top 10 Players &7&m***");
+                        MessageManager.message(p, "&7&m***&r &3Top 10 Players &7&m***");
 
                         Object[] a = map.entrySet().toArray();
                         Arrays.sort(a, (o1, o2) -> ((Map.Entry<String, Double>) o2).getValue().compareTo(((Map.Entry<String, Double>) o1).getValue()));
@@ -52,7 +57,7 @@ public class BalanceCommand extends BaseCommand {
                         int topten = 0;
                         for (Object e : a) {
                             if (topten <= 9) {
-                                MessageManager.sendMessage(p, "&7" + (topten + 1) + " - &b" + ((Map.Entry<String, Double>) e).getKey() + "&7: &c" + MessageManager.formatDouble(((Map.Entry<String, Double>) e).getValue()));
+                                MessageManager.message(p, "&7" + (topten + 1) + " - &b" + ((Map.Entry<String, Double>) e).getKey() + "&7: &c" + MessageManager.formatDouble(((Map.Entry<String, Double>) e).getValue()));
                             }
 
                             topten++;
@@ -60,14 +65,7 @@ public class BalanceCommand extends BaseCommand {
                     }
                 }.runTaskAsynchronously(main);
             } else {
-                Profile tprof = pm.getProfile(args[0]);
-
-                if (tprof == null) {
-                    MessageManager.sendMessage(p, "&c" + args[0] + " &7could not be found.");
-                    return;
-                }
-
-                MessageManager.sendMessage(p, "&c" + tprof.getName() + " has a balance of &c" + MessageManager.formatDouble(tprof.getGold()) + "&7.");
+                MessageManager.message(p, getUsage());
             }
         }
     }

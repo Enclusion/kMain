@@ -57,7 +57,7 @@ public class LogoutCommand extends BaseCommand {
 
                 dontMove.get(p.getUniqueId()).runTaskLaterAsynchronously(kMain.getInstance(), 10 * 20L);
 
-                MessageManager.sendMessage(p, "&cLogging out of the server. Do not move.");
+                MessageManager.message(p, "&cLogging out of the server. Do not move.");
 
                 count.put(p.getUniqueId(), 11);
 
@@ -70,9 +70,9 @@ public class LogoutCommand extends BaseCommand {
                     public void run() {
                         if (count.get(p.getUniqueId()) <= 11 && count.get(p.getUniqueId()) >= 1) {
                             count.put(p.getUniqueId(), count.get(p.getUniqueId()) - 1);
-                            MessageManager.sendMessage(p, "&cLogging out in " + count.get(p.getUniqueId()) + "..");
+                            MessageManager.message(p, "&cLogging out in " + count.get(p.getUniqueId()) + "..");
                         } else {
-                            MessageManager.sendMessage(p, "&cLogging out..");
+                            MessageManager.message(p, "&cLogging out..");
                             this.cancel();
                         }
                     }

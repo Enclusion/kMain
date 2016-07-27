@@ -1,20 +1,18 @@
 package com.mccritz.kmain.commands;
 
 import com.mccritz.kmain.kMain;
-import com.mccritz.kmain.utils.BlockUtils;
-import com.mccritz.kmain.utils.MessageManager;
 import com.mccritz.kmain.utils.command.BaseCommand;
 import com.mccritz.kmain.utils.command.CommandUsageBy;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class ClearSpawnCommand extends BaseCommand {
+public class ForceSaveCommand extends BaseCommand {
 
     private kMain main = kMain.getInstance();
 
-    public ClearSpawnCommand() {
-        super("clearspawn", "kmain.clearspawn", CommandUsageBy.PlAYER);
-        setUsage("&cInvalid usage! /clearspawn");
+    public ForceSaveCommand() {
+        super("clearspawn", "kmain.forcesave", CommandUsageBy.ANYONE);
+        setUsage("&cInvalid usage! /forcesave");
         setMinArgs(0);
         setMaxArgs(0);
     }
@@ -24,9 +22,11 @@ public class ClearSpawnCommand extends BaseCommand {
         new BukkitRunnable() {
             @Override
             public void run() {
-                BlockUtils utils = kMain.getInstance().getBlockUtils();
-                utils.regenAllBlocks(false);
-                MessageManager.message(sender, "&7Spawn has been cleared.");
+                main.getEconomyManager().saveSales(true);
+                main.getProfileManager().saveProfiles(true);
+                main.getTeamManager().saveTeams(true);
+                main.getWarpManager().saveWarps(true);
+                main.getSpawnManager().saveSpawn();
             }
         }.runTaskAsynchronously(main);
     }

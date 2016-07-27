@@ -4,7 +4,6 @@ import com.mccritz.kmain.kMain;
 import com.mccritz.kmain.teams.Team;
 import com.mccritz.kmain.teams.TeamManager;
 import com.mccritz.kmain.utils.MessageManager;
-import com.mccritz.kmain.utils.PlayerUtility;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
@@ -20,7 +19,7 @@ public class Leave extends TeamSubCommand {
     @Override
     public void execute(Player p, String[] args) {
         if (!tm.hasTeam(p.getUniqueId())) {
-            MessageManager.sendMessage(p, "&7You are not in a team.");
+            MessageManager.message(p, "&7You are not in a team.");
             return;
         }
 
@@ -32,10 +31,8 @@ public class Leave extends TeamSubCommand {
 
         team.getMembers().remove(p.getUniqueId());
 
-        team.sendMessage("&3" + p.getName() + " &7has left the team.");
-        MessageManager.sendMessage(p, "&7You have left the team.");
-
-        PlayerUtility.updateScoreboard(p);
+        team.message("&3" + p.getName() + " &7has left the team.");
+        MessageManager.message(p, "&7You have left the team.");
 
         if (tm.getTeamChatters().contains(p.getUniqueId())) {
             tm.getTeamChatters().remove(p.getUniqueId());

@@ -16,7 +16,7 @@ public class Create extends TeamSubCommand {
     @Override
     public void execute(final Player p, String[] args) {
         if (args.length == 0 || args.length > 2) {
-            MessageManager.sendMessage(p, "&cImproper usage! /team create <name> <password>");
+            MessageManager.message(p, "&cImproper usage! /team create <name> <password>");
             return;
         }
 

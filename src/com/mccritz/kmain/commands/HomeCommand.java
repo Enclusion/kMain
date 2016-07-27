@@ -31,7 +31,7 @@ public class HomeCommand extends BaseCommand {
             if (prof.getHome() != null) {
                 prof.homeTeleport(p);
             } else {
-                MessageManager.sendMessage(p, "&7You do not have a home set.");
+                MessageManager.message(p, "&7You do not have a home set.");
             }
         }
     }

@@ -18,13 +18,13 @@ public class Roster extends TeamSubCommand {
     @Override
     public void execute(Player p, String[] args) {
         if (args.length < 1) {
-            MessageManager.sendMessage(p, "&cImproper usage! /team roster (team)");
+            MessageManager.message(p, "&cImproper usage! /team roster (team)");
             return;
         }
 
         if (args.length == 0) {
             if (!tm.hasTeam(p.getUniqueId())) {
-                MessageManager.sendMessage(p, "&7You are not in a team.");
+                MessageManager.message(p, "&7You are not in a team.");
                 return;
             }
 
@@ -33,7 +33,7 @@ public class Roster extends TeamSubCommand {
 
         if (args.length == 1) {
             if (tm.getTeam(args[0]) == null) {
-                MessageManager.sendMessage(p, "&7That team does not exist.");
+                MessageManager.message(p, "&7That team does not exist.");
                 return;
             }
 

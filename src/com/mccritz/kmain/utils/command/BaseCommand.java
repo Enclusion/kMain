@@ -1,14 +1,13 @@
 package com.mccritz.kmain.utils.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.mccritz.kmain.utils.MessageManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import com.mccritz.kmain.utils.MessageManager;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BaseCommand implements TabExecutor {
 
@@ -30,20 +29,20 @@ public abstract class BaseCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] strings) {
 	if (commandUsage.equals(CommandUsageBy.PlAYER) && !(sender instanceof Player)) {
-	    MessageManager.sendMessage(sender, "Only players can use this command.");
+	    MessageManager.message(sender, "Only players can use this command.");
 	    return false;
 	} else if (commandUsage.equals(CommandUsageBy.CONSOLE)) {
-	    MessageManager.sendMessage(sender, "&cOnly the console can use this command.");
+	    MessageManager.message(sender, "&cOnly the console can use this command.");
 	    return false;
 	} else {
 	    if (permission != null && !sender.hasPermission(this.permission)) {
-		MessageManager.sendMessage(sender, "&cYou are not allowed to do this.");
+		MessageManager.message(sender, "&cYou are not allowed to do this.");
 		return false;
 	    } else {
 		if (!(maxArgs < 0)) {
 		    if (strings.length > maxArgs) {
 			if (getUsage() != null) {
-			    MessageManager.sendMessage(sender, getUsage().replace("<command>", s));
+			    MessageManager.message(sender, getUsage().replace("<command>", s));
 			}
 			return true;
 		    }
@@ -52,7 +51,7 @@ public abstract class BaseCommand implements TabExecutor {
 		if (!(minArgs < 0)) {
 		    if (strings.length < minArgs) {
 			if (getUsage() != null) {
-			    MessageManager.sendMessage(sender, getUsage().replace("<command>", s));
+			    MessageManager.message(sender, getUsage().replace("<command>", s));
 			}
 			return true;
 		    }

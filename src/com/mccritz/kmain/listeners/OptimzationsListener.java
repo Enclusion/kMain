@@ -134,7 +134,7 @@ public class OptimzationsListener implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         for (Player all : PlayerUtility.getOnlinePlayers()) {
             if (!ToggleDMCommand.getToggled().contains(all.getUniqueId())) {
-                MessageManager.sendMessage(all, ChatColor.stripColor(e.getDeathMessage()));
+                MessageManager.message(all, ChatColor.stripColor(e.getDeathMessage()));
             }
         }
 

@@ -22,20 +22,20 @@ public class MobCaptureListener implements Listener {
 		SpawnEggType type = SpawnEggType.getByEntityType(e.getEntity().getType());
 
 		if (type == null) {
-		    MessageManager.sendMessage(p, "&7You cannot capture this type of mob.");
+		    MessageManager.message(p, "&7You cannot capture this type of mob.");
 		    return;
 		}
 
 		if (e.getEntity() instanceof Ageable) {
 		    Ageable ageable = (Ageable) e.getEntity();
 		    if (!ageable.isAdult() && ageable.getType() != EntityType.SLIME) {
-			MessageManager.sendMessage(p, "&7You cannot capture babies.");
+			MessageManager.message(p, "&7You cannot capture babies.");
 			return;
 		    }
 		}
 
 		if (p.getLevel() < type.getCost()) {
-		    MessageManager.sendMessage(p, "&7You need " + type.getCost() + " levels to capture this mob.");
+		    MessageManager.message(p, "&7You need " + type.getCost() + " levels to capture this mob.");
 		    return;
 		}
 
@@ -47,7 +47,7 @@ public class MobCaptureListener implements Listener {
 		    World world = location.getWorld();
 		    ItemStack item = new ItemStack(Material.MONSTER_EGG, 1, (short) type.getId());
 		    world.dropItem(location, item);
-		    MessageManager.sendMessage(p, "&7You have successfully captured this '" + type.getName() + "'.");
+		    MessageManager.message(p, "&7You have successfully captured this '" + type.getName() + "'.");
 		    return;
 		}
 
@@ -58,7 +58,7 @@ public class MobCaptureListener implements Listener {
 			World world = location.getWorld();
 			ItemStack item = new ItemStack(Material.MONSTER_EGG, 1, (short) type.getId());
 			world.dropItem(location, item);
-			MessageManager.sendMessage(p,
+			MessageManager.message(p,
 				"&7You have successfully captured this '" + type.getName() + "'.");
 			return;
 		    }
@@ -72,7 +72,7 @@ public class MobCaptureListener implements Listener {
 		    world.dropItem(location, item);
 		    p.setLevel(0);
 		    p.setExp(0);
-		    MessageManager.sendMessage(p,
+		    MessageManager.message(p,
 			    "&7Capturing this '" + type.getName() + "' has drained all of your xp levels from you.");
 		    return;
 		}
@@ -85,7 +85,7 @@ public class MobCaptureListener implements Listener {
 		    world.dropItem(location, item);
 		    p.setLevel(0);
 		    p.setExp(0);
-		    MessageManager.sendMessage(p,
+		    MessageManager.message(p,
 			    "&7Capturing this '" + type.getName() + "' has drained all of your xp levels from you.");
 		    return;
 		}
@@ -98,7 +98,7 @@ public class MobCaptureListener implements Listener {
 		    world.dropItem(location, item);
 		    p.setLevel(0);
 		    p.setExp(0);
-		    MessageManager.sendMessage(p,
+		    MessageManager.message(p,
 			    "&7Capturing this '" + type.getName() + "' has drained all of your xp levels from you.");
 		}
 	    }

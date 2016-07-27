@@ -27,20 +27,20 @@ public class GoAsCommand extends BaseCommand {
         Player p = (Player) sender;
 
         if (args.length == 0) {
-            MessageManager.sendMessage(p, "&7***Goas Help***");
-            MessageManager.sendMessage(p, "&7/goas <player> - &cLists a players warps.");
-            MessageManager.sendMessage(p, "&7/goas <player> <warp> - &cWarps you to their warp.");
-            MessageManager.sendMessage(p, "&7/goas del <player> <warp> - &cRemoves a players warp.");
+            MessageManager.message(p, "&7***Goas Help***");
+            MessageManager.message(p, "&7/goas <player> - &cLists a players warps.");
+            MessageManager.message(p, "&7/goas <player> <warp> - &cWarps you to their warp.");
+            MessageManager.message(p, "&7/goas del <player> <warp> - &cRemoves a players warp.");
         }
 
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("del")) {
-                MessageManager.sendMessage(p, "&cImproper usage! /goas del <player> <warp>");
+                MessageManager.message(p, "&cImproper usage! /goas del <player> <warp>");
             } else {
                 Profile prof = pm.getProfile(args[0]);
 
                 if (prof == null) {
-                    MessageManager.sendMessage(p, "&c" + args[0] + " &7could not be found.");
+                    MessageManager.message(p, "&c" + args[0] + " &7could not be found.");
                     return;
                 }
 
@@ -50,13 +50,13 @@ public class GoAsCommand extends BaseCommand {
 
         if (args.length == 2) {
             if (args[0].equalsIgnoreCase("del")) {
-                MessageManager.sendMessage(p, "&cImproper usage! /goas del <player> <warp>");
+                MessageManager.message(p, "&cImproper usage! /goas del <player> <warp>");
                 return;
             } else {
                 Profile prof = pm.getProfile(args[0]);
 
                 if (prof == null) {
-                    MessageManager.sendMessage(p, "&c" + args[0] + " &7could not be found.");
+                    MessageManager.message(p, "&c" + args[0] + " &7could not be found.");
                     return;
                 }
 
@@ -68,7 +68,7 @@ public class GoAsCommand extends BaseCommand {
             Profile prof = pm.getProfile(args[1]);
 
             if (prof == null) {
-                MessageManager.sendMessage(p, "&c" + args[1] + " &7could not be found.");
+                MessageManager.message(p, "&c" + args[1] + " &7could not be found.");
                 return;
             }
 

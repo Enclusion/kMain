@@ -27,9 +27,9 @@ public class SetSpawnCommand extends BaseCommand {
 
             sm.setSpawn(spawn);
 
-            MessageManager.sendMessage(sender, "&7Successfully set spawn radius to &c" + args[0] + "&7, spawn height to &c" + args[1] + "&7, stone radius to &c" + args[2] + "&7, and stone height to &c" + args[3] + "&7.");
+            MessageManager.message(sender, "&7Successfully set spawn radius to &c" + args[0] + "&7, spawn height to &c" + args[1] + "&7, stone radius to &c" + args[2] + "&7, and stone height to &c" + args[3] + "&7.");
         } catch (NumberFormatException e) {
-            MessageManager.sendMessage(sender, "&4You must enter valid numbers.");
+            MessageManager.message(sender, "&4You must enter valid numbers.");
         }
     }
 }

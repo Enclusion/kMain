@@ -47,7 +47,7 @@ public class CombatLogListener implements Listener {
                         LogoutCommand.getCounter().get(e.getPlayer().getUniqueId()).cancel();
                         LogoutCommand.getCounter().remove(e.getPlayer().getUniqueId());
                         LogoutCommand.getCount().remove(e.getPlayer().getUniqueId());
-                        MessageManager.sendMessage(e.getPlayer(), "&cYou moved. Logout cancelled.");
+                        MessageManager.message(e.getPlayer(), "&cYou moved. Logout cancelled.");
                     }
                 }
             }
@@ -61,7 +61,7 @@ public class CombatLogListener implements Listener {
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (e.hasBlock() && e.getClickedBlock().getType() == Material.ENDER_CHEST && isInCombat(p.getUniqueId())) {
                 e.setCancelled(true);
-                MessageManager.sendMessage(p, "&7You cannot open your enderchest during combat.");
+                MessageManager.message(p, "&7You cannot open your enderchest during combat.");
             }
         }
     }
@@ -137,18 +137,18 @@ public class CombatLogListener implements Listener {
             for (String disabledCommand : blockedCommands) {
                 if (command.indexOf(" ") == disabledCommand.length()) {
                     if (command.substring(0, command.indexOf(" ")).equalsIgnoreCase(disabledCommand)) {
-                        MessageManager.sendMessage(p, "&7You cannot buy soup in combat.");
+                        MessageManager.message(p, "&7You cannot buy soup in combat.");
                         e.setCancelled(true);
                         return;
                     }
                 } else if (disabledCommand.indexOf(" ") > 0) {
                     if (command.toLowerCase().startsWith(disabledCommand.toLowerCase())) {
-                        MessageManager.sendMessage(p, "&7You cannot buy soup in combat.");
+                        MessageManager.message(p, "&7You cannot buy soup in combat.");
                         e.setCancelled(true);
                         return;
                     }
                 } else if (!command.contains(" ") && command.equalsIgnoreCase(disabledCommand)) {
-                    MessageManager.sendMessage(p, "&7You cannot buy soup in combat.");
+                    MessageManager.message(p, "&7You cannot buy soup in combat.");
                     e.setCancelled(true);
                     return;
                 }

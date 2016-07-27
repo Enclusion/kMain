@@ -3,14 +3,11 @@ package com.mccritz.kmain.teams;
 import com.mccritz.kmain.kMain;
 import com.mccritz.kmain.utils.LocationSerialization;
 import com.mccritz.kmain.utils.MessageManager;
-import com.mccritz.kmain.utils.PlayerUtility;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -32,129 +29,159 @@ public class TeamManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                saveTeams();
+                saveTeams(true);
             }
-        }.runTaskTimerAsynchronously(main, 0L, 300 * 20L);
+        }.runTaskTimer(main, 0L, 300 * 20L);
     }
 
     public void loadTeams() {
-        main.getLogger().log(Level.INFO, "Preparing to load " + teamCollection.count() + " teams.");
+        main.getLogger().log(Level.INFO, "&7Preparing to load &c" + teamCollection.count() + " &7teams.");
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Document document : teamCollection.find()) {
-                    String name = document.getString("name");
-                    Location hq = null;
-                    Location rally = null;
+        for (Document document : teamCollection.find()) {
+            String name = document.getString("name");
+            Location hq = null;
+            Location rally = null;
 
-                    HashSet<UUID> managerList = new HashSet<>();
-                    List<String> managerStrings = (List<String>) document.get("managers");
-                    for (String s : managerStrings) {
-                        managerList.add(UUID.fromString(s));
-                    }
-
-                    HashSet<UUID> memberList = new HashSet<>();
-                    List<String> memberStrings = (List<String>) document.get("members");
-                    for (String s : memberStrings) {
-                        managerList.add(UUID.fromString(s));
-                    }
-
-                    if (document.getString("hq") != null) {
-                        if (LocationSerialization.deserializeLocation(document.getString("hq")) != null) {
-                            hq = LocationSerialization.deserializeLocation(document.getString("hq"));
-                        }
-                    }
-
-                    if (document.getString("rally") != null) {
-                        if (LocationSerialization.deserializeLocation(document.getString("rally")) != null) {
-                            rally = LocationSerialization.deserializeLocation(document.getString("rally"));
-                        }
-                    }
-
-                    boolean friendlyfire = document.getBoolean("friendlyfire");
-                    String password = document.getString("password");
-
-                    Team team = new Team(name);
-                    team.setManagers(managerList);
-                    team.setMembers(memberList);
-                    team.setHq(hq);
-                    team.setRally(rally);
-                    team.setFriendlyFireEnabled(friendlyfire);
-                    team.setPassword(password);
-                    teams.add(team);
-                }
-
-                main.getLogger().log(Level.INFO, "Successfully loaded " + teams.size() + " teams.");
+            HashSet<UUID> managerList = new HashSet<>();
+            List<String> managerStrings = (List<String>) document.get("managers");
+            for (String s : managerStrings) {
+                managerList.add(UUID.fromString(s));
             }
-        }.runTaskAsynchronously(main);
+
+            HashSet<UUID> memberList = new HashSet<>();
+            List<String> memberStrings = (List<String>) document.get("members");
+            for (String s : memberStrings) {
+                managerList.add(UUID.fromString(s));
+            }
+
+            if (document.getString("hq") != null) {
+                if (LocationSerialization.deserializeLocation(document.getString("hq")) != null) {
+                    hq = LocationSerialization.deserializeLocation(document.getString("hq"));
+                }
+            }
+
+            if (document.getString("rally") != null) {
+                if (LocationSerialization.deserializeLocation(document.getString("rally")) != null) {
+                    rally = LocationSerialization.deserializeLocation(document.getString("rally"));
+                }
+            }
+
+            boolean friendlyfire = document.getBoolean("friendlyfire");
+            String password = document.getString("password");
+
+            Team team = new Team(name);
+            team.setManagers(managerList);
+            team.setMembers(memberList);
+            team.setHq(hq);
+            team.setRally(rally);
+            team.setFriendlyFireEnabled(friendlyfire);
+            team.setPassword(password);
+            teams.add(team);
+        }
+
+        main.getLogger().log(Level.INFO, "&7Successfully loaded &c" + teams.size() + " &7teams.");
     }
 
-    public void saveTeams() {
-        Bukkit.getLogger().log(Level.INFO, "Preparing to save " + getTeams().size() + " teams.");
+    public void saveTeams(boolean async) {
+        MessageManager.debug("&7Preparing to save &c" + getTeams().size() + " &7teams.");
 
-        for (Team team : getTeams()) {
-            Document document = new Document("name", team.getName());
-
-            List<String> managerStrings = new ArrayList<>();
-            for (UUID id : team.getManagers()) {
-                managerStrings.add(id.toString());
-            }
-
-            document.append("managers", managerStrings);
-
-            List<String> memberStrings = new ArrayList<>();
-            for (UUID id : team.getMembers()) {
-                memberStrings.add(id.toString());
-            }
-
-            document.append("members", memberStrings);
-
-            if (team.getHq() != null) {
-                document.append("hq", LocationSerialization.serializeLocation(team.getHq()));
-            }
-
-            if (team.getRally() != null) {
-                document.append("rally", LocationSerialization.serializeLocation(team.getRally()));
-            }
-
-            document.append("friendlyfire", team.isFriendlyFireEnabled());
-            document.append("password", team.getPassword());
-
+        if (async) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    teamCollection.updateOne(Filters.eq("name", team.getName()), document, new UpdateOptions().upsert(true));
+                    for (Team team : getTeams()) {
+                        Document document = new Document("name", team.getName());
+
+                        List<String> managerStrings = new ArrayList<>();
+                        for (UUID id : team.getManagers()) {
+                            managerStrings.add(id.toString());
+                        }
+
+                        document.append("managers", managerStrings);
+
+                        List<String> memberStrings = new ArrayList<>();
+                        for (UUID id : team.getMembers()) {
+                            memberStrings.add(id.toString());
+                        }
+
+                        document.append("members", memberStrings);
+
+                        if (team.getHq() != null) {
+                            document.append("hq", LocationSerialization.serializeLocation(team.getHq()));
+                        }
+
+                        if (team.getRally() != null) {
+                            document.append("rally", LocationSerialization.serializeLocation(team.getRally()));
+                        }
+
+                        document.append("friendlyfire", team.isFriendlyFireEnabled());
+                        document.append("password", team.getPassword());
+
+                        teamCollection.replaceOne(Filters.eq("name", team.getName()), document, new UpdateOptions().upsert(true));
+                    }
+
+                    MessageManager.debug("&7Successfully saved &c" + teamCollection.count() + " &7teams.");
                 }
             }.runTaskAsynchronously(main);
-        }
+        } else {
+            for (Team team : getTeams()) {
+                Document document = new Document("name", team.getName());
 
-        main.getLogger().log(Level.INFO, "Successfully saved " + teamCollection.count() + " teams.");
+                List<String> managerStrings = new ArrayList<>();
+                for (UUID id : team.getManagers()) {
+                    managerStrings.add(id.toString());
+                }
+
+                document.append("managers", managerStrings);
+
+                List<String> memberStrings = new ArrayList<>();
+                for (UUID id : team.getMembers()) {
+                    memberStrings.add(id.toString());
+                }
+
+                document.append("members", memberStrings);
+
+                if (team.getHq() != null) {
+                    document.append("hq", LocationSerialization.serializeLocation(team.getHq()));
+                }
+
+                if (team.getRally() != null) {
+                    document.append("rally", LocationSerialization.serializeLocation(team.getRally()));
+                }
+
+                document.append("friendlyfire", team.isFriendlyFireEnabled());
+                document.append("password", team.getPassword());
+
+                teamCollection.replaceOne(Filters.eq("name", team.getName()), document, new UpdateOptions().upsert(true));
+            }
+
+            MessageManager.debug("&7Successfully saved &c" + teamCollection.count() + " &7teams.");
+        }
     }
 
     public void createTeam(UUID id, String name, String password) {
         if (hasTeam(id)) {
-            MessageManager.sendMessage(id, "&7YOu are already in a team.");
+            MessageManager.message(id, "&7YOu are already in a team.");
             return;
         }
 
         for (Team teams : getTeams()) {
             if (name.equalsIgnoreCase(teams.getName())) {
-                MessageManager.sendMessage(id, "&7That team name is already in use.");
+                MessageManager.message(id, "&7That team name is already in use.");
                 return;
             }
         }
 
         if (!name.matches("^[A-Za-z0-9_+-]*$")) {
-            MessageManager.sendMessage(id, "&7Your team name must be alphanumerical.");
+            MessageManager.message(id, "&7Your team name must be alphanumerical.");
             return;
         }
 
         if (name.length() < 3) {
-            MessageManager.sendMessage(id, "&7Your team name must have at least 2 characters.");
+            MessageManager.message(id, "&7Your team name must have at least 2 characters.");
             return;
         } else if (name.length() > 14) {
-            MessageManager.sendMessage(id, "&7Team names have a limit of 14 characters.");
+            MessageManager.message(id, "&7Team names have a limit of 14 characters.");
             return;
         }
 
@@ -162,11 +189,9 @@ public class TeamManager {
         team.setPassword(password.equalsIgnoreCase("") ? "" : password);
         team.getManagers().add(id);
 
-        MessageManager.sendMessage(id, "&7You have created the team &3" + name + "&7.");
+        MessageManager.message(id, "&7You have created the team &3" + name + "&7.");
 
         teams.add(team);
-
-        PlayerUtility.updateScoreboard(Bukkit.getPlayer(id));
 
         Document document = new Document("name", team.getName());
 
@@ -198,17 +223,13 @@ public class TeamManager {
         new BukkitRunnable() {
             @Override
             public void run() {
-                teamCollection.updateOne(Filters.eq("name", team.getName()), document, new UpdateOptions().upsert(true));
+                teamCollection.replaceOne(Filters.eq("name", team.getName()), document, new UpdateOptions().upsert(true));
             }
         }.runTaskAsynchronously(main);
     }
 
     public void deleteTeam(Team team) {
         teams.remove(team);
-
-        for (Player all : team.getOnlinePlayers()) {
-            PlayerUtility.updateScoreboard(all);
-        }
 
         new BukkitRunnable() {
             @Override

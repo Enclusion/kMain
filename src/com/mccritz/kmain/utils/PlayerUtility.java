@@ -76,33 +76,53 @@ public class PlayerUtility {
 
         if (HudCommand.getDisplayList().contains(p.getUniqueId())) {
             if (scoreboard != null) {
-                if (scoreboard.getEntry("balance") != null) {
-                    scoreboard.getEntry("balance")
-                            .setText("&7Gold: &a" + MessageManager.formatDouble(kMain.getInstance().getProfileManager().getProfile(p.getUniqueId()).getGold()))
+                if (scoreboard.getEntry("spacer1") != null) {
+                    scoreboard.getEntry("spacer1")
+                            .setText("&7&m--------------------")
                             .send();
                 } else {
-                    new Entry("balance", scoreboard)
-                            .setText("&7Gold: &a" + MessageManager.formatDouble(kMain.getInstance().getProfileManager().getProfile(p.getUniqueId()).getGold()))
-                            .send();
-                }
-
-                if (scoreboard.getEntry("team") != null) {
-                    scoreboard.getEntry("team")
-                            .setText("&7Team: &3" + (tm.hasTeam(p.getUniqueId()) ? tm.getTeam(p.getUniqueId()).getName() : "&cNone."))
-                            .send();
-                } else {
-                    new Entry("team", scoreboard)
-                            .setText("&7Team: &3" + (tm.hasTeam(p.getUniqueId()) ? tm.getTeam(p.getUniqueId()).getName() : "&cNone."))
+                    new Entry("spacer1", scoreboard)
+                            .setText("&7&m--------------------")
                             .send();
                 }
 
                 if (scoreboard.getEntry("spawn") != null) {
                     scoreboard.getEntry("spawn")
-                            .setText("&7Spawn Protection: " + (sm.hasSpawnProt(p.getUniqueId()) ? "&aYes" : "&cNo"))
+                            .setText("&bSpawn Protection: " + (sm.hasSpawnProt(p.getUniqueId()) ? "&aYes" : "&cNo"))
                             .send();
                 } else {
                     new Entry("spawn", scoreboard)
-                            .setText("&7Spawn Protection: " + (sm.hasSpawnProt(p.getUniqueId()) ? "&aYes" : "&cNo"))
+                            .setText("&bSpawn Protection: " + (sm.hasSpawnProt(p.getUniqueId()) ? "&aYes" : "&cNo"))
+                            .send();
+                }
+
+                if (scoreboard.getEntry("gold") != null) {
+                    scoreboard.getEntry("gold")
+                            .setText("&bGold: &6" + MessageManager.formatDouble(kMain.getInstance().getProfileManager().getProfile(p.getUniqueId()).getGold()))
+                            .send();
+                } else {
+                    new Entry("gold", scoreboard)
+                            .setText("&bGold: &6" + MessageManager.formatDouble(kMain.getInstance().getProfileManager().getProfile(p.getUniqueId()).getGold()))
+                            .send();
+                }
+
+                if (scoreboard.getEntry("team") != null) {
+                    scoreboard.getEntry("team")
+                            .setText("&bTeam: &f" + (tm.hasTeam(p.getUniqueId()) ? tm.getTeam(p.getUniqueId()).getName() : "&cNone."))
+                            .send();
+                } else {
+                    new Entry("team", scoreboard)
+                            .setText("&bTeam: &f" + (tm.hasTeam(p.getUniqueId()) ? tm.getTeam(p.getUniqueId()).getName() : "&cNone."))
+                            .send();
+                }
+
+                if (scoreboard.getEntry("spacer2") != null) {
+                    scoreboard.getEntry("spacer2")
+                            .setText("&7&m--------------------")
+                            .send();
+                } else {
+                    new Entry("spacer2", scoreboard)
+                            .setText("&7&m--------------------")
                             .send();
                 }
             }

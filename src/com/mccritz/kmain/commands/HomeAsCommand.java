@@ -32,15 +32,15 @@ public class HomeAsCommand extends BaseCommand {
         Player p = (Player) sender;
 
         if (args.length == 0) {
-            MessageManager.sendMessage(p, "&7***HomeAs Help***");
-            MessageManager.sendMessage(p, "&7/homeas <player> - &cWarps you to their home.");
+            MessageManager.message(p, "&7***HomeAs Help***");
+            MessageManager.message(p, "&7/homeas <player> - &cWarps you to their home.");
         }
 
         if (args.length == 1) {
             Profile tprof = pm.getProfile(args[0]);
 
             if (tprof == null) {
-                MessageManager.sendMessage(p, "&c" + args[0] + " &7could not be found.");
+                MessageManager.message(p, "&c" + args[0] + " &7could not be found.");
                 return;
             }
 
@@ -48,7 +48,7 @@ public class HomeAsCommand extends BaseCommand {
                 p.teleport(tprof.getHome());
                 kMain.getInstance().getLogger().log(Level.INFO, "[Admin Teleport]: " + p.getName() + " to " + tprof.getName() + "'s home");
             } else {
-                MessageManager.sendMessage(p, "&c" + tprof.getName() + " &7does not have a home set.");
+                MessageManager.message(p, "&c" + tprof.getName() + " &7does not have a home set.");
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.mccritz.kmain.spawn;
 
 import com.mccritz.kmain.kMain;
+import com.mccritz.kmain.utils.MessageManager;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
@@ -9,7 +10,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.UUID;
-import java.util.logging.Level;
 
 public class SpawnManager {
 
@@ -34,9 +34,9 @@ public class SpawnManager {
 
                     setSpawn(spawn);
 
-                    main.getLogger().log(Level.INFO, "Successfully loaded spawn. Radius: " + spawn.getRadius() + " Height: " + spawn.getHeight() + " Stone Radius: " + spawn.getStoneRadius() + " Stone Height: " + spawn.getStoneHeight());
+                    MessageManager.debug("&7Successfully loaded spawn. Radius: &c" + spawn.getRadius() + " &7Height: &c" + spawn.getHeight() + " &7Stone Radius: &c" + spawn.getStoneRadius() + " &7Stone Height: &c" + spawn.getStoneHeight());
                 } else {
-                    main.getLogger().log(Level.INFO, "Spawn failed to load: Not set");
+                    MessageManager.debug("&cSpawn failed to load: Not set");
                 }
             }
         }.runTaskAsynchronously(main);
@@ -50,12 +50,7 @@ public class SpawnManager {
             document.append("stoneradius", spawn.getStoneRadius());
             document.append("stoneheight", spawn.getStoneHeight());
 
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    mainCollection.updateOne(Filters.eq("searchby", "spawn"), document, new UpdateOptions().upsert(true));
-                }
-            }.runTaskAsynchronously(main);
+            mainCollection.replaceOne(Filters.eq("searchby", "spawn"), document, new UpdateOptions().upsert(true));
         }
     }
 

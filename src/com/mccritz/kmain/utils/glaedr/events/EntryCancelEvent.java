@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+@Getter
+@Setter
 /**
  * This event is called when an entry is abruptly cancelled by entry#cancel
  */
-@Getter
-@Setter
 public class EntryCancelEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
@@ -25,7 +25,6 @@ public class EntryCancelEvent extends Event {
         this.scoreboard = scoreboard;
         this.player = scoreboard.getPlayer();
     }
-
     public HandlerList getHandlers() {
         return handlers;
     }

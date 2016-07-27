@@ -35,7 +35,7 @@ public class OverrideListener implements Listener {
                 }
 
                 if (w == null) {
-                    MessageManager.sendMessage(p, "&7The warp no longer exists.");
+                    MessageManager.message(p, "&7The warp no longer exists.");
                     return;
                 }
 
@@ -48,9 +48,9 @@ public class OverrideListener implements Listener {
 
                 p.removeMetadata("warpToOverride", main);
 
-                MessageManager.sendMessage(p, "You have overrided warp &c" + warp.getWarp().getName() + "&7.");
+                MessageManager.message(p, "You have overrided warp &c" + warp.getWarp().getName() + "&7.");
             } else {
-                MessageManager.sendMessage(p, "&7You are not overwriting any warps.");
+                MessageManager.message(p, "&7You are not overwriting any warps.");
             }
         } else if (message[0].equalsIgnoreCase("/no")) {
             e.setCancelled(true);
@@ -60,9 +60,9 @@ public class OverrideListener implements Listener {
                 wm.getOverriding().remove(p.getUniqueId());
                 p.removeMetadata("warpToOverride", main);
 
-                MessageManager.sendMessage(p, "&7You have &ccancelled &7the override.");
+                MessageManager.message(p, "&7You have &ccancelled &7the override.");
             } else {
-                MessageManager.sendMessage(p, "&7You are not overwriting any warps.");
+                MessageManager.message(p, "&7You are not overwriting any warps.");
             }
         }
     }

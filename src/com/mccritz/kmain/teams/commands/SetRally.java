@@ -18,16 +18,16 @@ public class SetRally extends TeamSubCommand {
     @Override
     public void execute(Player p, String[] args) {
         if (!tm.hasTeam(p.getUniqueId())) {
-            MessageManager.sendMessage(p, "&7You are not in a team.");
+            MessageManager.message(p, "&7You are not in a team.");
             return;
         }
 
         if (!tm.getTeam(p.getUniqueId()).isManager(p.getUniqueId())) {
-            MessageManager.sendMessage(p, "&7You must be a &3manager &7of this team to do that.");
+            MessageManager.message(p, "&7You must be a &3manager &7of this team to do that.");
             return;
         }
 
-        tm.getTeam(p.getUniqueId()).sendMessage("&3" + p.getName() + " &7has updated the team rally.");
+        tm.getTeam(p.getUniqueId()).message("&3" + p.getName() + " &7has updated the team rally.");
         tm.getTeam(p.getUniqueId()).setRally(p.getLocation());
     }
 }

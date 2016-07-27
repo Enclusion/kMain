@@ -34,7 +34,7 @@ public class TeleportationHandler implements Listener {
             if (teleporters.containsKey(e.getPlayer().getUniqueId())) {
                 teleporters.get(e.getPlayer().getUniqueId()).cancel();
                 teleporters.remove(e.getPlayer().getUniqueId());
-                MessageManager.sendMessage(e.getPlayer(), "&7You moved! Teleportation cancelled.");
+                MessageManager.message(e.getPlayer(), "&7You moved! Teleportation cancelled.");
             }
         }
     }
@@ -47,7 +47,7 @@ public class TeleportationHandler implements Listener {
             if (teleporters.containsKey(player.getUniqueId())) {
                 teleporters.get(player.getUniqueId()).cancel();
                 teleporters.remove(player.getUniqueId());
-                MessageManager.sendMessage(player, "&7You moved! Teleportation cancelled.");
+                MessageManager.message(player, "&7You moved! Teleportation cancelled.");
             }
         }
     }

@@ -8,12 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-/**
- * This event is called when an entry is abruptly cancelled by entry#cancel
- */
-
 @Getter
 @Setter
+/**
+ * This event is called once a countdown entry reaches 0 seconds
+ */
 public class EntryFinishEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
@@ -22,17 +21,16 @@ public class EntryFinishEvent extends Event {
     private Player player;
 
     public EntryFinishEvent(Entry entry, PlayerScoreboard scoreboard) {
-	this.entry = entry;
-	this.scoreboard = scoreboard;
-	this.player = scoreboard.getPlayer();
+        this.entry = entry;
+        this.scoreboard = scoreboard;
+        this.player = scoreboard.getPlayer();
     }
 
-    @Override
     public HandlerList getHandlers() {
-	return handlers;
+        return handlers;
     }
 
     public static HandlerList getHandlerList() {
-	return handlers;
+        return handlers;
     }
 }

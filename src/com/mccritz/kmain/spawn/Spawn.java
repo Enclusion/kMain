@@ -3,7 +3,6 @@ package com.mccritz.kmain.spawn;
 import com.mccritz.kmain.kMain;
 import com.mccritz.kmain.listeners.TeleportationHandler;
 import com.mccritz.kmain.utils.MessageManager;
-import com.mccritz.kmain.utils.PlayerUtility;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -51,11 +50,9 @@ public class Spawn {
         if (th.canTeleport(p)) {
             p.teleport(new Location(Bukkit.getWorld("world"), 0.5, getHeight(), 0.5));
 
-            MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
+            MessageManager.message(p, "&7You cannot attack for 10 seconds.");
 
             kMain.getInstance().getSpawnManager().getSpawnProtected().add(p.getUniqueId());
-
-            PlayerUtility.updateScoreboard(p);
         } else {
             if (th.getTeleporters().containsKey(p.getUniqueId())) {
                 th.getTeleporters().get(p.getUniqueId()).cancel();
@@ -65,16 +62,14 @@ public class Spawn {
                 public void run() {
                     p.teleport(new Location(Bukkit.getWorld("world"), 0.5, getHeight(), 0.5));
 
-                    MessageManager.sendMessage(p, "&7You cannot attack for 10 seconds.");
+                    MessageManager.message(p, "&7You cannot attack for 10 seconds.");
                     kMain.getInstance().getSpawnManager().getSpawnProtected().add(p.getUniqueId());
                     th.getTeleporters().remove(p.getUniqueId());
-
-                    PlayerUtility.updateScoreboard(p);
                 }
             });
 
             th.getTeleporters().get(p.getUniqueId()).runTaskLater(kMain.getInstance(), 10 * 20L);
-            MessageManager.sendMessage(p, "&7Someone is nearby. Warping in 10 seconds. Do not move.");
+            MessageManager.message(p, "&7Someone is nearby. Warping in 10 seconds. Do not move.");
         }
     }
 }

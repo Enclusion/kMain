@@ -19,14 +19,14 @@ public class Chat extends TeamSubCommand {
     public void execute(Player p, String[] args) {
         if (tm.hasTeam(p.getUniqueId())) {
             if (tm.getTeamChatters().contains(p.getUniqueId())) {
-                MessageManager.sendMessage(p, "&3You are now in global chat.");
+                MessageManager.message(p, "&3You are now in global chat.");
                 tm.getTeamChatters().remove(p.getUniqueId());
             } else {
-                MessageManager.sendMessage(p, "&3You are now in team chat.");
+                MessageManager.message(p, "&3You are now in team chat.");
                 tm.getTeamChatters().add(p.getUniqueId());
             }
         } else {
-            MessageManager.sendMessage(p, "&7You are not in a team.");
+            MessageManager.message(p, "&7You are not in a team.");
         }
     }
 }

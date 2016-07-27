@@ -63,10 +63,10 @@ public class TrackingUtils {
             compass = "east";
         }
         if (player == player2) {
-            MessageManager.sendMessage(player, "&7" + player2.getName() + " &aIS &7within &c" + num + " &7blocks " + compass + " of here.");
+            MessageManager.message(player, "&7" + player2.getName() + " &aIS &7within &c" + num + " &7blocks " + compass + " of here.");
 
         } else {
-            MessageManager.sendMessage(player, "&7" + player2.getName() + (can ? " &aIS " : " &4IS NOT ") + "&7within &c" + num + " &7blocks " + compass + " of here.");
+            MessageManager.message(player, "&7" + player2.getName() + (can ? " &aIS " : " &4IS NOT ") + "&7within &c" + num + " &7blocks " + compass + " of here.");
         }
     }
 
@@ -140,7 +140,7 @@ public class TrackingUtils {
         } else if (block.getType() == Material.OBSIDIAN && isTemp(block)) {
             Track(Material.COBBLESTONE, Material.STONE, player, player2);
         } else {
-            MessageManager.sendMessage(player, "&7You are not on a tracker.");
+            MessageManager.message(player, "&7You are not on a tracker.");
         }
     }
 
@@ -317,9 +317,9 @@ public class TrackingUtils {
         } else if (block.getType() == Material.DIAMOND_BLOCK && isPerm(block)) {
             TrackAll(Material.OBSIDIAN, Material.GOLD_BLOCK, player, player2);
         } else if (isTemp(block) && block.getType().equals(Material.OBSIDIAN)) {
-            MessageManager.sendMessage(player, "&7You cannot track all on a temp tracker.");
+            MessageManager.message(player, "&7You cannot track all on a temp tracker.");
         } else {
-            MessageManager.sendMessage(player, "&7You are not on a tracker.");
+            MessageManager.message(player, "&7You are not on a tracker.");
         }
     }
 

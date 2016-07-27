@@ -27,10 +27,10 @@ public class ToggleDMCommand extends BaseCommand implements Listener {
 
         if (!toggled.contains(p.getUniqueId())) {
             toggled.add(p.getUniqueId());
-            MessageManager.sendMessage(p, "&7Death messages have been &cdisabled&7.");
+            MessageManager.message(p, "&7Death messages have been &cdisabled&7.");
         } else {
             toggled.remove(p.getUniqueId());
-            MessageManager.sendMessage(p, "&7Death messages have been &aenabled&7.");
+            MessageManager.message(p, "&7Death messages have been &aenabled&7.");
         }
     }
 
