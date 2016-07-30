@@ -34,6 +34,8 @@ public class ProfileManager {
     public void loadProfiles() {
         MessageManager.debug("&7Preparing to load &c" + profileCollection.count() + " &7profiles.");
 
+        long startTime = System.currentTimeMillis();
+
         for (Document document : profileCollection.find()) {
             UUID id = UUID.fromString(document.getString("uniqueId"));
             String name = document.getString("name");
@@ -59,11 +61,13 @@ public class ProfileManager {
             loadedProfiles.add(profile);
         }
 
-        MessageManager.debug("&7Successfully loaded &c" + profileCollection.count() + " &7profiles.");
+        MessageManager.debug("&7Successfully loaded &c" + profileCollection.count() + " &7profiles. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
     }
 
     public void saveProfiles(boolean async) {
         MessageManager.debug("&7Preparing to save &c" + getLoadedProfiles().size() + " &7profiles.");
+
+        long startTime = System.currentTimeMillis();
 
         if (async) {
             new BukkitRunnable() {
@@ -80,7 +84,7 @@ public class ProfileManager {
                         profileCollection.replaceOne(Filters.eq("uniqueId", profile.getUniqueId().toString()), document, new UpdateOptions().upsert(true));
                     }
 
-                    MessageManager.debug("&7Successfully saved &c" + getLoadedProfiles().size() + " &7profiles.");
+                    MessageManager.debug("&7Successfully saved &c" + getLoadedProfiles().size() + " &7profiles. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
                 }
             }.runTaskAsynchronously(main);
         } else {
@@ -95,7 +99,7 @@ public class ProfileManager {
                 profileCollection.replaceOne(Filters.eq("uniqueId", profile.getUniqueId().toString()), document, new UpdateOptions().upsert(true));
             }
 
-            MessageManager.debug("&7Successfully saved &c" + getLoadedProfiles().size() + " &7profiles.");
+            MessageManager.debug("&7Successfully saved &c" + getLoadedProfiles().size() + " &7profiles. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
         }
     }
 

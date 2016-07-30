@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="kBasic">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Libraries/kBasic.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../Libraries/kBasic.jar!/" />
+    </SOURCES>
+  </library>
+</component>

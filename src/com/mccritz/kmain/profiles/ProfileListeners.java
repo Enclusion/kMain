@@ -19,6 +19,9 @@ public class ProfileListeners implements Listener {
 
         if (!kMain.getInstance().getProfileManager().hasProfile(p.getUniqueId())) {
             kMain.getInstance().getProfileManager().createProfile(p);
+        } else {
+            Profile profile = kMain.getInstance().getProfileManager().getProfile(p.getUniqueId());
+            profile.setName(p.getName());
         }
     }
 }

@@ -85,7 +85,7 @@ public class kMain extends JavaPlugin {
                     }
                 }
             }
-        }.runTaskLaterAsynchronously(this, 20L);
+        }.runTaskLater(this, 20L);
 
         new BukkitRunnable() {
             @Override
@@ -136,6 +136,7 @@ public class kMain extends JavaPlugin {
             register.registerCommand("hud", new HudCommand());
             register.registerCommand("debug", new DebugCommand());
             register.registerCommand("forcesave", new ForceSaveCommand());
+            register.registerCommand("editspawn", new EditSpawnCommand());
 
             /*
              Economy Commands
@@ -164,14 +165,15 @@ public class kMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CombatLogListener(), this);
         getServer().getPluginManager().registerEvents(new ExpBottleListeners(), this);
         getServer().getPluginManager().registerEvents(new ToggleDMCommand(), this);
+        getServer().getPluginManager().registerEvents(new AntiPortalTrapListener(), this);
     }
 
     public void registerDummyEntities() {
         //Passive
-        new CustomEntityController().registerEntity("Sheep", 91, EntitySheep.class, CustomEntitySheep.class);
-        new CustomEntityController().registerEntity("Pig", 90, EntityPig.class, CustomEntityPig.class);
-        new CustomEntityController().registerEntity("Cow", 92, EntityCow.class, CustomEntityCow.class);
-        new CustomEntityController().registerEntity("Chicken", 93, EntityChicken.class, CustomEntityChicken.class);
+//        new CustomEntityController().registerEntity("Sheep", 91, EntitySheep.class, CustomEntitySheep.class);
+//        new CustomEntityController().registerEntity("Pig", 90, EntityPig.class, CustomEntityPig.class);
+//        new CustomEntityController().registerEntity("Cow", 92, EntityCow.class, CustomEntityCow.class);
+//        new CustomEntityController().registerEntity("Chicken", 93, EntityChicken.class, CustomEntityChicken.class);
         new CustomEntityController().registerEntity("Bat", 65, EntityBat.class, CustomEntityBat.class);
         new CustomEntityController().registerEntity("Ocelot", 98, EntityOcelot.class, CustomEntityOcelot.class);
 

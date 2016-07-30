@@ -49,6 +49,8 @@ public class WarpManager {
     public void loadWarps() {
         MessageManager.debug("&7Preparing to load &c" + warpCollection.count() + " &7player warps.");
 
+        long startTime = System.currentTimeMillis();
+
         for (Document document : warpCollection.find()) {
             UUID id = UUID.fromString(document.getString("uuid"));
             String name = document.getString("name");
@@ -63,11 +65,13 @@ public class WarpManager {
             }
         }
 
-        MessageManager.debug("&7Successfully loaded &c" + warps.size() + " &7players warps.");
+        MessageManager.debug("&7Successfully loaded &c" + warps.size() + " &7players warps. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
     }
 
     public void saveWarps(boolean async) {
         MessageManager.debug("&7Preparing to save &c" + warps.size() + " &7players warps.");
+
+        long startTime = System.currentTimeMillis();
 
         if (async) {
             new BukkitRunnable() {
@@ -88,7 +92,7 @@ public class WarpManager {
                         }
                     }
 
-                    MessageManager.debug("&7Successfully saved &c" + warps.size() + " &7players warps.");
+                    MessageManager.debug("&7Successfully saved &c" + warps.size() + " &7players warps. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
                 }
             }.runTaskAsynchronously(main);
         } else {
@@ -107,7 +111,7 @@ public class WarpManager {
                 }
             }
 
-            MessageManager.debug("&7Successfully saved &c" + warps.size() + " &7players warps.");
+            MessageManager.debug("&7Successfully saved &c" + warps.size() + " &7players warps. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
         }
     }
 
@@ -143,7 +147,7 @@ public class WarpManager {
 
                     overriding.put(p.getUniqueId(), new BukkitRunnable() {
                         public void run() {
-                            MessageManager.message(p, "&7You ran out of time. Cancelling overwrite of &c" + tempwarp.getWarp().getName() + "&7.");
+                            MessageManager.message(p, "&7You ran out of time. Cancelling overwrite of &c" + tempwarp.getWarp().getName() + "&7).");
                         }
                     });
 

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
 
 public class TeamManager {
 
@@ -35,7 +34,9 @@ public class TeamManager {
     }
 
     public void loadTeams() {
-        main.getLogger().log(Level.INFO, "&7Preparing to load &c" + teamCollection.count() + " &7teams.");
+        MessageManager.debug("&7Preparing to load &c" + getTeams().size() + " &7teams.");
+
+        long startTime = System.currentTimeMillis();
 
         for (Document document : teamCollection.find()) {
             String name = document.getString("name");
@@ -79,11 +80,13 @@ public class TeamManager {
             teams.add(team);
         }
 
-        main.getLogger().log(Level.INFO, "&7Successfully loaded &c" + teams.size() + " &7teams.");
+        MessageManager.debug("&7Successfully loaded &c" + getTeams().size() + " &7teams. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
     }
 
     public void saveTeams(boolean async) {
         MessageManager.debug("&7Preparing to save &c" + getTeams().size() + " &7teams.");
+
+        long startTime = System.currentTimeMillis();
 
         if (async) {
             new BukkitRunnable() {
@@ -120,7 +123,7 @@ public class TeamManager {
                         teamCollection.replaceOne(Filters.eq("name", team.getName()), document, new UpdateOptions().upsert(true));
                     }
 
-                    MessageManager.debug("&7Successfully saved &c" + teamCollection.count() + " &7teams.");
+                    MessageManager.debug("&7Successfully saved &c" + teamCollection.count() + " &7teams. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
                 }
             }.runTaskAsynchronously(main);
         } else {
@@ -155,7 +158,7 @@ public class TeamManager {
                 teamCollection.replaceOne(Filters.eq("name", team.getName()), document, new UpdateOptions().upsert(true));
             }
 
-            MessageManager.debug("&7Successfully saved &c" + teamCollection.count() + " &7teams.");
+            MessageManager.debug("&7Successfully saved &c" + teamCollection.count() + " &7teams. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
         }
     }
 

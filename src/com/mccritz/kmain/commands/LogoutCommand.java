@@ -31,8 +31,8 @@ public class LogoutCommand extends BaseCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        final Player p = (Player) sender;
-        final Profile prof = pm.getProfile(p.getUniqueId());
+        Player p = (Player) sender;
+        Profile prof = pm.getProfile(p.getUniqueId());
 
         new BukkitRunnable() {
             @Override

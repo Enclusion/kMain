@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="kMain">
+    <output-path>$PROJECT_DIR$/../../Compiled</output-path>
+    <root id="archive" name="kMain.jar">
+      <element id="module-output" name="kMain" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mongodb/mongo-java-driver/3.0.2/mongo-java-driver-3.0.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/mkremins/fanciful/0.3.2-SNAPSHOT/fanciful-0.3.2-SNAPSHOT.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-csv/1.4/commons-csv-1.4.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

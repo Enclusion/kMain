@@ -40,6 +40,8 @@ public class EconomyManager {
         if (sCollection.count() > 0) {
             MessageManager.debug("&7Preparing to load &c" + sCollection.count() + " &7sales.");
 
+            long startTime = System.currentTimeMillis();
+
             for (Document document : sCollection.find()) {
                 UUID transactionID = UUID.fromString(document.getString("transactionID"));
                 UUID seller = UUID.fromString(document.getString("seller"));
@@ -51,12 +53,15 @@ public class EconomyManager {
                 ItemStack newItem = new ItemStack(material, 1, (short) durability);
                 double price = document.getDouble("price");
 
-                sales.add(new Sale(transactionID, seller, newItem, price));
+                if (price <= 0.0) {
+                    System.out.println("Removed: " + document.toString());
+                    sCollection.deleteOne(document);
+                } else {
+                    sales.add(new Sale(transactionID, seller, newItem, price));
+                }
             }
 
-            Collections.sort(sales);
-
-            MessageManager.debug("&7Successfully loaded &c" + sCollection.count() + " &7sales.");
+            MessageManager.debug("&7Successfully loaded &c" + sCollection.count() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
         }
     }
 
@@ -64,23 +69,35 @@ public class EconomyManager {
         if (sales.size() > 0) {
             MessageManager.debug("&7Preparing to save &c" + sales.size() + " &7sales.");
 
+            long startTime = System.currentTimeMillis();
+
             if (async) {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         for (Sale sale : sales) {
+                            if (sale.getPrice() <= 0.0) {
+                                System.out.println("Removed: " + sale.toDocument().toString());
+                                continue;
+                            }
+
                             sCollection.replaceOne(Filters.eq("transactionID", sale.getTransactionID().toString()), sale.toDocument(), new UpdateOptions().upsert(true));
                         }
 
-                        MessageManager.debug("&7Successfully saved &c" + sales.size() + " &7sales.");
+                        MessageManager.debug("&7Successfully saved &c" + sales.size() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
                     }
                 }.runTaskAsynchronously(main);
             } else {
                 for (Sale sale : sales) {
+                    if (sale.getPrice() <= 0.0) {
+                        System.out.println("Removed: " + sale.toDocument().toString());
+                        continue;
+                    }
+
                     sCollection.replaceOne(Filters.eq("transactionID", sale.getTransactionID().toString()), sale.toDocument(), new UpdateOptions().upsert(true));
                 }
 
-                MessageManager.debug("&7Successfully saved &c" + sales.size() + " &7sales.");
+                MessageManager.debug("&7Successfully saved &c" + sales.size() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
             }
         }
     }
@@ -141,14 +158,6 @@ public class EconomyManager {
 
                 double totalPrice = sales.stream().mapToDouble(Sale::getPrice).sum();
 
-//        Bukkit.broadcastMessage("TotalPrice: " + totalPrice);
-//        Bukkit.broadcastMessage("PriceLimit: " + priceLimit);
-//        Bukkit.broadcastMessage("TotalPricev2: " + (totalPrice / sales.size()));
-//        Bukkit.broadcastMessage("Sales: " + sales.size());
-//        Bukkit.broadcastMessage("ItemStack: " + itemStack.toString());
-//        Bukkit.broadcastMessage("TotalPrice > PriceLimit: " + (totalPrice > priceLimit));
-//        Bukkit.broadcastMessage("TotalPrice / Stack Amount > Price Limit: " + ((totalPrice / itemStack.getAmount()) > priceLimit));
-
                 if (totalPrice > priceLimit) {
                     MessageManager.message(buyer, "&c" + itemStack.getAmount() + " " + getItemName(itemStack) + " costs " + totalPrice + " gold which is more than your limit.");
                     return;
@@ -201,7 +210,9 @@ public class EconomyManager {
             return;
         }
 
-        if (getSpecificSales(itemStack).size() < itemStack.getAmount()) {
+        ArrayList<Sale> sales = getSpecificSales(itemStack);
+
+        if (sales.size() < itemStack.getAmount()) {
             MessageManager.message(player, "&7There is not enough " + getItemName(itemStack) + " on the market.");
             return;
         }
@@ -211,7 +222,7 @@ public class EconomyManager {
             public void run() {
                 double totalPrice = 0.0;
 
-                for (Sale sale : getSpecificSales(itemStack)) {
+                for (Sale sale : sales) {
                     totalPrice += sale.getPrice();
                 }
 
@@ -250,34 +261,40 @@ public class EconomyManager {
     }
 
     public ArrayList<Sale> getSpecificSales(ItemStack itemStack) {
-        ArrayList<Sale> sales = new ArrayList<>();
+        Collections.sort(sales, (o1, o2) -> Double.compare(o1.getPrice(), o2.getPrice()));
+
+        ArrayList<Sale> results = new ArrayList<>();
 
         for (Sale sale : getSales()) {
             if (sale.getItemStack().getType() == itemStack.getType() && sale.getItemStack().getDurability() == itemStack.getDurability()) {
-                if (sales.size() < itemStack.getAmount())
-                    sales.add(sale);
+                if (results.size() < itemStack.getAmount())
+                    results.add(sale);
             }
         }
 
-        Collections.sort(sales);
+        Collections.sort(results, (o1, o2) -> Double.compare(o1.getPrice(), o2.getPrice()));
 
-        return sales;
+        return results;
     }
 
     public ArrayList<Sale> getSpecificSales(ItemStack itemStack, double price) {
-        ArrayList<Sale> sales = new ArrayList<>();
+        Collections.sort(sales, (o1, o2) -> Double.compare(o1.getPrice(), o2.getPrice()));
+
+        ArrayList<Sale> results = new ArrayList<>();
 
         for (Sale sale : getSales()) {
             if (sale.getItemStack().getType() == itemStack.getType() && sale.getItemStack().getDurability() == itemStack.getDurability()) {
-                if (sales.size() < itemStack.getAmount() && sale.getPrice() <= price) {
-                    sales.add(sale);
+                if (results.size() < itemStack.getAmount()) {
+                    if (sale.getPrice() <= price) {
+                        results.add(sale);
+                    }
                 }
             }
         }
 
-        Collections.sort(sales);
+        Collections.sort(results, (o1, o2) -> Double.compare(o1.getPrice(), o2.getPrice()));
 
-        return sales;
+        return results;
     }
 
     private boolean isFullyRepaired(ItemStack itemStack) {

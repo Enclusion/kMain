@@ -1,5 +1,6 @@
 package com.mccritz.kmain.spawn;
 
+import com.mccritz.kmain.commands.EditSpawnCommand;
 import com.mccritz.kmain.kMain;
 import com.mccritz.kmain.utils.BlockUtils;
 import com.mccritz.kmain.utils.MessageManager;
@@ -24,12 +25,22 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SpawnListeners implements Listener {
 
     private kMain main = kMain.getInstance();
     private SpawnManager sm = main.getSpawnManager();
     private BlockUtils butils = kMain.getInstance().getBlockUtils();
+
+    public SpawnListeners() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                getNearbyEntities(new Location(Bukkit.getWorld("world"), 0.5, sm.getSpawn().getHeight(), 0.5), sm.getSpawn().getStoneRadius()).stream().filter(entity -> entity.getType() == EntityType.SNOWMAN).forEach(Entity::remove);
+            }
+        }.runTaskTimerAsynchronously(main, 5L, 10L);
+    }
 
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent e) {
@@ -175,12 +186,12 @@ public class SpawnListeners implements Listener {
             return;
         }
 
-        if (sm.getSpawn().isInStoneRadius(e.getLocation()) && e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CHUNK_GEN && e.getEntity().getType() != EntityType.VILLAGER && e.getEntity() instanceof Monster) {
+        if (sm.getSpawn().isInStoneRadius(e.getLocation()) && e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CHUNK_GEN && e.getEntity() instanceof Monster) {
             e.setCancelled(true);
             return;
         }
 
-        if (sm.getSpawn().isInStoneRadius(e.getLocation()) && e.getEntity().getType() != EntityType.VILLAGER) {
+        if (sm.getSpawn().isInStoneRadius(e.getLocation())) {
             e.setCancelled(true);
         }
     }
@@ -211,7 +222,7 @@ public class SpawnListeners implements Listener {
         }
 
         if (sm.getSpawn().isInSpawnRadius(e.getBlock().getLocation())) {
-            if (!e.getPlayer().hasPermission("spawn.build")) {
+            if (!EditSpawnCommand.getEditors().contains(e.getPlayer().getUniqueId())) {
                 e.setCancelled(true);
                 return;
             }
@@ -245,7 +256,7 @@ public class SpawnListeners implements Listener {
         }
 
         if (sm.getSpawn().isInSpawnRadius(e.getBlock().getLocation())) {
-            if (!e.getPlayer().hasPermission("spawn.build")) {
+            if (!EditSpawnCommand.getEditors().contains(e.getPlayer().getUniqueId())) {
                 e.setCancelled(true);
                 return;
             }
@@ -524,5 +535,16 @@ public class SpawnListeners implements Listener {
                 }
             }
         }
+    }
+
+    public static List<Entity> getNearbyEntities(Location where, int range) {
+        return where.getWorld().getEntities().stream().filter(entity -> isInBorder(where, entity.getLocation(), range)).collect(Collectors.toList());
+    }
+
+    public static boolean isInBorder(Location center, Location notCenter, int range) {
+        int x = center.getBlockX(), z = center.getBlockZ();
+        int x1 = notCenter.getBlockX(), z1 = notCenter.getBlockZ();
+
+        return !(x1 >= (x + range) || z1 >= (z + range) || x1 <= (x - range) || z1 <= (z - range));
     }
 }
