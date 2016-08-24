@@ -37,7 +37,8 @@ public class SpawnListeners implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                getNearbyEntities(new Location(Bukkit.getWorld("world"), 0.5, sm.getSpawn().getHeight(), 0.5), sm.getSpawn().getStoneRadius()).stream().filter(entity -> entity.getType() == EntityType.SNOWMAN).forEach(Entity::remove);
+                if (sm.getSpawn() != null)
+                    getNearbyEntities(new Location(Bukkit.getWorld("world"), 0.5, sm.getSpawn().getHeight(), 0.5), sm.getSpawn().getStoneRadius()).stream().filter(entity -> entity.getType() == EntityType.SNOWMAN).forEach(Entity::remove);
             }
         }.runTaskTimerAsynchronously(main, 5L, 10L);
     }
@@ -340,11 +341,11 @@ public class SpawnListeners implements Listener {
             return;
         }
 
-        event.setRespawnLocation(new Location(Bukkit.getWorld("world"), 0.5, sm.getSpawn().getHeight(), 0.5));
-
         if (sm.getSpawn() == null) {
             return;
         }
+
+        event.setRespawnLocation(new Location(Bukkit.getWorld("world"), 0.5, sm.getSpawn().getHeight(), 0.5));
 
         sm.getSpawnProtected().add(event.getPlayer().getUniqueId());
     }

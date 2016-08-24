@@ -21,12 +21,7 @@ public class Spawn {
     private int stoneRadius;
     private int stoneHeight;
 
-    public Spawn(int radius, int height, int stoneRadius, int stoneHeight) {
-        this.radius = radius;
-        this.height = height;
-        this.stoneRadius = stoneRadius;
-        this.stoneHeight = stoneHeight;
-
+    public Spawn() {
         Bukkit.getServer().getWorld("world").setSpawnLocation(0, height, 0);
     }
 

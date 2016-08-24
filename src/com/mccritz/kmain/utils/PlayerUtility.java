@@ -1,17 +1,21 @@
 package com.mccritz.kmain.utils;
 
 import com.mccritz.kmain.commands.HudCommand;
+import com.mccritz.kmain.events.EventManager;
+import com.mccritz.kmain.events.end.EndEvent;
 import com.mccritz.kmain.kMain;
 import com.mccritz.kmain.spawn.SpawnManager;
 import com.mccritz.kmain.teams.TeamManager;
 import com.mccritz.kmain.utils.glaedr.scoreboards.Entry;
 import com.mccritz.kmain.utils.glaedr.scoreboards.PlayerScoreboard;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,16 +23,23 @@ public class PlayerUtility {
 
     private static TeamManager tm = kMain.getInstance().getTeamManager();
     private static SpawnManager sm = kMain.getInstance().getSpawnManager();
+    private static EventManager em = kMain.getInstance().getEventManager();
 
     public static double getHealth(Player p) {
         return p.getHealth();
     }
 
-    public static double getMaxHealth(Player p) { return p.getMaxHealth(); }
+    public static double getMaxHealth(Player p) {
+        return p.getMaxHealth();
+    }
 
-    public static void setHealth(Player p, double health) { p.setHealth(health); }
+    public static void setHealth(Player p, double health) {
+        p.setHealth(health);
+    }
 
-    public static double getDamage(EntityDamageByEntityEvent e) { return e.getDamage(); }
+    public static double getDamage(EntityDamageByEntityEvent e) {
+        return e.getDamage();
+    }
 
     public static Player[] getOnlinePlayers() {
         return Bukkit.getOnlinePlayers();
@@ -73,6 +84,7 @@ public class PlayerUtility {
 
     public static void updateScoreboard(Player p) {
         PlayerScoreboard scoreboard = PlayerScoreboard.getScoreboard(p);
+        EndEvent endEvent = kMain.getInstance().getEventManager().getEndEvent();
 
         if (HudCommand.getDisplayList().contains(p.getUniqueId())) {
             if (scoreboard != null) {
@@ -105,6 +117,67 @@ public class PlayerUtility {
                             .setText("&bGold: &6" + MessageManager.formatDouble(kMain.getInstance().getProfileManager().getProfile(p.getUniqueId()).getGold()))
                             .send();
                 }
+
+                if (endEvent != null && endEvent.isStarted() && p.getWorld().getEnvironment() == World.Environment.THE_END) {
+                    if (endEvent.getGameTime() <= 660 && endEvent.getGameTime() > 360) {
+                        if (scoreboard.getEntry("endevent") != null) {
+                            scoreboard.getEntry("endevent")
+                                    .setText("&bEnd Exit: &5" + DateUtil.readableTime(BigDecimal.valueOf(endEvent.getEndExitTime())))
+                                    .send();
+                        } else {
+                            new Entry("endevent", scoreboard)
+                                    .setText("&bEnd Exit: &5" + DateUtil.readableTime(BigDecimal.valueOf(endEvent.getEndExitTime())))
+                                    .send();
+                        }
+                    } else if (endEvent.getGameTime() <= 360 && endEvent.getGameTime() > 240) {
+                        if (scoreboard.getEntry("endevent") != null) {
+                            scoreboard.getEntry("endevent")
+                                    .setText("&bChest Refill: &5" + DateUtil.readableTime(BigDecimal.valueOf(endEvent.getChestRefillTime())))
+                                    .send();
+                        } else {
+                            new Entry("endevent", scoreboard)
+                                    .setText("&bChest Refill: &5" + DateUtil.readableTime(BigDecimal.valueOf(endEvent.getChestRefillTime())))
+                                    .send();
+                        }
+                    } else if (endEvent.getGameTime() <= 60 && endEvent.getGameTime() > 0) {
+                        if (scoreboard.getEntry("endevent") != null) {
+                            scoreboard.getEntry("endevent")
+                                    .setText("&bEnd Over: &5" + DateUtil.readableTime(BigDecimal.valueOf(endEvent.getEndOverTime())))
+                                    .send();
+                        } else {
+                            new Entry("endevent", scoreboard)
+                                    .setText("&bEnd Over: &5" + DateUtil.readableTime(BigDecimal.valueOf(endEvent.getEndOverTime())))
+                                    .send();
+                        }
+                    } else {
+                        if (scoreboard.getEntry("endevent") != null) {
+                            scoreboard.getEntry("endevent").cancel();
+                        }
+                    }
+                } else {
+                    if (scoreboard.getEntry("endevent") != null) {
+                        scoreboard.getEntry("endevent").cancel();
+                    }
+                }
+//
+//                if (p.getWorld().getEnvironment() == World.Environment.NORMAL || p.getWorld().getEnvironment() == World.Environment.NETHER) {
+//                    Bukkit.broadcastMessage(Cooldowns.getCooldown(p.getUniqueId(), "deathban") + "");
+//                    if (Cooldowns.getCooldown(p.getUniqueId(), "deathban") > 0) {
+//                        if (scoreboard.getEntry("endevent") != null) {
+//                            scoreboard.getEntry("endevent")
+//                                    .setText("&bDeathban: &5" + DateUtil.readableTime(BigDecimal.valueOf(Cooldowns.getCooldown(p.getUniqueId(), "deathban"))))
+//                                    .send();
+//                        } else {
+//                           new Entry("endevent", scoreboard)
+//                                   .setText("&bDeathban: &5" + DateUtil.readableTime(BigDecimal.valueOf(Cooldowns.getCooldown(p.getUniqueId(), "deathban"))))
+//                                   .send();
+//                        }
+//                    } else {
+//                        if (scoreboard.getEntry("endevent") != null) {
+//                            scoreboard.getEntry("endevent").cancel();
+//                        }
+//                    }
+//                }
 
                 if (scoreboard.getEntry("team") != null) {
                     scoreboard.getEntry("team")

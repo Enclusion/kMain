@@ -7,3 +7,6 @@ database:
 
 combat:
   tag-length: 36
+
+kits:
+  enabled: false

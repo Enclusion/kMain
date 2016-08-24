@@ -30,7 +30,11 @@ public class SpawnManager {
                 Document document = mainCollection.find(Filters.eq("searchby", "spawn")).first();
 
                 if (document != null) {
-                    Spawn spawn = new Spawn(document.getInteger("spawnradius"), document.getInteger("spawnheight"), document.getInteger("stoneradius"), document.getInteger("stoneheight"));
+                    Spawn spawn = new Spawn();
+                    spawn.setRadius(document.getInteger("spawnradius"));
+                    spawn.setHeight(document.getInteger("spawnheight"));
+                    spawn.setStoneRadius(document.getInteger("stoneradius"));
+                    spawn.setStoneHeight(document.getInteger("stoneheight"));
 
                     setSpawn(spawn);
 

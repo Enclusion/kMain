@@ -6,6 +6,7 @@ import com.mccritz.kmain.profiles.ProfileManager;
 import com.mccritz.kmain.utils.MessageManager;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class EconomyManager {
 
@@ -27,6 +29,8 @@ public class EconomyManager {
 
     public EconomyManager() {
         loadSales();
+
+        sCollection.createIndex(new Document("transactionID", 1), new IndexOptions().unique(true));
 
         new BukkitRunnable() {
             @Override
@@ -53,12 +57,7 @@ public class EconomyManager {
                 ItemStack newItem = new ItemStack(material, 1, (short) durability);
                 double price = document.getDouble("price");
 
-                if (price <= 0.0) {
-                    System.out.println("Removed: " + document.toString());
-                    sCollection.deleteOne(document);
-                } else {
-                    sales.add(new Sale(transactionID, seller, newItem, price));
-                }
+                sales.add(new Sale(transactionID, seller, newItem, price));
             }
 
             MessageManager.debug("&7Successfully loaded &c" + sCollection.count() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
@@ -75,29 +74,19 @@ public class EconomyManager {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        for (Sale sale : sales) {
-                            if (sale.getPrice() <= 0.0) {
-                                System.out.println("Removed: " + sale.toDocument().toString());
-                                continue;
-                            }
-
+                        for (Sale sale : cloneSales()) {
                             sCollection.replaceOne(Filters.eq("transactionID", sale.getTransactionID().toString()), sale.toDocument(), new UpdateOptions().upsert(true));
                         }
 
-                        MessageManager.debug("&7Successfully saved &c" + sales.size() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
+                        MessageManager.debug("&7Successfully saved &c" + cloneSales().size() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
                     }
                 }.runTaskAsynchronously(main);
             } else {
-                for (Sale sale : sales) {
-                    if (sale.getPrice() <= 0.0) {
-                        System.out.println("Removed: " + sale.toDocument().toString());
-                        continue;
-                    }
-
+                for (Sale sale : cloneSales()) {
                     sCollection.replaceOne(Filters.eq("transactionID", sale.getTransactionID().toString()), sale.toDocument(), new UpdateOptions().upsert(true));
                 }
 
-                MessageManager.debug("&7Successfully saved &c" + sales.size() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
+                MessageManager.debug("&7Successfully saved &c" + cloneSales().size() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
             }
         }
     }
@@ -309,5 +298,9 @@ public class EconomyManager {
 
     public ArrayList<Sale> getSales() {
         return sales;
+    }
+
+    public ArrayList<Sale> cloneSales() {
+        return sales.stream().collect(Collectors.toCollection(ArrayList::new));
     }
 }

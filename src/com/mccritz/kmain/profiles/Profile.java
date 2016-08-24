@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 @Getter
@@ -29,6 +30,7 @@ public class Profile {
     private Double gold;
     private boolean safeLogged;
     private Location home;
+    private HashMap<String, Long> usedKits = new HashMap<>();
 
     private long warpTime;
 

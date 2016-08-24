@@ -3,6 +3,10 @@ package com.mccritz.kmain;
 import com.mccritz.kmain.commands.*;
 import com.mccritz.kmain.economy.EconomyManager;
 import com.mccritz.kmain.economy.commands.*;
+import com.mccritz.kmain.events.EventManager;
+import com.mccritz.kmain.events.end.commands.EndEventCommand;
+import com.mccritz.kmain.events.end.listeners.EndEventListeners;
+import com.mccritz.kmain.kits.KitManager;
 import com.mccritz.kmain.listeners.*;
 import com.mccritz.kmain.profiles.ProfileListeners;
 import com.mccritz.kmain.profiles.ProfileManager;
@@ -37,6 +41,8 @@ public class kMain extends JavaPlugin {
     private MongoDatabase mongoDatabase;
     private TeleportationHandler teleportationHandler;
     private ProfileManager profileManager;
+    private KitManager kitManager;
+    private EventManager eventManager;
     private EconomyManager economyManager;
     private SpawnManager spawnManager;
     private TeamManager teamManager;
@@ -55,6 +61,7 @@ public class kMain extends JavaPlugin {
 
         teleportationHandler = new TeleportationHandler();
         profileManager = new ProfileManager();
+        eventManager = new EventManager();
         economyManager = new EconomyManager();
         spawnManager = new SpawnManager();
         teamManager = new TeamManager();
@@ -64,6 +71,9 @@ public class kMain extends JavaPlugin {
 //        glaedr.getTopWrappers().add("&7&m--------------------------");
 //        glaedr.getBottomWrappers().add("&7&m--------------------------");
         itemDb = new ItemDb();
+
+        if (getConfig().getBoolean("kits.enabled"))
+            kitManager = new KitManager();
 
         registerCommands();
         registerListeners();
@@ -84,6 +94,8 @@ public class kMain extends JavaPlugin {
                         new PlayerScoreboard(all);
                     }
                 }
+
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "toggleworld world_the_end");
             }
         }.runTaskLater(this, 20L);
 
@@ -103,6 +115,9 @@ public class kMain extends JavaPlugin {
         warpManager.saveWarps(false);
         spawnManager.saveSpawn();
         economyManager.saveSales(false);
+
+        if (getConfig().getBoolean("kits.enabled"))
+            kitManager.saveAllKits();
 
         for (Player all : PlayerUtility.getOnlinePlayers()) {
             all.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
@@ -133,10 +148,18 @@ public class kMain extends JavaPlugin {
             register.registerCommand("home", new HomeCommand());
             register.registerCommand("sethome", new SetHomeCommand());
             register.registerCommand("homeas", new HomeAsCommand());
+            register.registerCommand("teamas", new TeamAsCommand());
             register.registerCommand("hud", new HudCommand());
             register.registerCommand("debug", new DebugCommand());
             register.registerCommand("forcesave", new ForceSaveCommand());
             register.registerCommand("editspawn", new EditSpawnCommand());
+            register.registerCommand("endevent", new EndEventCommand());
+
+            if (getConfig().getBoolean("kits.enabled")) {
+                register.registerCommand("kit", new KitCommand());
+                register.registerCommand("setkit", new SetKitCommand());
+                register.registerCommand("delkit", new DelKitCommand());
+            }
 
             /*
              Economy Commands
@@ -165,17 +188,12 @@ public class kMain extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CombatLogListener(), this);
         getServer().getPluginManager().registerEvents(new ExpBottleListeners(), this);
         getServer().getPluginManager().registerEvents(new ToggleDMCommand(), this);
-        getServer().getPluginManager().registerEvents(new AntiPortalTrapListener(), this);
+        Bukkit.getPluginManager().registerEvents(new EndEventListeners(), this);
     }
 
     public void registerDummyEntities() {
         //Passive
-//        new CustomEntityController().registerEntity("Sheep", 91, EntitySheep.class, CustomEntitySheep.class);
-//        new CustomEntityController().registerEntity("Pig", 90, EntityPig.class, CustomEntityPig.class);
-//        new CustomEntityController().registerEntity("Cow", 92, EntityCow.class, CustomEntityCow.class);
-//        new CustomEntityController().registerEntity("Chicken", 93, EntityChicken.class, CustomEntityChicken.class);
         new CustomEntityController().registerEntity("Bat", 65, EntityBat.class, CustomEntityBat.class);
-        new CustomEntityController().registerEntity("Ocelot", 98, EntityOcelot.class, CustomEntityOcelot.class);
 
         //Aggressive
         new CustomEntityController().registerEntity("Blaze", 61, EntityBlaze.class, CustomEntityBlaze.class);
@@ -202,6 +220,14 @@ public class kMain extends JavaPlugin {
 
     public ProfileManager getProfileManager() {
         return profileManager;
+    }
+
+    public KitManager getKitManager() {
+        return kitManager;
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
     }
 
     public EconomyManager getEconomyManager() {

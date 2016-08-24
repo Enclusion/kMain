@@ -23,11 +23,14 @@ public class SetSpawnCommand extends BaseCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         try {
-            Spawn spawn = new Spawn(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
-
+            Spawn spawn = new Spawn();
+            spawn.setRadius(Integer.parseInt(args[0]));
+            spawn.setHeight(Integer.parseInt(args[1]));
+            spawn.setStoneRadius(Integer.parseInt(args[2]));
+            spawn.setStoneHeight(Integer.parseInt(args[3]));
             sm.setSpawn(spawn);
 
-            MessageManager.message(sender, "&7Successfully set spawn radius to &c" + args[0] + "&7, spawn height to &c" + args[1] + "&7, stone radius to &c" + args[2] + "&7, and stone height to &c" + args[3] + "&7.");
+            MessageManager.message(sender, "&7Successfully set spawn radius to &c" + args[0] + "&7, spawn height to &c" + args[1] + "&7, stone radius to &c" + args[2] + "&7, stone height to &c" + args[3] + "&7.");
         } catch (NumberFormatException e) {
             MessageManager.message(sender, "&4You must enter valid numbers.");
         }

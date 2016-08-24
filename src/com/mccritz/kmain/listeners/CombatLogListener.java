@@ -29,7 +29,7 @@ public class CombatLogListener implements Listener {
 
     private SpawnManager sm = kMain.getInstance().getSpawnManager();
     private ArrayList<String> blockedCommands = new ArrayList<>();
-    private ConcurrentHashMap<UUID, Long> tagged = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<UUID, Long> tagged = new ConcurrentHashMap<>();
 
     public CombatLogListener() {
         blockedCommands.add("/buy soup");
@@ -156,7 +156,7 @@ public class CombatLogListener implements Listener {
         }
     }
 
-    public long getRemainingTime(UUID id) {
+    public static long getRemainingTime(UUID id) {
         Long tag = tagged.get(id);
 
         if (tag == null) {
@@ -187,7 +187,7 @@ public class CombatLogListener implements Listener {
         return System.currentTimeMillis() + (seconds * 1000);
     }
 
-    public boolean isInCombat(UUID id) {
+    public static boolean isInCombat(UUID id) {
         if (getRemainingTime(id) < 0) {
             if (tagged.containsKey(id)) {
                 tagged.remove(id);
