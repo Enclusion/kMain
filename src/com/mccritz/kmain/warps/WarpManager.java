@@ -8,6 +8,7 @@ import com.mccritz.kmain.utils.LocationSerialization;
 import com.mccritz.kmain.utils.MessageManager;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.UpdateOptions;
 import mkremins.fanciful.FancyMessage;
 import org.bson.Document;
@@ -36,6 +37,8 @@ public class WarpManager {
     private HashMap<UUID, BukkitRunnable> overriding = new HashMap<>();
 
     public WarpManager() {
+        warpCollection.createIndex(new Document("transactionID", 1), new IndexOptions().unique(true));
+
         loadWarps();
 
         new BukkitRunnable() {

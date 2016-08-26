@@ -5,6 +5,7 @@ import com.mccritz.kmain.utils.LocationSerialization;
 import com.mccritz.kmain.utils.MessageManager;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
 import org.bukkit.Location;
@@ -21,6 +22,8 @@ public class ProfileManager {
     private MongoCollection<Document> profileCollection = main.getMongoDatabase().getCollection("profiles");
 
     public ProfileManager() {
+        profileCollection.createIndex(new Document("uniqueId", 1), new IndexOptions().unique(true));
+
         loadProfiles();
 
         new BukkitRunnable() {

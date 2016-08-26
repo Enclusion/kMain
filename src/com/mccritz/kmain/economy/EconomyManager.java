@@ -25,12 +25,12 @@ public class EconomyManager {
     private ProfileManager pm = main.getProfileManager();
 
     private ArrayList<Sale> sales = new ArrayList<>();
-    private MongoCollection<Document> sCollection = main.getMongoDatabase().getCollection("sales");
+    private MongoCollection<Document> salesCollection = main.getMongoDatabase().getCollection("sales");
 
     public EconomyManager() {
-        loadSales();
+        salesCollection.createIndex(new Document("transactionID", 1), new IndexOptions().unique(true));
 
-        sCollection.createIndex(new Document("transactionID", 1), new IndexOptions().unique(true));
+        loadSales();
 
         new BukkitRunnable() {
             @Override
@@ -41,12 +41,12 @@ public class EconomyManager {
     }
 
     public void loadSales() {
-        if (sCollection.count() > 0) {
-            MessageManager.debug("&7Preparing to load &c" + sCollection.count() + " &7sales.");
+        if (salesCollection.count() > 0) {
+            MessageManager.debug("&7Preparing to load &c" + salesCollection.count() + " &7sales.");
 
             long startTime = System.currentTimeMillis();
 
-            for (Document document : sCollection.find()) {
+            for (Document document : salesCollection.find()) {
                 UUID transactionID = UUID.fromString(document.getString("transactionID"));
                 UUID seller = UUID.fromString(document.getString("seller"));
 
@@ -60,7 +60,7 @@ public class EconomyManager {
                 sales.add(new Sale(transactionID, seller, newItem, price));
             }
 
-            MessageManager.debug("&7Successfully loaded &c" + sCollection.count() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
+            MessageManager.debug("&7Successfully loaded &c" + salesCollection.count() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
         }
     }
 
@@ -75,7 +75,7 @@ public class EconomyManager {
                     @Override
                     public void run() {
                         for (Sale sale : cloneSales()) {
-                            sCollection.replaceOne(Filters.eq("transactionID", sale.getTransactionID().toString()), sale.toDocument(), new UpdateOptions().upsert(true));
+                            salesCollection.replaceOne(Filters.eq("transactionID", sale.getTransactionID().toString()), sale.toDocument(), new UpdateOptions().upsert(true));
                         }
 
                         MessageManager.debug("&7Successfully saved &c" + cloneSales().size() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
@@ -83,7 +83,7 @@ public class EconomyManager {
                 }.runTaskAsynchronously(main);
             } else {
                 for (Sale sale : cloneSales()) {
-                    sCollection.replaceOne(Filters.eq("transactionID", sale.getTransactionID().toString()), sale.toDocument(), new UpdateOptions().upsert(true));
+                    salesCollection.replaceOne(Filters.eq("transactionID", sale.getTransactionID().toString()), sale.toDocument(), new UpdateOptions().upsert(true));
                 }
 
                 MessageManager.debug("&7Successfully saved &c" + cloneSales().size() + " &7sales. Took (&c" + (System.currentTimeMillis() - startTime) + "ms&7).");
@@ -167,7 +167,7 @@ public class EconomyManager {
                         completedSale.add(sale.getPrice());
                         completedSales.put(sale.getSeller(), completedSale);
 
-                        sCollection.deleteOne(Filters.eq("transactionID", sale.getTransactionID().toString()));
+                        salesCollection.deleteOne(Filters.eq("transactionID", sale.getTransactionID().toString()));
                         getSales().remove(sale);
                     } else {
                         break;

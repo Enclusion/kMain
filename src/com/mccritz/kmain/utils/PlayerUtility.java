@@ -181,11 +181,11 @@ public class PlayerUtility {
 
                 if (scoreboard.getEntry("team") != null) {
                     scoreboard.getEntry("team")
-                            .setText("&bTeam: &f" + (tm.hasTeam(p.getUniqueId()) ? tm.getTeam(p.getUniqueId()).getName() : "&cNone."))
+                            .setText("&bTeam: &c" + (tm.hasTeam(p.getUniqueId()) ? tm.getTeam(p.getUniqueId()).getName() : "&cNone."))
                             .send();
                 } else {
                     new Entry("team", scoreboard)
-                            .setText("&bTeam: &f" + (tm.hasTeam(p.getUniqueId()) ? tm.getTeam(p.getUniqueId()).getName() : "&cNone."))
+                            .setText("&bTeam: &c" + (tm.hasTeam(p.getUniqueId()) ? tm.getTeam(p.getUniqueId()).getName() : "&cNone."))
                             .send();
                 }
 
