@@ -21,7 +21,7 @@ public class BalanceCommand extends BaseCommand {
 
     public BalanceCommand() {
         super("balance", null, CommandUsageBy.PlAYER, "bal", "money", "dinero");
-        setUsage("&c<command>");
+        setUsage("&c/<command>");
         setMinArgs(0);
         setMaxArgs(1);
     }
@@ -29,6 +29,11 @@ public class BalanceCommand extends BaseCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         final Player p = (Player) sender;
+
+        if (main.getEconomyManager().isEconomyHalted()) {
+            MessageManager.message(sender, "&cThe economy is temporarily disabled. The administrators will let you know when it is re-enabled.");
+            return;
+        }
 
         if (args.length == 0) {
             MessageManager.message(p, "&7You currently have " + MessageManager.formatDouble(pm.getProfile(p.getUniqueId()).getGold()) + " gold in your account.");

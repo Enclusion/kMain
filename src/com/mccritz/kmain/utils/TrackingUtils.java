@@ -7,6 +7,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class TrackingUtils {
 
@@ -194,85 +195,90 @@ public class TrackingUtils {
     }
 
     public void TrackDirAll(Player player, int x, int z, Player player2) {
-        String compass;
-        int in = 0;
-        int num = Math.abs(x) + Math.abs(z);
-        FancyMessage m1 = new FancyMessage(ChatColor.translateAlternateColorCodes('&', "&r"));
-        FancyMessage m2 = new FancyMessage(ChatColor.translateAlternateColorCodes('&', "&r"));
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                String compass;
+                int in = 0;
+                int num = Math.abs(x) + Math.abs(z);
+                FancyMessage m1 = new FancyMessage(ChatColor.translateAlternateColorCodes('&', "&r"));
+                FancyMessage m2 = new FancyMessage(ChatColor.translateAlternateColorCodes('&', "&r"));
 
-        if (player2 == null) {
-            for (int i = 0; i < PlayerUtility.getOnlinePlayers().length; i++) {
-                if (i < PlayerUtility.getOnlinePlayers().length - 1) {
-                    Player pl = PlayerUtility.getOnlinePlayers()[i];
-                    boolean can = checkPlayer(pl, x, z);
+                if (player2 == null) {
+                    for (int i = 0; i < PlayerUtility.getOnlinePlayers().length; i++) {
+                        if (i < PlayerUtility.getOnlinePlayers().length - 1) {
+                            Player pl = PlayerUtility.getOnlinePlayers()[i];
+                            boolean can = checkPlayer(pl, x, z);
 
-                    if (can) {
-                        in++;
-                        m2.then(pl.getName()).command("/track " + pl.getName()).color(ChatColor.RED).tooltip(ChatColor.RED + "Track " + pl.getName()).then(", ").color(ChatColor.GRAY);
+                            if (can) {
+                                in++;
+                                m2.then(pl.getName()).command("/track " + pl.getName()).color(ChatColor.RED).tooltip(ChatColor.RED + "Track " + pl.getName()).then(", ").color(ChatColor.GRAY);
+                            }
+                        } else {
+                            Player pl = PlayerUtility.getOnlinePlayers()[i];
+                            boolean can = checkPlayer(pl, x, z);
+
+                            if (can) {
+                                in++;
+                                m2.then(pl.getName()).command("/track " + pl.getName()).color(ChatColor.RED).tooltip(ChatColor.RED + "Track " + pl.getName());
+                            }
+                        }
                     }
                 } else {
-                    Player pl = PlayerUtility.getOnlinePlayers()[i];
-                    boolean can = checkPlayer(pl, x, z);
+                    boolean can = checkPlayer(player2, x, z);
 
                     if (can) {
                         in++;
-                        m2.then(pl.getName()).command("/track " + pl.getName()).color(ChatColor.RED).tooltip(ChatColor.RED + "Track " + pl.getName());
+                    }
+                }
+
+                if (z < 0) {
+                    compass = "North";
+
+                    if (in == 0) {
+                        m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
+                        m1.send(player);
+                    } else {
+                        m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
+                        m1.send(player);
+                        m2.send(player);
+                    }
+                } else if (x > 0) {
+                    compass = "East";
+
+                    if (in == 0) {
+                        m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
+                        m1.send(player);
+                    } else {
+                        m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
+                        m1.send(player);
+                        m2.send(player);
+                    }
+                } else if (z > 0) {
+                    compass = "South";
+
+                    if (in == 0) {
+                        m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
+                        m1.send(player);
+                    } else {
+                        m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
+                        m1.send(player);
+                        m2.send(player);
+                    }
+                } else if (x < 0) {
+                    compass = "West";
+
+                    if (in == 0) {
+                        m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
+                        m1.send(player);
+                    } else {
+                        m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
+                        m1.send(player);
+                        m2.send(player);
                     }
                 }
             }
-        } else {
-            boolean can = checkPlayer(player2, x, z);
-
-            if (can) {
-                in++;
-            }
-        }
-
-        if (z < 0) {
-            compass = "North";
-
-            if (in == 0) {
-                m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
-                m1.send(player);
-            } else {
-                m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
-                m1.send(player);
-                m2.send(player);
-            }
-        } else if (x > 0) {
-            compass = "East";
-
-            if (in == 0) {
-                m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
-                m1.send(player);
-            } else {
-                m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
-                m1.send(player);
-                m2.send(player);
-            }
-        } else if (z > 0) {
-            compass = "South";
-
-            if (in == 0) {
-                m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
-                m1.send(player);
-            } else {
-                m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
-                m1.send(player);
-                m2.send(player);
-            }
-        } else if (x < 0) {
-            compass = "West";
-
-            if (in == 0) {
-                m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
-                m1.send(player);
-            } else {
-                m1.then(compass).color(ChatColor.GRAY).then(" (").color(ChatColor.GRAY).then("" + num).color(ChatColor.GREEN).then("): ").color(ChatColor.GRAY);
-                m1.send(player);
-                m2.send(player);
-            }
-        }
+        }.runTaskAsynchronously(kMain.getInstance());
     }
 
     public void TrackAll(final Material mat1, final Material mat2, final Player player, final Player player2) {

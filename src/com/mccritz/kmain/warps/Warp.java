@@ -42,7 +42,6 @@ public class Warp {
         }
 
         if (th.canTeleport(p)) {
-            location.getChunk().load(true);
             p.teleport(location);
             MessageManager.message(p, "&7You cannot attack for 10 seconds.");
             return;
@@ -54,7 +53,6 @@ public class Warp {
 
         th.getTeleporters().put(p.getUniqueId(), new BukkitRunnable() {
             public void run() {
-                location.getChunk().load(true);
                 p.teleport(location);
                 th.getTeleporters().remove(p.getUniqueId());
                 MessageManager.message(p, "&7You cannot attack for 10 seconds.");

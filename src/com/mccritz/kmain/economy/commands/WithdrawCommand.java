@@ -26,6 +26,12 @@ public class WithdrawCommand extends BaseCommand {
     @Override
     public void execute(CommandSender s, String[] args) {
         Player p = (Player) s;
+
+        if (kMain.getInstance().getEconomyManager().isEconomyHalted()) {
+            MessageManager.message(s, "&cThe economy is temporarily disabled. The administrators will let you know when it is re-enabled.");
+            return;
+        }
+
         int amount, balance = (int) em.getBalance(p.getUniqueId());
 
         if (args[0].equalsIgnoreCase("all")) {

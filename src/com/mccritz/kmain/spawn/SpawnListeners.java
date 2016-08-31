@@ -24,6 +24,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,13 +35,6 @@ public class SpawnListeners implements Listener {
     private BlockUtils butils = kMain.getInstance().getBlockUtils();
 
     public SpawnListeners() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (sm.getSpawn() != null)
-                    getNearbyEntities(new Location(Bukkit.getWorld("world"), 0.5, sm.getSpawn().getHeight(), 0.5), sm.getSpawn().getStoneRadius()).stream().filter(entity -> entity.getType() == EntityType.SNOWMAN).forEach(Entity::remove);
-            }
-        }.runTaskTimerAsynchronously(main, 5L, 10L);
     }
 
     @EventHandler
@@ -470,13 +464,18 @@ public class SpawnListeners implements Listener {
 
     @EventHandler
     public void onBlockFromTo(BlockFromToEvent e) {
-        if (sm.getSpawn() == null) {
-            return;
-        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (sm.getSpawn() == null) {
+                    return;
+                }
 
-        if (sm.getSpawn().isInStoneRadius(e.getToBlock().getLocation())) {
-            e.setCancelled(true);
-        }
+                if (sm.getSpawn().isInStoneRadius(e.getToBlock().getLocation())) {
+                    e.setCancelled(true);
+                }
+            }
+        }.runTaskAsynchronously(kMain.getInstance());
     }
 
     @EventHandler
@@ -518,9 +517,10 @@ public class SpawnListeners implements Listener {
             Player player = (Player) e.getEntity().getShooter();
 
             if (sm.getSpawnProtected().contains(player.getUniqueId())) {
+                Collection<LivingEntity> entityArray = e.getAffectedEntities();
                 boolean spawnprot = true;
 
-                for (Entity entity : e.getAffectedEntities()) {
+                for (Entity entity : entityArray) {
                     if (entity instanceof Player) {
                         Player affected = (Player) entity;
 

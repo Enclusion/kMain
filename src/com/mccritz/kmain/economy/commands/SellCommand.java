@@ -24,6 +24,11 @@ public class SellCommand extends BaseCommand {
     public void execute(CommandSender sender, String[] args) {
         Player p = (Player) sender;
 
+        if (kMain.getInstance().getEconomyManager().isEconomyHalted()) {
+            MessageManager.message(sender, "&cThe economy is temporarily disabled. The administrators will let you know when it is re-enabled.");
+            return;
+        }
+
         int amount;
 
         try {

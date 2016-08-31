@@ -120,7 +120,6 @@ public class Team {
             }
 
             if (th.canTeleport(p)) {
-                hq.getChunk().load(true);
                 p.teleport(hq);
                 MessageManager.message(p, "&7You cannot attack for 10 seconds.");
                 return;
@@ -132,7 +131,6 @@ public class Team {
 
             th.getTeleporters().put(p.getUniqueId(), new BukkitRunnable() {
                 public void run() {
-                    hq.getChunk().load(true);
                     p.teleport(hq);
                     th.getTeleporters().remove(p.getUniqueId());
                     MessageManager.message(p, "&7You can not attack for 10 seconds.");
@@ -142,21 +140,18 @@ public class Team {
             th.getTeleporters().get(p.getUniqueId()).runTaskLater(kMain.getInstance(), 10 * 20);
 
             MessageManager.message(p, "&7Someone is nearby. Warping in 10 seconds. Do not move.");
-        }
-
-        if (locName.equalsIgnoreCase("rally")) {
+        } else if (locName.equalsIgnoreCase("rally")) {
             if (kMain.getInstance().getSpawnManager().hasSpawnProt(p.getUniqueId())) {
                 MessageManager.message(p, "&7Your cannot warp this close to spawn.");
                 return;
             }
 
             if (rally == null) {
-                MessageManager.message(p, "&7Your team does not have a headquaters set.");
+                MessageManager.message(p, "&7Your team does not have a rally set.");
                 return;
             }
 
             if (th.canTeleport(p)) {
-                rally.getChunk().load(true);
                 p.teleport(rally);
                 MessageManager.message(p, "&7You can not attack for 10 seconds.");
                 return;
@@ -168,7 +163,6 @@ public class Team {
 
             th.getTeleporters().put(p.getUniqueId(), new BukkitRunnable() {
                 public void run() {
-                    rally.getChunk().load(true);
                     p.teleport(rally);
                     th.getTeleporters().remove(p.getUniqueId());
                     MessageManager.message(p, "&7You can not attack for 10 seconds.");

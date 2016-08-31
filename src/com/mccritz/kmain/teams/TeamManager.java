@@ -5,7 +5,6 @@ import com.mccritz.kmain.utils.LocationSerialization;
 import com.mccritz.kmain.utils.MessageManager;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
 import org.bukkit.Location;
@@ -24,8 +23,6 @@ public class TeamManager {
     private MongoCollection<Document> teamCollection = main.getMongoDatabase().getCollection("teams");
 
     public TeamManager() {
-        teamCollection.createIndex(new Document("name", 1), new IndexOptions().unique(true));
-
         loadTeams();
 
         new BukkitRunnable() {

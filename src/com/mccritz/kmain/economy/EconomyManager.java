@@ -6,7 +6,6 @@ import com.mccritz.kmain.profiles.ProfileManager;
 import com.mccritz.kmain.utils.MessageManager;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
 import org.bukkit.Bukkit;
@@ -27,8 +26,10 @@ public class EconomyManager {
     private ArrayList<Sale> sales = new ArrayList<>();
     private MongoCollection<Document> salesCollection = main.getMongoDatabase().getCollection("sales");
 
+    private boolean economyHalted = false;
+
     public EconomyManager() {
-        salesCollection.createIndex(new Document("transactionID", 1), new IndexOptions().unique(true));
+        salesCollection.createIndex(new Document("transactionId", 1));
 
         loadSales();
 
@@ -37,7 +38,7 @@ public class EconomyManager {
             public void run() {
                 saveSales(true);
             }
-        }.runTaskTimer(main, 0L, 300*20L);
+        }.runTaskTimer(main, 0L, 300 * 20L);
     }
 
     public void loadSales() {
@@ -135,62 +136,63 @@ public class EconomyManager {
             MessageManager.message(buyer, "&7The minimum price limit is 0.01.");
         }
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                ArrayList<Sale> sales = getSpecificSales(itemStack, priceLimit);
+        ArrayList<Sale> sales = getSpecificSales(itemStack, priceLimit);
 
-                if (sales.size() < itemStack.getAmount()) {
-                    MessageManager.message(buyer, "&7There is not enough " + getItemName(itemStack) + " on the market.");
-                    return;
-                }
+        if (sales.size() < itemStack.getAmount()) {
+            MessageManager.message(buyer, "&7There is not enough " + getItemName(itemStack) + " on the market.");
+            return;
+        }
 
-                double totalPrice = sales.stream().mapToDouble(Sale::getPrice).sum();
+        double totalPrice = sales.stream().mapToDouble(Sale::getPrice).sum();
 
-                if (totalPrice > priceLimit) {
-                    MessageManager.message(buyer, "&c" + itemStack.getAmount() + " " + getItemName(itemStack) + " costs " + totalPrice + " gold which is more than your limit.");
-                    return;
-                }
+        if (totalPrice > priceLimit) {
+            MessageManager.message(buyer, "&c" + itemStack.getAmount() + " " + getItemName(itemStack) + " costs " + totalPrice + " gold which is more than your limit.");
+            return;
+        }
 
-                int actualAmountBought = 0;
-                double actualPrice = 0;
-                Map<UUID, CompletedSale> completedSales = new HashMap<>();
+        int actualAmountBought = 0;
+        double actualPrice = 0;
+        Map<UUID, CompletedSale> completedSales = new HashMap<>();
 
-                for (Sale sale : sales) {
-                    HashMap<Integer, ItemStack> leftover = buyer.getInventory().addItem(sale.getItemStack());
+        for (Sale sale : sales) {
+            HashMap<Integer, ItemStack> leftover = buyer.getInventory().addItem(sale.getItemStack());
 
-                    if (leftover.isEmpty()) {
-                        actualAmountBought++;
-                        actualPrice += sale.getPrice();
+            if (leftover.isEmpty()) {
+                actualAmountBought++;
+                actualPrice += sale.getPrice();
 
-                        CompletedSale completedSale = completedSales.getOrDefault(sale.getSeller(), new CompletedSale());
-                        completedSale.add(sale.getPrice());
-                        completedSales.put(sale.getSeller(), completedSale);
+                CompletedSale completedSale = completedSales.getOrDefault(sale.getSeller(), new CompletedSale());
+                completedSale.add(sale.getPrice());
+                completedSales.put(sale.getSeller(), completedSale);
 
+                getSales().remove(sale);
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
                         salesCollection.deleteOne(Filters.eq("transactionID", sale.getTransactionID().toString()));
-                        getSales().remove(sale);
-                    } else {
-                        break;
                     }
-                }
-
-                for (Entry<UUID, CompletedSale> data : completedSales.entrySet()) {
-                    UUID uuid = data.getKey();
-                    CompletedSale completedSale = data.getValue();
-
-                    deposit(uuid, completedSale.getPrice());
-
-                    Player seller = Bukkit.getPlayer(uuid);
-
-                    if (seller != null) {
-                        MessageManager.message(seller, "&6A player has bought " + completedSale.getAmount() + " of " + getItemName(itemStack) + " for " + completedSale.getPrice() + " gold. This has been deposited into your account.");
-                    }
-                }
-
-                withdraw(buyer.getUniqueId(), actualPrice);
-                MessageManager.message(buyer, "&7You bought " + actualAmountBought + " " + getItemName(itemStack) + " for " + actualPrice + " gold.");
+                }.runTaskAsynchronously(main);
+            } else {
+                break;
             }
-        }.runTaskAsynchronously(main);
+        }
+
+        for (Entry<UUID, CompletedSale> data : completedSales.entrySet()) {
+            UUID uuid = data.getKey();
+            CompletedSale completedSale = data.getValue();
+
+            deposit(uuid, completedSale.getPrice());
+
+            Player seller = Bukkit.getPlayer(uuid);
+
+            if (seller != null) {
+                MessageManager.message(seller, "&6A player has bought " + completedSale.getAmount() + " of " + getItemName(itemStack) + " for " + completedSale.getPrice() + " gold. This has been deposited into your account.");
+            }
+        }
+
+        withdraw(buyer.getUniqueId(), actualPrice);
+        MessageManager.message(buyer, "&7You bought " + actualAmountBought + " " + getItemName(itemStack) + " for " + actualPrice + " gold.");
     }
 
     public void showPrice(Player player, ItemStack itemStack) {
@@ -302,5 +304,13 @@ public class EconomyManager {
 
     public ArrayList<Sale> cloneSales() {
         return sales.stream().collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public boolean isEconomyHalted() {
+        return economyHalted;
+    }
+
+    public void setEconomyHalted(boolean economyHalted) {
+        this.economyHalted = economyHalted;
     }
 }

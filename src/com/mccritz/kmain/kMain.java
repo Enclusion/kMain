@@ -68,8 +68,6 @@ public class kMain extends JavaPlugin {
         warpManager = new WarpManager();
         blockUtils = new BlockUtils(this);
         glaedr = new Glaedr(this, "&c&lMcCritZ");
-//        glaedr.getTopWrappers().add("&7&m--------------------------");
-//        glaedr.getBottomWrappers().add("&7&m--------------------------");
         itemDb = new ItemDb();
 
         if (getConfig().getBoolean("kits.enabled"))
@@ -154,6 +152,7 @@ public class kMain extends JavaPlugin {
             register.registerCommand("forcesave", new ForceSaveCommand());
             register.registerCommand("editspawn", new EditSpawnCommand());
             register.registerCommand("endevent", new EndEventCommand());
+            register.registerCommand("blackhole", new BlackholeCommand());
 
             if (getConfig().getBoolean("kits.enabled")) {
                 register.registerCommand("kit", new KitCommand());
@@ -170,6 +169,7 @@ public class kMain extends JavaPlugin {
             register.registerCommand("price", new PriceCommand());
             register.registerCommand("deposit", new DepositCommand());
             register.registerCommand("withdraw", new WithdrawCommand());
+            register.registerCommand("halteconomy", new HaltEconomyCommand());
         } catch (Exception e) {
             e.printStackTrace();
         }

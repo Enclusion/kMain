@@ -3,6 +3,7 @@ package com.mccritz.kmain.economy.commands;
 import com.mccritz.kmain.economy.EconomyManager;
 import com.mccritz.kmain.kMain;
 import com.mccritz.kmain.utils.MessageManager;
+import com.mccritz.kmain.utils.PlayerUtility;
 import com.mccritz.kmain.utils.command.BaseCommand;
 import com.mccritz.kmain.utils.command.CommandUsageBy;
 import org.bukkit.Material;
@@ -24,10 +25,35 @@ public class DepositCommand extends BaseCommand {
     @Override
     public void execute(CommandSender s, String[] args) {
         Player p = (Player) s;
+
+        if (kMain.getInstance().getEconomyManager().isEconomyHalted()) {
+            MessageManager.message(s, "&cThe economy is temporarily disabled. The administrators will let you know when it is re-enabled.");
+            return;
+        }
+
         int amount, total = 0;
 
+        boolean attemptDupe = false;
+        ItemStack itemStack = null;
+
         for (ItemStack item : p.getInventory().all(Material.GOLD_INGOT).values()) {
-            total += item.getAmount();
+            if (!item.hasItemMeta() && !(item.getItemMeta().hasDisplayName() || item.getItemMeta().hasLore())) {
+                total += item.getAmount();
+            } else {
+                attemptDupe = true;
+                itemStack = item;
+            }
+        }
+
+        if (attemptDupe) {
+            MessageManager.message(p, "&7You cannot sell renamed gold ingots.");
+
+            for (Player all : PlayerUtility.getOnlinePlayers()) {
+                if (all.hasPermission("kmain.dupe")) {
+                    MessageManager.message(all, "&c[&4Dupe Attempt&c]: " + p.getName() + " attempted to dupe gold.");
+                    MessageManager.message(all, "&cDisplayName: " + itemStack.getItemMeta().getDisplayName());
+                }
+            }
         }
 
         if (args[0].equalsIgnoreCase("all")) {

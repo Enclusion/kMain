@@ -12,12 +12,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -60,10 +58,10 @@ public class OptimzationsListener implements Listener {
     }
 
     @EventHandler
-    public void onClick(InventoryClickEvent e) {
-        if (e.getInventory().getType() == InventoryType.BREWING) {
-            if (e.getSlot() == 0 || e.getSlot() == 1 || e.getSlot() == 2) {
-                if (e.getClick() == ClickType.SHIFT_LEFT && e.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || e.getClick() == ClickType.SHIFT_RIGHT && e.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+    public void onInteract(PlayerInteractEvent e) {
+        if (e.hasBlock()) {
+            if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (e.getClickedBlock().getType() == Material.HOPPER) {
                     e.setCancelled(true);
                 }
             }
@@ -84,19 +82,23 @@ public class OptimzationsListener implements Listener {
 
                         try {
                             event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, event.getDamage(EntityDamageEvent.DamageModifier.ARMOR) * damagePercent);
-                        } catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
 
                         try {
                             event.setDamage(EntityDamageEvent.DamageModifier.MAGIC, event.getDamage(EntityDamageEvent.DamageModifier.MAGIC) * damagePercent);
-                        } catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
 
                         try {
                             event.setDamage(EntityDamageEvent.DamageModifier.RESISTANCE, event.getDamage(EntityDamageEvent.DamageModifier.RESISTANCE) * damagePercent);
-                        } catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
 
                         try {
                             event.setDamage(EntityDamageEvent.DamageModifier.BLOCKING, event.getDamage(EntityDamageEvent.DamageModifier.BLOCKING) * damagePercent);
-                        } catch (Exception ignored) {}
+                        } catch (Exception ignored) {
+                        }
 
                         event.setDamage(EntityDamageEvent.DamageModifier.BASE, newDamage);
                         break;
@@ -114,7 +116,7 @@ public class OptimzationsListener implements Listener {
                 double droppedXp = event.getDroppedExp();
                 droppedXp *= 1.0 + lootingLevel / 5.0 + Math.pow(lootingLevel, 2.0) / 10.0 + (Math.random() * 0.5 - 0.2);
                 droppedXp *= 0.8;
-                event.setDroppedExp((int)droppedXp);
+                event.setDroppedExp((int) droppedXp);
             }
         }
     }
@@ -126,19 +128,25 @@ public class OptimzationsListener implements Listener {
             double droppedXp = event.getExpToDrop();
             droppedXp *= 1.0 + fortuneLevel / 5.0 + Math.pow(fortuneLevel, 2.0) / 10.0 + (Math.random() * 0.5 - 0.2);
             droppedXp *= 0.8;
-            event.setExpToDrop((int)droppedXp);
+            event.setExpToDrop((int) droppedXp);
         }
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
-        for (Player all : PlayerUtility.getOnlinePlayers()) {
-            if (!ToggleDMCommand.getToggled().contains(all.getUniqueId())) {
-                MessageManager.message(all, ChatColor.stripColor(e.getDeathMessage()));
-            }
-        }
-
+        String deathMessage = e.getDeathMessage();
         e.setDeathMessage(null);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player all : PlayerUtility.getOnlinePlayers()) {
+                    if (!ToggleDMCommand.getToggled().contains(all.getUniqueId())) {
+                        MessageManager.message(all, ChatColor.stripColor(deathMessage));
+                    }
+                }
+            }
+        }.runTaskAsynchronously(kMain.getInstance());
     }
 
     @EventHandler
