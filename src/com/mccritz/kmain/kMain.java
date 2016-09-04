@@ -170,6 +170,9 @@ public class kMain extends JavaPlugin {
             register.registerCommand("deposit", new DepositCommand());
             register.registerCommand("withdraw", new WithdrawCommand());
             register.registerCommand("halteconomy", new HaltEconomyCommand());
+            register.registerCommand("checkbalance", new CheckBalanceCommand());
+            register.registerCommand("setbalance", new SetBalanceCommand());
+            register.registerCommand("clearbalance", new ClearBalanceCommand());
         } catch (Exception e) {
             e.printStackTrace();
         }

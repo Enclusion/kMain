@@ -54,7 +54,7 @@ public class BalanceCommand extends BaseCommand {
                             map.put(profs.getName(), profs.getGold());
                         }
 
-                        MessageManager.message(p, "&7&m***&r &3Top 10 Players &7&m***");
+                        MessageManager.message(p, "&7***&cTop 10 Players&7***");
 
                         Object[] a = map.entrySet().toArray();
                         Arrays.sort(a, (o1, o2) -> ((Map.Entry<String, Double>) o2).getValue().compareTo(((Map.Entry<String, Double>) o1).getValue()));
@@ -62,7 +62,7 @@ public class BalanceCommand extends BaseCommand {
                         int topten = 0;
                         for (Object e : a) {
                             if (topten <= 9) {
-                                MessageManager.message(p, "&7" + (topten + 1) + " - &b" + ((Map.Entry<String, Double>) e).getKey() + "&7: &c" + MessageManager.formatDouble(((Map.Entry<String, Double>) e).getValue()));
+                                MessageManager.message(p, "&7" + (topten + 1) + ". &c" + ((Map.Entry<String, Double>) e).getKey() + " &7- &c" + MessageManager.formatDouble(((Map.Entry<String, Double>) e).getValue()));
                             }
 
                             topten++;

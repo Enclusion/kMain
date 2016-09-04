@@ -17,8 +17,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -134,6 +136,53 @@ public class EndEventListeners implements Listener {
     public void onClose(InventoryCloseEvent e) {
         if (e.getInventory().getName().equalsIgnoreCase(eventManager.getEndEvent().getTier1Inventory().getName()) || e.getInventory().getName().equalsIgnoreCase(eventManager.getEndEvent().getTier2Inventory().getName()) || e.getInventory().getName().equalsIgnoreCase(eventManager.getEndEvent().getTier3Inventory().getName())) {
             eventManager.getEndEvent().saveData();
+        }
+    }
+
+    @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent e) {
+        Player p = e.getPlayer();
+
+        if (eventManager.getEndEvent() == null) {
+            return;
+        }
+
+        if (e.getMessage().toLowerCase().contains("/team hq")
+                || e.getMessage().toLowerCase().contains("/t hq")
+                || e.getMessage().toLowerCase().contains("/team sethq")
+                || e.getMessage().toLowerCase().contains("/team shq")
+                || e.getMessage().toLowerCase().contains("/team seth")
+                || e.getMessage().toLowerCase().contains("/t sethq")
+                || e.getMessage().toLowerCase().contains("/t shq")
+                || e.getMessage().toLowerCase().contains("/t seth")
+                || e.getMessage().toLowerCase().contains("/team rally")
+                || e.getMessage().toLowerCase().contains("/t rally")
+                || e.getMessage().toLowerCase().contains("/t setrally")
+                || e.getMessage().toLowerCase().contains("/team setrally")
+                || e.getMessage().toLowerCase().contains("/team setr")
+                || e.getMessage().toLowerCase().contains("/team sr")
+                || e.getMessage().toLowerCase().contains("/t setr")
+                || e.getMessage().toLowerCase().contains("/t sr")
+                || e.getMessage().toLowerCase().contains("/home")
+                || e.getMessage().toLowerCase().contains("/sethome")
+                || e.getMessage().toLowerCase().contains("/go")
+                || e.getMessage().toLowerCase().contains("/warp")
+                || e.getMessage().toLowerCase().contains("/buy")
+                || e.getMessage().toLowerCase().contains("/sell")
+                || e.getMessage().toLowerCase().contains("/price")
+                || e.getMessage().toLowerCase().contains("/withdraw")
+                || e.getMessage().toLowerCase().contains("/deposit")) {
+            if (p.getWorld().getEnvironment() == World.Environment.THE_END) {
+                e.setCancelled(true);
+                MessageManager.message(p, "&cThese commands are not allowed during the end event.");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSpawn(CreatureSpawnEvent e) {
+        if (e.getEntity().getWorld().getEnvironment() == World.Environment.THE_END) {
+            e.setCancelled(true);
         }
     }
 }

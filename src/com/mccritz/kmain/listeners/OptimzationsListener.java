@@ -5,9 +5,13 @@ import com.mccritz.kmain.kMain;
 import com.mccritz.kmain.utils.MessageManager;
 import com.mccritz.kmain.utils.PlayerUtility;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Furnace;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,15 +19,26 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.FurnaceBurnEvent;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class OptimzationsListener implements Listener {
+
+    private HashMap<Block, Integer> furnaces = new HashMap<>();
+    private ArrayList<Block> blockList = new ArrayList<>();
 
     @EventHandler
     public void onHungerLoss(FoodLevelChangeEvent e) {
@@ -61,7 +76,7 @@ public class OptimzationsListener implements Listener {
     public void onInteract(PlayerInteractEvent e) {
         if (e.hasBlock()) {
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (e.getClickedBlock().getType() == Material.HOPPER) {
+                if (e.getClickedBlock().getType() == Material.HOPPER || e.getClickedBlock().getType() == Material.ENDER_CHEST) {
                     e.setCancelled(true);
                 }
             }
@@ -109,7 +124,7 @@ public class OptimzationsListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDeathEvent(final EntityDeathEvent event) {
+    public void onEntityDeathEvent(EntityDeathEvent event) {
         if (event.getEntity().getKiller() != null) {
             if (event.getEntity().getKiller().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) != 0) {
                 int lootingLevel = event.getEntity().getKiller().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
@@ -122,7 +137,7 @@ public class OptimzationsListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockBreakEvent(final BlockBreakEvent event) {
+    public void onBlockBreakEvent(BlockBreakEvent event) {
         if (event.getPlayer() != null) {
             int fortuneLevel = event.getPlayer().getInventory().getItemInHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
             double droppedXp = event.getExpToDrop();
@@ -150,7 +165,7 @@ public class OptimzationsListener implements Listener {
     }
 
     @EventHandler
-    public void onItemSpawn(final ItemSpawnEvent e) {
+    public void onItemSpawn(ItemSpawnEvent e) {
         new BukkitRunnable() {
             public void run() {
                 if (e.getEntity().getItemStack().getType() == Material.BOWL || e.getEntity().getItemStack().getType() == Material.MUSHROOM_SOUP || e.getEntity().getItemStack().getType() == Material.GLASS_BOTTLE || e.getEntity().getItemStack().getType() == Material.SAND || e.getEntity().getItemStack().getType() == Material.GRAVEL || e.getEntity().getItemStack().getType() == Material.DIRT || e.getEntity().getItemStack().getType() == Material.COBBLESTONE || e.getEntity().getItemStack().getType() == Material.ROTTEN_FLESH || e.getEntity().getItemStack().getType() == Material.STRING || e.getEntity().getItemStack().getType() == Material.BONE || e.getEntity().getItemStack().getType() == Material.ARROW || e.getEntity().getItemStack().getType() == Material.NETHERRACK) {
@@ -158,5 +173,61 @@ public class OptimzationsListener implements Listener {
                 }
             }
         }.runTaskLater(kMain.getInstance(), 20 * 20L);
+    }
+
+    @EventHandler
+    public void onFurnaceBurn(FurnaceBurnEvent e) {
+        Furnace furnace = (Furnace) e.getBlock().getState();
+        Location location = furnace.getLocation();
+
+        for (Entity entity : getNearbyEntities(location, 5)) {
+            if (entity instanceof Player) {
+                Player p = (Player) entity;
+
+                if (!(p.getOpenInventory().getTopInventory().getType() == InventoryType.FURNACE)) {
+                    return;
+                }
+
+                furnace.setCookTime((short) 100);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onFurnaceSmelt(FurnaceSmeltEvent e) {
+        Furnace furnace = (Furnace) e.getBlock().getState();
+        Location location = furnace.getLocation();
+
+        for (Entity entity : getNearbyEntities(location, 5)) {
+            if (entity instanceof Player) {
+                Player p = (Player) entity;
+
+                if (!(p.getOpenInventory().getTopInventory().getType() == InventoryType.FURNACE)) {
+                    return;
+                }
+
+                furnace.setCookTime((short) 100);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent e) {
+        Player player = (Player) e.getWhoClicked();
+
+        try {
+            Block block = e.getWhoClicked().getTargetBlock(null, 10);
+
+            if (block != null) {
+                if ((block.getType() == Material.FURNACE || block.getType() == Material.BURNING_FURNACE) && (e.getSlot() == 0 || e.getSlot() == 1) && e.getCursor().getType() != Material.AIR) {
+                    Furnace furnace = (Furnace) block.getState();
+                    furnace.setCookTime((short) 100);
+                }
+            }
+        } catch (Exception ignored) {}
+    }
+
+    public List<Entity> getNearbyEntities(Location l, int size) {
+        return l.getWorld().getEntities().stream().filter(e -> l.distance(e.getLocation()) <= size).collect(Collectors.toList());
     }
 }
