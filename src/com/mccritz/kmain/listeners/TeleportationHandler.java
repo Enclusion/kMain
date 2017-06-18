@@ -1,6 +1,5 @@
 package com.mccritz.kmain.listeners;
 
-import com.mccritz.kbasic.util.ProfileUtils;
 import com.mccritz.kmain.kMain;
 import com.mccritz.kmain.teams.TeamManager;
 import com.mccritz.kmain.utils.MessageManager;
@@ -61,8 +60,6 @@ public class TeleportationHandler implements Listener {
                 Player near = (Player) ent;
 
                 if (near.equals(p)) continue;
-
-                if (ProfileUtils.getInstance().getProfile(near.getUniqueId()).isVanished()) continue;
 
                 if (tm.getTeam(near.getUniqueId()) != null && tm.getTeam(p.getUniqueId()) != null) {
                     if (!tm.getTeam(p.getUniqueId()).equals(tm.getTeam(near.getUniqueId()))) {
